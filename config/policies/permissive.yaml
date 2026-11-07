@@ -1,0 +1,52 @@
+name: permissive
+label: Permissive (on-premise model)
+description: >
+  For an internal, on-premise model that does not leave the organization.
+  Secrets are still stripped and strong attacks blocked; personal data only
+  produces warnings.
+destination: local
+default_min_confidence: 0.5
+
+exposure:
+  mode: estimate
+  k_warn: 5
+  k_min: 2
+  on_breach: WARN
+
+rules:
+  - id: P-CRED-01
+    description: Secrets are stripped even for internal models
+    when: {category_any: [credential]}
+    action: GENERALIZE
+    severity: critical
+    level: remove
+    remediation: Avoid pasting secrets into any AI tool.
+    principle: Security of personal and organizational data
+
+  - id: P-INJ-01
+    description: Strong prompt injection is blocked
+    when: {injection_score_gte: 0.85}
+    action: BLOCK
+    severity: high
+    principle: Security of personal and organizational data
+
+  - id: P-INJ-02
+    description: Possible prompt injection is flagged
+    when: {injection_score_gte: 0.5}
+    action: WARN
+    severity: medium
+
+  - id: P-ID-01
+    description: Government IDs and payment data are masked
+    when: {type_any: [national_id, passport, iban, payment_card]}
+    action: GENERALIZE
+    severity: high
+    level: masked
+    principle: Data minimization (PDPL Art. 11)
+
+  - id: P-MIN-01
+    description: Personal data beyond the task's needs is flagged (not changed)
+    when: {not_required_by_purpose: true, category_any: [pii, financial]}
+    action: WARN
+    severity: low
+    principle: Data minimization (PDPL Art. 11)

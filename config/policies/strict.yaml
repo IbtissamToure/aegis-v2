@@ -1,0 +1,92 @@
+name: strict
+label: Strict (regulated)
+description: >
+  For banks, government entities and other regulated units. Anything
+  identifying, confidential or ambiguous is blocked rather than transformed.
+destination: external
+default_min_confidence: 0.5
+
+exposure:
+  mode: estimate
+  k_warn: 50
+  k_min: 10
+  on_breach: BLOCK
+
+rules:
+  - id: S-CRED-01
+    description: Credentials and secrets never leave the organization
+    when: {category_any: [credential]}
+    action: BLOCK
+    severity: critical
+    level: remove
+    remediation: Remove the secret and rotate it.
+    principle: Security of personal and organizational data
+
+  - id: S-INJ-01
+    description: Possible prompt injection is blocked
+    when: {injection_score_gte: 0.5}
+    action: BLOCK
+    severity: high
+    remediation: Remove the embedded instructions.
+    principle: Security of personal and organizational data
+
+  - id: S-INJ-02
+    description: Weak injection signals require confirmation
+    when: {injection_score_gte: 0.3}
+    action: WARN
+    severity: medium
+    remediation: Check the flagged text.
+
+  - id: S-ID-01
+    description: Government IDs and financial accounts may not be sent to external AI
+    when: {type_any: [national_id, passport, iban, payment_card]}
+    action: BLOCK
+    severity: critical
+    level: remove
+    remediation: Remove the identifier; use an internal case reference.
+    principle: Data minimization (PDPL Art. 11)
+
+  - id: S-CONF-01
+    description: Confidential documents may not be sent to external AI
+    when: {type_any: [confidential_marker], min_confidence: 0.7}
+    action: BLOCK
+    severity: high
+    remediation: Use the on-premise model for confidential material.
+    principle: Confidentiality of business information
+
+  - id: S-NAME-01
+    description: Names are always pseudonymized
+    when: {type_any: [person_name]}
+    action: GENERALIZE
+    severity: high
+    level: pseudonym
+    principle: Data minimization (PDPL Art. 11)
+
+  - id: S-SAL-01
+    description: Individual compensation is reduced to its order of magnitude
+    when: {type_any: [salary]}
+    action: GENERALIZE
+    severity: high
+    level: magnitude
+    principle: Data minimization (PDPL Art. 11)
+
+  - id: S-MIN-01
+    description: Data beyond what the task needs is minimized
+    when: {not_required_by_purpose: true, category_any: [pii, financial, quasi_identifier, confidential]}
+    action: GENERALIZE
+    severity: medium
+    principle: Purpose limitation and data minimization (PDPL Art. 11)
+
+  - id: S-PUR-01
+    description: Personal data with an unclear purpose needs confirmation
+    when: {purpose_confidence_lt: 0.3, has_findings_in_category: [pii, financial]}
+    action: WARN
+    severity: medium
+    remediation: State the purpose of the request (e.g. "for an HR case summary").
+    principle: Purpose limitation (PDPL Art. 11)
+
+  - id: S-BIZ-01
+    description: Business-sensitive topics are flagged
+    when: {type_any: [business_sensitive], min_confidence: 0.7}
+    action: WARN
+    severity: medium

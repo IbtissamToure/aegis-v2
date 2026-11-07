@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aegis — Your AI. Your Data. Your Control.</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <aside class="side">
+    <div class="brand">
+      <img src="/static/favicon.svg" alt="" width="34" height="34">
+      <div><strong>AEGIS</strong><span>Your AI. Your Data. Your Control.</span></div>
+    </div>
+    <nav id="nav">
+      <button data-view="overview" class="active">Overview</button>
+      <button data-view="inspect">Inspect a request</button>
+      <button data-view="demo">Demo scenarios</button>
+      <button data-view="exposure">Exposure budget</button>
+      <button data-view="simulate">Policy simulator</button>
+      <button data-view="policies">Policies &amp; purposes</button>
+      <button data-view="audit">Audit log</button>
+      <button data-view="evaluation">Evaluation</button>
+    </nav>
+    <div class="side-foot">
+      <div class="badge local" id="proc-badge">Processing: local</div>
+      <div class="muted small" id="llm-status">Model: checking…</div>
+    </div>
+  </aside>
+
+  <main>
+    <!-- OVERVIEW -->
+    <section id="view-overview" class="view active">
+      <header class="page-head">
+        <h1>Security overview</h1>
+        <p class="muted">Live figures from this machine's audit log (metadata only — no prompt text is stored). <span id="demo-note"></span></p>
+      </header>
+      <div class="kpis" id="kpis"></div>
+      <div class="grid2">
+        <div class="card"><h3>Decisions</h3><div id="action-bars"></div></div>
+        <div class="card"><h3>Most frequent data types</h3><div id="type-bars"></div></div>
+        <div class="card"><h3>Most triggered rules</h3><div id="rule-bars"></div></div>
+        <div class="card"><h3>How Aegis decides</h3>
+          <ol class="flow">
+            <li><b>Injection screen</b> — instructions hidden in prompts or attached content</li>
+            <li><b>Detection</b> — validators, bilingual lexicons and context (EN/AR)</li>
+            <li><b>Purpose</b> — which disclosure contract applies to this task</li>
+            <li><b>Policy</b> — deterministic YAML rules: ALLOW · WARN · GENERALIZE · BLOCK</li>
+            <li><b>Identifiability budget</b> — how many people still match, across prompts</li>
+            <li><b>Generalization</b> — least revealing form the task still needs</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- INSPECT -->
+    <section id="view-inspect" class="view">
+      <header class="page-head"><h1>Inspect a request</h1><p class="muted">Paste what an employee or agent wants to send to an AI model.</p></header>
+      <div class="card form">
+        <label>Prompt<textarea id="in-prompt" rows="4" maxlength="20000" placeholder="e.g. Summarize the leave request of Noura Alotaibi, 29, HR engineer in Riyadh…"></textarea></label>
+        <label>Attached content <span class="muted">(optional — document, email, CSV, tool output; treated as untrusted)</span><textarea id="in-content" rows="3" maxlength="100000"></textarea></label>
+        <div class="row">
+          <label>Purpose<select id="in-purpose"><option value="">Auto-detect</option></select></label>
+          <label>Policy<select id="in-policy"></select></label>
+          <label>Session<input id="in-session" value="my-session" maxlength="128"></label>
+          <div class="btns">
+            <button class="primary" id="btn-eval">Analyze &amp; decide</button>
+            <button id="btn-dry" title="Evaluate without updating session memory or the audit log">Dry run</button>
+          </div>
+        </div>
+      </div>
+      <div id="inspect-out"></div>
+    </section>
+
+    <!-- DEMO -->
+    <section id="view-demo" class="view">
+      <header class="page-head"><h1>Demo scenarios</h1><p class="muted"><span class="badge demo">DEMO DATA</span> All people, IDs and keys are synthetic. Each step calls the real API.</p></header>
+      <div id="scenarios"></div>
+    </section>
+
+    <!-- EXPOSURE -->
+    <section id="view-exposure" class="view">
+      <header class="page-head"><h1>Identifiability budget</h1>
+        <p class="muted">For each person a session talks about: how many employees in the reference population would still match what has left. Population: <span id="pop-name"></span>.</p></header>
+      <div class="card form row">
+        <label>Session<input id="ex-session" value="demo-cumulative" maxlength="128"></label>
+        <div class="btns"><button class="primary" id="btn-ex">Load</button><button id="btn-ex-reset">Reset session</button></div>
+      </div>
+      <div id="exposure-out"></div>
+    </section>
+
+    <!-- SIMULATE -->
+    <section id="view-simulate" class="view">
+      <header class="page-head"><h1>Policy simulator</h1><p class="muted">Same request, every policy, side by side (dry run). Shows how organizational policy — not the tool — decides.</p></header>
+      <div class="card form">
+        <label>Prompt<textarea id="sim-prompt" rows="3" maxlength="20000">Draft a reply to Mr. Fahad Alotaibi (ID 1123456780) about his salary of SAR 31,000 being paid late. This is confidential.</textarea></label>
+        <label>Attached content <span class="muted">(optional)</span><textarea id="sim-content" rows="2" maxlength="100000"></textarea></label>
+        <div class="row"><label>Purpose<select id="sim-purpose"><option value="">Auto-detect</option></select></label>
+          <div class="btns"><button class="primary" id="btn-sim">Simulate</button></div></div>
+      </div>
+      <div id="sim-out" class="sim-grid"></div>
+    </section>
+
+    <!-- POLICIES -->
+    <section id="view-policies" class="view">
+      <header class="page-head"><h1>Policies &amp; purpose contracts</h1><p class="muted">Configuration lives in YAML files under <code>config/</code>, owned by the data-protection officer — not in the UI or the code.</p></header>
+      <div class="card"><h3>Purpose contracts — the most revealing level each task may see</h3><div id="contracts"></div></div>
+      <div class="card"><h3>Policies</h3><div class="row"><select id="pol-pick"></select></div><pre id="pol-src" class="code"></pre></div>
+    </section>
+
+    <!-- AUDIT -->
+    <section id="view-audit" class="view">
+      <header class="page-head"><h1>Audit log</h1><p class="muted">What is stored: decision, rules, data types, keyed hashes, exposure numbers, latency. Never prompt text or detected values.</p></header>
+      <div class="card"><div class="row"><button id="btn-audit">Refresh</button></div><div id="audit-out" class="table-wrap"></div></div>
+    </section>
+
+    <!-- EVALUATION -->
+    <section id="view-evaluation" class="view">
+      <header class="page-head"><h1>Evaluation</h1><p class="muted">Generated by <code>python -m eval.run</code>. Every figure shows its sample size and a 95% confidence interval.</p></header>
+      <div id="eval-out"></div>
+    </section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>

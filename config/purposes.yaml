@@ -1,0 +1,117 @@
+# Purpose contracts ("disclosure contracts").
+#
+# Each purpose lists, per entity type, the MOST revealing level the task is
+# allowed to see. Anything not listed is removed. Levels per type are defined in
+# aegis/generalization/ladders.py (exact -> ... -> remove).
+#
+# These contracts are the auditable answer to "is this data NECESSARY for this
+# task?" and are meant to be owned and edited by the Data Protection Officer.
+
+version: 1
+default_purpose: general
+
+purposes:
+  demographic_analysis:
+    label: Demographic / customer analysis
+    description: Aggregate patterns by age, gender, region, nationality or spend.
+    keywords:
+      en: [demographic, demographics, age group, age groups, distribution, segment, segmentation, average age, customer profile, population, breakdown by age, by gender, by region, by nationality, cohort]
+      ar: [ديموغرافي, الفئات العمرية, متوسط الاعمار, متوسط العمر, توزيع العملاء, شرائح, حسب العمر, حسب الجنس, حسب المنطقة, حسب الجنسية, تحليل العملاء]
+    needs:
+      age: band_5
+      gender: exact
+      city: region
+      nationality: group
+      money_amount: range
+      salary: range
+      date: month
+      department: function
+      job_title: level
+      join_year: range
+
+  financial_report:
+    label: Financial report
+    description: Summaries of expenses, revenues, budgets and transactions.
+    keywords:
+      en: [expense, expenses, budget, revenue, invoice, invoices, transactions, financial report, spending, cost, costs, profit, ledger, quarterly, reconciliation]
+      ar: [المصروفات, مصروفات, الميزانية, ميزانية, الايرادات, فواتير, الفواتير, المعاملات, تقرير مالي, التكاليف, الارباح, ربع سنوي]
+    needs:
+      money_amount: exact
+      salary: range
+      date: exact
+      department: exact
+      city: exact
+      project_codename: pseudonym
+      job_title: level
+      person_name: role
+
+  hr_case_summary:
+    label: HR case summary
+    description: Summaries of employee cases, performance or requests for HR staff.
+    keywords:
+      en: [performance review, appraisal, hr case, grievance, leave request, promotion, disciplinary, employee case, warning letter, evaluation of employee, transfer request]
+      ar: [تقييم الاداء, تقييم اداء, ترقية, اجازة, طلب نقل, انذار, شكوى موظف, قضية موظف, مخالفة, الموارد البشرية]
+    needs:
+      person_name: pseudonym
+      department: exact
+      job_title: exact
+      join_year: exact
+      date: exact
+      age: band_10
+      gender: exact
+      salary: range
+      city: region
+
+  support_summary:
+    label: Customer support summary
+    description: Summarize tickets, complaints and common issues.
+    keywords:
+      en: [ticket, tickets, complaint, complaints, support, issue, issues, customer service, feedback, helpdesk, escalation]
+      ar: [شكاوى, شكوى, تذاكر, تذكرة, الدعم, خدمة العملاء, مشاكل, ملاحظات العملاء, بلاغ, بلاغات]
+    needs:
+      date: exact
+      city: region
+      money_amount: exact
+      person_name: role
+      job_title: level
+      department: exact
+
+  code_review:
+    label: Code review / debugging
+    description: Review, explain or fix source code and configuration.
+    keywords:
+      en: [code, function, bug, debug, refactor, stack trace, error, exception, script, query, sql, python, javascript, config, deploy, api endpoint]
+      ar: [كود, الكود, الدالة, خطا برمجي, برمجة, سكربت, استعلام, تصحيح الكود]
+    needs:
+      date: exact
+
+  contract_review:
+    label: Contract / legal review
+    description: Review clauses, obligations and terms of agreements.
+    keywords:
+      en: [contract, agreement, clause, clauses, terms, nda, obligations, liability, lease, tender, legal review]
+      ar: [عقد, العقد, اتفاقية, بند, البنود, الشروط, التزامات, مناقصة, مراجعة قانونية]
+    needs:
+      money_amount: exact
+      date: exact
+      city: exact
+      person_name: pseudonym
+      department: exact
+      project_codename: pseudonym
+
+  general:
+    label: General / unrecognized task
+    description: Safe default when the purpose cannot be determined.
+    keywords: {en: [], ar: []}
+    needs:
+      age: band_10
+      city: region
+      money_amount: range
+      salary: magnitude
+      date: month
+      person_name: pseudonym
+      department: function
+      job_title: level
+      nationality: group
+      join_year: range
+      project_codename: pseudonym

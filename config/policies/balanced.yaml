@@ -1,0 +1,71 @@
+name: balanced
+label: Balanced (default)
+description: >
+  Default for employees using external AI tools. Secrets and injection attacks
+  are blocked; personal and business data is reduced to what the task needs;
+  sensitive topics raise a warning.
+destination: external
+default_min_confidence: 0.5
+
+exposure:
+  mode: estimate        # estimate (frequency tables only) | exact (local directory)
+  k_warn: 25            # warn when fewer than 25 people still match a subject
+  k_min: 5              # never let fewer than 5 people match a subject
+  on_breach: GENERALIZE # coarsen this prompt's attributes; BLOCK if impossible
+
+rules:
+  - id: R-CRED-01
+    description: Credentials and secrets never leave the organization
+    when: {category_any: [credential]}
+    action: BLOCK
+    severity: critical
+    level: remove
+    remediation: Remove the secret from the request. If it was already shared anywhere, rotate it.
+    principle: Security of personal and organizational data
+
+  - id: R-INJ-01
+    description: High-confidence prompt injection is blocked
+    when: {injection_score_gte: 0.7}
+    action: BLOCK
+    severity: high
+    remediation: Remove the embedded instructions, or review the source document before using it with AI.
+    principle: Security of personal and organizational data
+
+  - id: R-INJ-02
+    description: Possible prompt injection requires user confirmation
+    when: {injection_score_gte: 0.4}
+    action: WARN
+    severity: medium
+    remediation: Check whether the flagged text is an instruction you intended to send.
+
+  - id: R-ID-01
+    description: Government IDs, passports and payment data are not needed by any AI task
+    when: {type_any: [national_id, passport, iban, payment_card]}
+    action: GENERALIZE
+    severity: critical
+    level: remove
+    remediation: Refer to the record by an internal case number instead.
+    principle: Data minimization (PDPL Art. 11)
+
+  - id: R-MIN-01
+    description: Personal and business data beyond what the task needs is minimized
+    when: {not_required_by_purpose: true, category_any: [pii, financial, quasi_identifier, confidential]}
+    action: GENERALIZE
+    severity: medium
+    remediation: The task works with the generalized values shown; request full access if the exact value is essential.
+    principle: Purpose limitation and data minimization (PDPL Art. 11)
+
+  - id: R-CONF-01
+    description: Documents marked confidential need confirmation before external AI use
+    when: {type_any: [confidential_marker], min_confidence: 0.7}
+    action: WARN
+    severity: high
+    remediation: Confirm the document may be processed externally, or use the local model.
+    principle: Confidentiality of business information
+
+  - id: R-BIZ-01
+    description: Business-sensitive topics are flagged
+    when: {type_any: [business_sensitive], min_confidence: 0.7}
+    action: WARN
+    severity: medium
+    remediation: Confirm the topic is approved for AI assistance.
