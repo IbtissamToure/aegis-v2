@@ -12,6 +12,7 @@ exposure:
   k_warn: 25            # warn when fewer than 25 people still match a subject
   k_min: 5              # never let fewer than 5 people match a subject
   on_breach: GENERALIZE # coarsen this prompt's attributes; BLOCK if impossible
+  safety_factor: 2      # divide the frequency-table estimate by 2 to absorb estimator error (chosen on the dev set)
 
 rules:
   - id: R-CRED-01

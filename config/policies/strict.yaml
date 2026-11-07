@@ -11,6 +11,7 @@ exposure:
   k_warn: 50
   k_min: 10
   on_breach: BLOCK
+  safety_factor: 2
 
 rules:
   - id: S-CRED-01

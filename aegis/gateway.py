@@ -130,6 +130,8 @@ class Aegis:
 
         # ---- identifiability budget
         self.exposure.mode = pol.exposure.mode
+        # The floor is enforced with a safety margin on the frequency-table estimate (absorbs estimator error).
+        floor = pol.exposure.k_min * (pol.exposure.safety_factor if pol.exposure.mode == "estimate" else 1.0)
         session = self.exposure.session(session_id, ephemeral=dry_run)
         subject_key, link_reason = self.exposure.link_subject(session, prompt, findings)
         levels = dict(out.levels)
@@ -141,9 +143,9 @@ class Aegis:
         status = "not_tracked"
         if subject_key:
             ex = pol.exposure
-            if after["k"] >= ex.k_warn:
+            if after["k"] >= max(ex.k_warn, floor):
                 status = "ok"
-            elif after["k"] >= ex.k_min:
+            elif after["k"] >= floor:
                 status = "warn"
                 exp_action = Action.WARN
                 fired.append(FiredRule(rule_id="X-EXP-WARN", description=f"Subject is becoming identifiable (fewer than {ex.k_warn:g} people match)",
@@ -151,7 +153,7 @@ class Aegis:
                                        remediation="Avoid adding further details about this person."))
             else:
                 if ex.on_breach == Action.GENERALIZE:
-                    plan, planned_after, ok = self.exposure.plan_generalization(session, subject_key, proposal, ex.k_min)
+                    plan, planned_after, ok = self.exposure.plan_generalization(session, subject_key, proposal, floor)
                     if ok:
                         status = "generalized"
                         exp_action = Action.GENERALIZE

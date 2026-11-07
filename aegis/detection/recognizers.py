@@ -123,9 +123,9 @@ ASSIGNED_SECRET_RE = re.compile(
     r"(?:api[_\- ]?key|apikey|secret(?:[_\- ]?key)?|access[_\- ]?token|auth[_\- ]?token|token|bearer|client[_\- ]?secret|"
     r"مفتاح(?:\s+ال)?(?:api|واجهة)?|التوكن|الرمز السري)\s*(?:is|=|:|هو)?\s*['\"]?([A-Za-z0-9_\-\.\/+=]{16,})", re.I)
 PASSWORD_RE = re.compile(
-    r"(?:password|passwd|pwd|passcode|pass|كلمة المرور|كلمة السر|الباسورد|الرقم السري|كلمه المرور|كلمه السر)"
-    r"\s*(?:is|was|=|:|هي|هو|كانت)?\s*['\"]?([^\s'\",;]{4,64})", re.I)
-PRIVATE_IP_RE = re.compile(r"(?<![\d.])(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})(?![\d.])")
+    r"(?<![A-Za-z])(?:password|passwd|pwd|passcode|pass|كلمة المرور|كلمة السر|الباسورد|الرقم السري|كلمه المرور|كلمه السر)(?![A-Za-z])"
+    r"\s*(is|was|=|:|هي|هو|كانت)?\s*['\"]?([^\s'\",;]{4,64})", re.I)
+PRIVATE_IP_RE = re.compile(r"(?<![\d.])(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})(?!\d)(?!\.\d)")
 INTERNAL_HOST_RE = re.compile(r"\b[a-z0-9][a-z0-9\-]*(?:\.[a-z0-9\-]+)*\.(?:internal|corp|local|lan|intranet|intra)\b", re.I)
 
 _NUM = r"\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?"
@@ -288,10 +288,12 @@ def recognize(nt: NormText, codenames: Optional[dict] = None) -> list[Candidate]
             add(Candidate("api_key", m.start(1), m.end(1), 0.88, "context:assigned_secret",
                           f"High-entropy value (H={ent:.1f} bits/char) assigned to a key/token label", None))
     for m in PASSWORD_RE.finditer(t):
-        val = m.group(1)
-        if val.lower() in {"reset", "policy", "manager", "change", "expired", "required", "field", "please", "was", "is"}:
+        sep, val = m.group(1), m.group(2)
+        # a password value either follows an explicit separator ("is", ":", "=") or looks like one (digit / symbol)
+        looks_secret = bool(re.search(r"[\d\W_]", val)) and not val.isdigit() or (bool(sep) and len(val) >= 6)
+        if not looks_secret or val.lower() in {"reset", "policy", "manager", "managers", "change", "expired", "required", "field", "please"}:
             continue
-        add(Candidate("password", m.start(1), m.end(1), 0.9, "context:password_label", "Value following a password label", None))
+        add(Candidate("password", m.start(2), m.end(2), 0.9 if sep else 0.75, "context:password_label", "Value following a password label", None))
 
     for m in PRIVATE_IP_RE.finditer(t):
         add(Candidate("internal_host", m.start(), m.end(), 0.9, "pattern:private_ipv4", "RFC 1918 private address", m.group(0)))
@@ -348,6 +350,7 @@ def recognize(nt: NormText, codenames: Optional[dict] = None) -> list[Candidate]
 
     _lexicon_entities(t, out)
     _names(t, out)
+    _structural_names(t, out)
     return out
 
 
@@ -439,6 +442,41 @@ def _names(t: str, out: list[Candidate]) -> None:
             add(m.start(1), seg_end, 0.85, "lexicon:first_name_ar+family", "Known Arabic given name followed by family name")
         else:
             add(m.start(1), m.end(1), 0.62, "lexicon:first_name_ar", "Known Arabic given name")
+
+
+_STRUCT_EN = re.compile(r"(?<![A-Za-z'])([A-Z][a-z]{2,})\s+((?:Al|El)-?[A-Z]?[a-z]{2,}|bin\s+[A-Z][a-z]{2,}|[A-Z][a-z]{2,}(?:-[A-Z][a-z]+)?)(?![A-Za-z])")
+_PRE_PERSON_EN = re.compile(r"(?:\b(?:to|for|from|with|by|named|called|dear|ask|tell|remind|cc|about|and|colleague|employee|customer)\s+)$", re.I)
+_NISBA_AR = re.compile(r"(?<![\u0621-\u064a])([\u0621-\u064a]{3,8})\s+(ال[\u0621-\u064a]{2,}ي)(?![\u0621-\u064a])")
+_AR_ADJ = set(_norm(w) for w in ["المالي", "الحالي", "التالي", "الثاني", "الماضي", "الداخلي", "الخارجي", "الرسمي", "الوطني", "الفعلي", "الشهري",
+                                 "السنوي", "الدراسي", "الفني", "الاداري", "الاساسي", "العربي", "الالكتروني", "الحكومي", "الصحي", "الطبي", "الذكي",
+                                 "الامني", "التنفيذي", "القانوني", "الشخصي", "الوظيفي", "النهائي", "الاصلي", "الكلي", "الجزئي", "العالمي", "المحلي",
+                                 "الاجتماعي", "الاقتصادي", "التقني", "الرقمي", "الذاتي", "اليومي", "الاسبوعي", "الربعي", "الثالث", "الحقيقي", "الضروري"])
+_AR_NOT_FIRST = set(_norm(w) for w in ["تقرير", "قسم", "مكتب", "فرع", "نظام", "برنامج", "مشروع", "عمل", "طلب", "خطاب", "ملف", "دعم", "مدير", "موظف",
+                                       "رقم", "حساب", "تحليل", "ملخص", "اجتماع", "الربع", "مستوى", "تقييم", "مبلغ", "راتب", "عقد"])
+
+
+def _structural_names(t: str, out: list[Candidate]) -> None:
+    """Names NOT in any lexicon, recognized by structure (works for unseen names)."""
+    for m in _STRUCT_EN.finditer(t):
+        a, b = m.group(1), m.group(2)
+        if a in _EN_NOT_NAME or b.split()[-1] in _EN_NOT_NAME or b in _EN_NOT_NAME:
+            continue
+        nxt = t[m.end():m.end() + 3]
+        al = bool(re.match(r"(?:Al|El)-?[A-Z]|(?:Al|El)[a-z]{3,}|bin\s", b)) and a not in {"Al", "El"}
+        poss = nxt.startswith(("'s", "’s", " (", ",", " ("))
+        ctx = bool(_PRE_PERSON_EN.search(t[max(0, m.start() - 16):m.start()]))
+        if al or poss or ctx:
+            conf = 0.75 if al else (0.72 if poss else 0.66)
+            out.append(Candidate("person_name", m.start(), m.end(), conf, "structure:name_en", "Two-part name pattern in a person context",
+                                 re.sub(r"\s+", " ", m.group(0)).lower()))
+    for m in _NISBA_AR.finditer(t):
+        first, fam = m.group(1), m.group(2)
+        if first in _AR_STOP or first.startswith("ال") or first in _AR_NOT_FIRST or _is_ar_lexicon_term(first):
+            continue
+        if fam in _AR_ADJ or _is_ar_lexicon_term(fam):
+            continue
+        out.append(Candidate("person_name", m.start(), m.end(), 0.72, "structure:name_ar_nisba",
+                             "Indefinite word + definite nisba family name (Arabic name structure)", m.group(0)))
 
 
 def _money_value(s: str) -> Optional[str]:

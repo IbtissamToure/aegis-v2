@@ -1,0 +1,56 @@
+{"text": "Break down our customers by age group and gender for the marketing deck", "purpose": "demographic_analysis"}
+{"text": "What does our customer base look like by region and nationality?", "purpose": "demographic_analysis"}
+{"text": "Find patterns in the survey respondents' ages across cities", "purpose": "demographic_analysis"}
+{"text": "Segment the attached customer list into cohorts", "purpose": "demographic_analysis"}
+{"text": "حلل الفئات العمرية للعملاء حسب المنطقة", "purpose": "demographic_analysis"}
+{"text": "ما هو متوسط العمر لعملائنا في كل مدينة؟", "purpose": "demographic_analysis"}
+{"text": "وزع المشاركين في الاستبيان حسب الجنس والجنسية", "purpose": "demographic_analysis"}
+{"text": "Profile the population of loyalty-program members", "purpose": "demographic_analysis"}
+{"text": "Summarize Q2 expenses by department", "purpose": "financial_report"}
+{"text": "Reconcile these invoices against the budget", "purpose": "financial_report"}
+{"text": "Prepare a quarterly spending summary for the CFO", "purpose": "financial_report"}
+{"text": "Which cost centers exceeded their budget this year?", "purpose": "financial_report"}
+{"text": "اعمل تقرير مالي عن مصروفات الربع الأول", "purpose": "financial_report"}
+{"text": "قارن الميزانية مع الإيرادات الفعلية", "purpose": "financial_report"}
+{"text": "لخص الفواتير غير المدفوعة", "purpose": "financial_report"}
+{"text": "Calculate total revenue per branch from these transactions", "purpose": "financial_report"}
+{"text": "Write a performance review summary for this employee", "purpose": "hr_case_summary"}
+{"text": "Summarize this grievance for the HR committee", "purpose": "hr_case_summary"}
+{"text": "Draft a response to her leave request", "purpose": "hr_case_summary"}
+{"text": "Prepare notes for the disciplinary meeting", "purpose": "hr_case_summary"}
+{"text": "لخص تقييم الأداء السنوي للموظف", "purpose": "hr_case_summary"}
+{"text": "اكتب رد على طلب النقل المقدم من الموظفة", "purpose": "hr_case_summary"}
+{"text": "جهز ملخص قضية المخالفة لاجتماع الموارد البشرية", "purpose": "hr_case_summary"}
+{"text": "Assess whether he is ready for promotion", "purpose": "hr_case_summary"}
+{"text": "Summarize the top complaints from this week's tickets", "purpose": "support_summary"}
+{"text": "What issues do customers report most often?", "purpose": "support_summary"}
+{"text": "Group these support tickets by root cause", "purpose": "support_summary"}
+{"text": "Draft replies to the escalated customer complaints", "purpose": "support_summary"}
+{"text": "لخص شكاوى العملاء لهذا الشهر", "purpose": "support_summary"}
+{"text": "ما أكثر المشاكل تكرارا في تذاكر الدعم؟", "purpose": "support_summary"}
+{"text": "صنف بلاغات العملاء حسب الأولوية", "purpose": "support_summary"}
+{"text": "Analyze the feedback left on our helpdesk", "purpose": "support_summary"}
+{"text": "Why does this Python function throw a KeyError?", "purpose": "code_review"}
+{"text": "Refactor this SQL query to be faster", "purpose": "code_review"}
+{"text": "Review my deployment config for mistakes", "purpose": "code_review"}
+{"text": "Explain this stack trace", "purpose": "code_review"}
+{"text": "لماذا لا يعمل هذا الكود؟", "purpose": "code_review"}
+{"text": "صحح الخطأ البرمجي في السكربت التالي", "purpose": "code_review"}
+{"text": "Add unit tests for this JavaScript module", "purpose": "code_review"}
+{"text": "Debug the API endpoint returning 500", "purpose": "code_review"}
+{"text": "Review the liability clause in this agreement", "purpose": "contract_review"}
+{"text": "Summarize the obligations in the attached NDA", "purpose": "contract_review"}
+{"text": "Are the payment terms in this lease fair?", "purpose": "contract_review"}
+{"text": "Compare these two tender documents", "purpose": "contract_review"}
+{"text": "راجع بنود العقد المرفق", "purpose": "contract_review"}
+{"text": "ما هي التزامات الطرف الثاني في الاتفاقية؟", "purpose": "contract_review"}
+{"text": "لخص شروط المناقصة", "purpose": "contract_review"}
+{"text": "Check this contract for termination conditions", "purpose": "contract_review"}
+{"text": "Write a poem about teamwork", "purpose": "general"}
+{"text": "Plan a team lunch for next Thursday", "purpose": "general"}
+{"text": "Translate this paragraph to Arabic", "purpose": "general"}
+{"text": "اقترح أفكار لفعالية اليوم الوطني", "purpose": "general"}
+{"text": "اكتب رسالة شكر للفريق", "purpose": "general"}
+{"text": "Give me tips for a better morning routine", "purpose": "general"}
+{"text": "Draft an agenda for tomorrow's kickoff", "purpose": "general"}
+{"text": "Summarize this article about renewable energy", "purpose": "general"}

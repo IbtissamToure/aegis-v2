@@ -34,7 +34,9 @@ PERSON_CUE = re.compile(
 NEW_SUBJECT_CUE = re.compile(r"\b(?:another|a different|a second|other)\s+(?:employee|colleague|person|staff member|manager)\b|"
                              r"(?:موظف اخر|موظفة اخرى|زميل اخر|زميلة اخرى|شخص اخر)", re.I)
 REFERENCE_CUE = re.compile(r"\b(?:he|she|him|her|his|they|the same (?:person|employee|colleague)|this (?:employee|colleague|person))\b|"
-                           r"(?:هو|هي|نفس الشخص|نفس الموظف|نفس الزميل|هذا الموظف|هذه الموظفة|يعمل|تعمل)", re.I)
+                           r"(?:هو|هي|نفس الشخص|نفس الموظف|نفس الزميل|هذا الموظف|هذه الموظفة|يعمل|تعمل)|"
+                           # Arabic third-person forms: pronoun suffixes (عمرها، مقره) and feminine past verbs (انضمت، التحقت)
+                           r"(?<![\u0621-\u064a])[\u0621-\u064a]{2,}(?:ها|ه)(?![\u0621-\u064a])|(?:انضمت|التحقت|عملت|انتقلت|ترقت)", re.I)
 
 
 @dataclass
@@ -122,6 +124,10 @@ class ExposureEngine:
             return key, "new person introduced"
         if session.active and (REFERENCE_CUE.search(text) or PERSON_CUE.search(text)):
             return session.active, "continues the same person"
+        if session.active and tracked:
+            # Conservative default: details following a person, with no new subject introduced, are counted
+            # against that person rather than silently dropped.
+            return session.active, "assumed to continue the same person (no new person introduced)"
         if PERSON_CUE.search(text):
             key = self._hash(f"anon|{session.key}|{session.turn}")
             session.subjects[key] = Subject(key=key, label=f"Subject {len(session.subjects) + 1}")

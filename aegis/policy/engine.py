@@ -48,6 +48,7 @@ class ExposurePolicy:
     k_min: float = 5
     on_breach: Action = Action.GENERALIZE
     mode: str = "estimate"
+    safety_factor: float = 1.0
 
 
 @dataclass
@@ -74,7 +75,8 @@ def load_policy(path: str | Path) -> Policy:
                           principle=r.get("principle", "")))
     ex = data.get("exposure", {})
     exposure = ExposurePolicy(k_warn=float(ex.get("k_warn", 25)), k_min=float(ex.get("k_min", 5)),
-                              on_breach=Action(ex.get("on_breach", "GENERALIZE")), mode=ex.get("mode", "estimate"))
+                              on_breach=Action(ex.get("on_breach", "GENERALIZE")), mode=ex.get("mode", "estimate"),
+                              safety_factor=float(ex.get("safety_factor", 1.0)))
     return Policy(name=data["name"], label=data.get("label", data["name"]), description=data.get("description", ""),
                   destination=data.get("destination", "external"), rules=rules, exposure=exposure,
                   default_min_confidence=float(data.get("default_min_confidence", 0.5)), raw=data)
