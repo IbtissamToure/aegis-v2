@@ -198,9 +198,12 @@ def coarse_value(entity_type: str, value: Optional[str], level: str) -> Optional
     return None  # pseudonym/role/masked/etc. reveal no population attribute
 
 
-def render(f: Finding, level: str, pseudo: PseudonymRegistry, key_hash: str) -> str:
-    """Replacement text for finding ``f`` at disclosure ``level``."""
-    ar = has_arabic(f.text)
+def render(f: Finding, level: str, pseudo: PseudonymRegistry, key_hash: str, context: Optional[str] = None) -> str:
+    """Replacement text for finding ``f`` at disclosure ``level``.
+
+    Language follows the value itself, or (for digits/codes) the surrounding text.
+    """
+    ar = has_arabic(f.text) or (context is not None and has_arabic(context))
     t = f.type
     v = f.value_norm
     if level == "exact":
@@ -255,6 +258,8 @@ def render(f: Finding, level: str, pseudo: PseudonymRegistry, key_hash: str) -> 
             return _attach_ar(_ar_prefix(f.text), arl) if ar else f"a {en}"
         if t == "job_title" and level == "level" and v in L.JOB_TITLES:
             en, arl = _LEVEL[L.JOB_TITLES[v][0]]
+            if ar and normalize(f.text).text.strip().endswith(("ة", "ه")):  # keep Arabic gender agreement
+                arl = {"موظف": "موظفة", "موظف بمستوى إداري": "موظفة بمستوى إداري", "قيادي": "قيادية"}.get(arl, arl)
             return arl if ar else en
         if t == "nationality" and level == "group" and v in L.NATIONALITIES:
             en, arl = _NAT_GROUP[L.NATIONALITIES[v][0]]

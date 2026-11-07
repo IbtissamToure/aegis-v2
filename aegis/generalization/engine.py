@@ -63,7 +63,8 @@ def apply(text: str, segment: str, findings: list[Finding], levels: dict[str, st
         level = levels.get(f.id, "exact")
         if level == "exact":
             continue
-        rep = render(f, level, pseudo, value_key(secret, f))
+        window = text[max(0, f.start - 25):f.end + 25]
+        rep = render(f, level, pseudo, value_key(secret, f), context=window)
         before = out[: f.start]
         # keep English grammar intact at the junction: "the a corporate function" -> "the corporate function"
         if re.search(r"\b(?:the|a|an|our|their|his|her|its)\s+$", before, re.I):
