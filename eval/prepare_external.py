@@ -1,10 +1,10 @@
 """Extract the external prompt-injection test sets used by the evaluation.
 
 Sources (both MIT-licensed, cloned from GitHub):
-  * verazuo/jailbreak_llms — in-the-wild jailbreak and regular prompts (CCS'24 "Do Anything Now")
+  * verazuo/jailbreak_llms, in-the-wild jailbreak and regular prompts (CCS'24 "Do Anything Now")
       dev  = 2023-05-07 release (used while developing signatures)
       test = prompts first appearing in the 2023-12-25 release (held out, never used for tuning)
-  * microsoft/BIPIA — indirect prompt injection benchmark (email task, text attacks, test split)
+  * microsoft/BIPIA, indirect prompt injection benchmark (email task, text attacks, test split)
 
 Usage: python -m eval.prepare_external /path/to/jailbreak_llms /path/to/BIPIA
 """

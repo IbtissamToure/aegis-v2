@@ -1,4 +1,4 @@
-"""Aegis evaluation harness — one command regenerates every number and figure.
+"""Aegis evaluation harness, one command regenerates every number and figure.
 
     python -m eval.run            # writes eval/reports/latest.json, EVALUATION_REPORT.md, figures/*.png
 
@@ -139,11 +139,11 @@ def eval_detection(a: Aegis):
     per_type = {row[0]: float(row[4]) for row in table}
     metrics = [
         rate("Micro precision", TP, TP + FP), rate("Micro recall", TP, TP + FN), num("Micro F1", 2 * P * R / (P + R), n=TP + FN),
-        rate("Recall — English texts", lang_tp["en"], lang_tp["en"] + lang_fn["en"]),
-        rate("Recall — Arabic texts", lang_tp["ar"], lang_tp["ar"] + lang_fn["ar"]),
-        rate("Recall — mixed Arabic/English texts", lang_tp["mixed"], lang_tp["mixed"] + lang_fn["mixed"]),
-        rate("Name recall — names in the lexicon", *name_rec[False]), rate("Name recall — names NOT in the lexicon", *name_rec[True]),
-        rate("Arabic name recall — in lexicon", *ar_name[False]), rate("Arabic name recall — not in lexicon", *ar_name[True]),
+        rate("Recall, English texts", lang_tp["en"], lang_tp["en"] + lang_fn["en"]),
+        rate("Recall, Arabic texts", lang_tp["ar"], lang_tp["ar"] + lang_fn["ar"]),
+        rate("Recall, mixed Arabic/English texts", lang_tp["mixed"], lang_tp["mixed"] + lang_fn["mixed"]),
+        rate("Name recall, names in the lexicon", *name_rec[False]), rate("Name recall, names NOT in the lexicon", *name_rec[True]),
+        rate("Arabic name recall, in lexicon", *ar_name[False]), rate("Arabic name recall, not in lexicon", *ar_name[True]),
         rate("Benign texts with a false personal/credential alarm", benign_fp, benign_n),
         num("Detection latency p50", statistics.median(times), "ms", len(times)),
     ]
@@ -151,7 +151,7 @@ def eval_detection(a: Aegis):
             "description": f"{len(rows) - benign_n} synthetic texts with {TP + FN} gold entities across {len(eval_types)} types, plus {benign_n} benign texts with look-alikes. "
                            "Overlap match, same type. Salary and money amounts count as one family.",
             "metrics": metrics, "tables": [{"title": "Per type", "columns": ["Type", "Gold", "Precision", "Recall", "F1"], "rows": table}],
-            "notes": ["Error analysis — misses: " + "; ".join(miss_examples[:6]), "Error analysis — false positives: " + "; ".join(fp_examples[:5]),
+            "notes": ["Error analysis, misses: " + "; ".join(miss_examples[:6]), "Error analysis, false positives: " + "; ".join(fp_examples[:5]),
                       "Benign false alarms: " + ("; ".join(benign_examples) or "none"),
                       "Limitation: the generator and detector were written by the same team. Out-of-lexicon names are included to measure generalization."],
             "_fig": per_type}
@@ -177,8 +177,8 @@ def eval_purpose(a: Aegis):
         by_lang[0][ar] += a.resolver.resolve(r["text"]).purpose == r["purpose"]
     return {"title": "2 · Purpose recognition (rules only, no LLM)", "key": "purpose",
             "description": f"{len(rows)} hand-written requests (English and Arabic) over {len(labels)} purposes including 'general'.",
-            "metrics": [rate("Accuracy", ok, len(rows)), rate("Accuracy — English", by_lang[0][False], by_lang[1][False]),
-                        rate("Accuracy — Arabic", by_lang[0][True], by_lang[1][True])],
+            "metrics": [rate("Accuracy", ok, len(rows)), rate("Accuracy, English", by_lang[0][False], by_lang[1][False]),
+                        rate("Accuracy, Arabic", by_lang[0][True], by_lang[1][True])],
             "tables": [{"title": "Confusion (rows = true, columns = predicted)", "columns": ["true \\ pred"] + labels,
                         "rows": [[t] + [conf[t][p] for p in labels] for t in labels]}],
             "notes": ["Misclassified: " + "; ".join(wrong), "When rules are unsure, the deployment can ask a local LLM to choose from the same closed list; "
@@ -213,8 +213,8 @@ def eval_minimization(a: Aegis):
     m = []
     for name, label in (("aegis", "Aegis (purpose-bound)"), ("redact_all", "Redact everything detected"), ("none", "No protection")):
         L, Rm, K, N = res[name]
-        m.append(rate(f"{label} — unnecessary values leaked", L, Rm))
-        m.append(rate(f"{label} — task-needed facts kept", K, N))
+        m.append(rate(f"{label}, unnecessary values leaked", L, Rm))
+        m.append(rate(f"{label}, task-needed facts kept", K, N))
     table = [[p, f"{v[0]}/{v[1]}", f"{v[2]}/{v[3]}"] for p, v in per_purpose.items()]
     return {"title": "3 · Purpose-bound minimization: privacy vs. usefulness", "key": "minimization",
             "description": f"{len(rows)} synthetic tasks over 4 purposes. 'Unnecessary' values (names, phones, IDs, exact cities…) must not leave; "
@@ -302,12 +302,12 @@ def eval_sessions(a: Aegis):
     metrics = [
         rate("Sessions that would identify a person if sent as written (k < 5)", I, I + NI),
         rate("…of those, where NO single prompt alone looks identifying", stats["single_pass"], I),
-        rate("Protected (k ≥ 5 at the end) — no protection", 0, I),
-        rate("Protected — purpose minimization only (budget off)", stats["prot_contract"], I),
-        rate("Protected — minimization + identifiability budget", stats["prot_full"], I),
+        rate("Protected (k ≥ 5 at the end), no protection", 0, I),
+        rate("Protected, purpose minimization only (budget off)", stats["prot_contract"], I),
+        rate("Protected, minimization + identifiability budget", stats["prot_full"], I),
         rate("Budget intervened on a session that was not identifying", stats["false_int"], NI),
-        num("Mean attributes still sent exactly — minimization only", statistics.mean(stats["exact_attrs_contract"]), n=len(sessions)),
-        num("Mean attributes still sent exactly — with budget", statistics.mean(stats["exact_attrs_full"]), n=len(sessions)),
+        num("Mean attributes still sent exactly, minimization only", statistics.mean(stats["exact_attrs_contract"]), n=len(sessions)),
+        num("Mean attributes still sent exactly, with budget", statistics.mean(stats["exact_attrs_full"]), n=len(sessions)),
     ]
     return {"title": "4 · Cumulative exposure: the identifiability budget", "key": "sessions",
             "description": f"{len(sessions)} multi-prompt sessions (2–4 prompts, 30% Arabic) each describing one real row of the 5,000-person synthetic directory, "
@@ -455,10 +455,10 @@ def eval_injection(a: Aegis):
         if not path.exists():
             continue
         tp, pos, fp, neg, no, nofp, misses = _inj(a, jl(path), cont)
-        m.append(rate(f"{label} — attacks detected", tp, pos))
-        m.append(rate(f"{label} — benign flagged", fp, neg))
+        m.append(rate(f"{label}, attacks detected", tp, pos))
+        m.append(rate(f"{label}, benign flagged", fp, neg))
         if no:
-            m.append(rate(f"{label} — benign flagged, excluding prompts that literally say 'ignore previous instructions'", fp - nofp, neg - no))
+            m.append(rate(f"{label}, benign flagged, excluding prompts that literally say 'ignore previous instructions'", fp - nofp, neg - no))
         figd[name] = (tp / pos, fp / neg)
         tables.append([label, pos, neg, f"{tp / pos:.3f}", f"{fp / neg:.3f}", "; ".join(misses[:2])])
     return {"title": "6 · Prompt-injection detection", "key": "injection",
@@ -533,7 +533,7 @@ def figures(sections):
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
     except ImportError:
-        return ["matplotlib not installed — figures skipped"]
+        return ["matplotlib not installed, figures skipped"]
     FIG.mkdir(parents=True, exist_ok=True)
     EVER, MINT, GOLD, RED, BLUE, GREY = "#0E3F3C", "#3FA58A", "#E0A800", "#C0392B", "#2F6FB3", "#9AA9A6"
     plt.rcParams.update({"font.size": 12, "axes.spines.top": False, "axes.spines.right": False, "font.family": "DejaVu Sans"})

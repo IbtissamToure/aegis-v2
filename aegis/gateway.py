@@ -29,7 +29,8 @@ from aegis.exposure.population import Population
 from aegis.generalization import engine as gen
 from aegis.generalization.ladders import LADDERS
 from aegis.injection.detector import InjectionDetector
-from aegis.llm.providers import LLMProvider, provider_from_env
+from aegis.llm.providers import EXECUTE_SYSTEM, SUMMARY_SYSTEM, LLMProvider, final_answer, provider_from_env
+from aegis.text import has_arabic
 from aegis.models import (Action, Decision, ExposureState, FiredRule, InjectionResult, Severity, max_action, max_severity)
 from aegis.policy.engine import Policy, evaluate as policy_evaluate, load_policy
 from aegis.purpose import PurposeResolver
@@ -79,7 +80,8 @@ class Aegis:
         retention = float(os.environ.get("AEGIS_AUDIT_RETENTION_DAYS", 30))
         self.audit = AuditStore(audit_path or os.environ.get("AEGIS_AUDIT_DB", str(self.data_dir / "audit.db")), retention_days=retention)
         self.llm = llm if llm is not None else provider_from_env()
-        self.resolver = PurposeResolver(self.contracts, self.default_purpose, self.llm)
+        # Purpose is decided by rules only; the model is used solely to carry out the (minimized) task.
+        self.resolver = PurposeResolver(self.contracts, self.default_purpose, None)
         self._lock = threading.RLock()
 
     # ------------------------------------------------------------------ API
@@ -217,7 +219,17 @@ class Aegis:
             if self.llm.available():
                 payload = min_prompt + (f"\n\n---\n{min_content}" if min_content else "")
                 try:
-                    model_output = self.llm.complete(payload, max_tokens=512)
+                    ar = has_arabic(prompt)
+                    payload += ("\n\n(أعطني النتيجة النهائية فقط في سطرين إلى خمسة أسطر، نص عادي بدون تنسيق.)" if ar else
+                                "\n\n(Reply with the final result only, 2-5 short lines, plain text, no Markdown.)")
+                    draft = final_answer(self.llm.complete(payload, max_tokens=1500, system=EXECUTE_SYSTEM))
+                    # Small models tend to over-explain. If the reply is still long, ask the model to compress its
+                    # own answer (it only ever sees safe text) into a short summary.
+                    if len(draft) > 300 or draft.count("\n") > 4:
+                        ask = ("لخّص الإجابة التالية في جملة إلى ثلاث جمل قصيرة فيها النتيجة فقط، بدون مقدمة ولا شرح ولا تنسيق:\n\n" if ar else
+                               "Summarize the answer below in 1-3 short sentences containing only the result. No introduction, no steps, no formatting:\n\n")
+                        draft = final_answer(self.llm.complete(ask + draft, max_tokens=300, system=SUMMARY_SYSTEM)) or draft
+                    model_output = draft
                     external_call = self.llm.location == "external"
                 except Exception as e:  # model failures never affect the decision
                     model_output = f"[model call failed: {type(e).__name__}]"
@@ -327,6 +339,6 @@ class Aegis:
             "population": {"name": self.population.name, "size": self.population.N, "budget_bits": round(self.population.budget_bits, 2),
                            "synthetic": True},
             "llm": {"provider": getattr(self.llm, "name", "none"), "location": getattr(self.llm, "location", "none"),
-                    "available": bool(self.llm.available())},
+                    "available": bool(self.llm.available()), "problem": getattr(self.llm, "last_error", "")},
             "default_policy": self.default_policy,
         }

@@ -1,4 +1,4 @@
-# Aegis — Your AI. Your Data. Your Control.
+# Aegis, Your AI. Your Data. Your Control.
 
 Aegis is a local-first policy gateway between employees (or AI agents) and external AI models.
 It decides **what an AI request needs to know**, and **remembers what has already been revealed**.
@@ -17,7 +17,7 @@ It decides **what an AI request needs to know**, and **remembers what has alread
 
 All personal data in this repository (directory, demo scenarios, datasets) is **synthetic**.
 
-## Quick start (macOS, Apple M1, 8 GB — no Docker, no GPU, no model needed)
+## Quick start (macOS, Apple M1, 8 GB, no Docker, no GPU, no model needed)
 
 ```bash
 cd ~/Documents/aegis-v2

@@ -54,7 +54,7 @@ a person cue are not tracked.
 
 ## Configuration
 
-* `config/policies/*.yaml` — rules, actions, levels, exposure floor, PDPL principle per rule
-* `config/purposes.yaml` — disclosure contracts
-* `config/org_terms.yaml` — internal project registry
-* `config/population/synthetic_directory.csv` — reference population (synthetic; regenerate with `scripts/generate_directory.py`)
+* `config/policies/*.yaml`, rules, actions, levels, exposure floor, PDPL principle per rule
+* `config/purposes.yaml`, disclosure contracts
+* `config/org_terms.yaml`, internal project registry
+* `config/population/synthetic_directory.csv`, reference population (synthetic; regenerate with `scripts/generate_directory.py`)

@@ -11,13 +11,13 @@ Every rate shows n and a 95% Wilson confidence interval. All personal data is sy
 - Micro precision: **97.9%** [96.6–98.7] (n=726)
 - Micro recall: **99.4%** [98.6–99.8] (n=715)
 - Micro F1: **0.987** (n=715)
-- Recall — English texts: **99.4%** [97.7–99.8] (n=315)
-- Recall — Arabic texts: **100.0%** [98.7–100.0] (n=280)
-- Recall — mixed Arabic/English texts: **98.3%** [94.1–99.5] (n=120)
-- Name recall — names in the lexicon: **100.0%** [95.6–100.0] (n=83)
-- Name recall — names NOT in the lexicon: **94.7%** [87.2–97.9] (n=76)
-- Arabic name recall — in lexicon: **100.0%** [89.8–100.0] (n=34)
-- Arabic name recall — not in lexicon: **100.0%** [85.1–100.0] (n=22)
+- Recall, English texts: **99.4%** [97.7–99.8] (n=315)
+- Recall, Arabic texts: **100.0%** [98.7–100.0] (n=280)
+- Recall, mixed Arabic/English texts: **98.3%** [94.1–99.5] (n=120)
+- Name recall, names in the lexicon: **100.0%** [95.6–100.0] (n=83)
+- Name recall, names NOT in the lexicon: **94.7%** [87.2–97.9] (n=76)
+- Arabic name recall, in lexicon: **100.0%** [89.8–100.0] (n=34)
+- Arabic name recall, not in lexicon: **100.0%** [85.1–100.0] (n=22)
 - Benign texts with a false personal/credential alarm: **0.0%** [0.0–3.7] (n=100)
 - Detection latency p50: **1.013** ms (n=400)
 
@@ -46,9 +46,9 @@ Every rate shows n and a 95% Wilson confidence interval. All personal data is sy
 | Connection string | 7 | 1.000 | 1.000 | 1.000 |
 | Nationality | 7 | 1.000 | 1.000 | 1.000 |
 
-_Error analysis — misses: [en] missed person_name: 'Hector Rossi'; [en] missed person_name: 'Bader Fernandes'; [mixed] missed person_name: 'عبدالمجيد الشهراني'; [mixed] missed person_name: 'عبدالمجيد الجهني'_
+_Error analysis, misses: [en] missed person_name: 'Hector Rossi'; [en] missed person_name: 'Bader Fernandes'; [mixed] missed person_name: 'عبدالمجيد الشهراني'; [mixed] missed person_name: 'عبدالمجيد الجهني'_
 
-_Error analysis — false positives: [en] extra department: 'HR'; [en] extra department: 'HR'; [en] extra department: 'HR'; [en] extra department: 'HR'; [en] extra department: 'HR'_
+_Error analysis, false positives: [en] extra department: 'HR'; [en] extra department: 'HR'; [en] extra department: 'HR'; [en] extra department: 'HR'; [en] extra department: 'HR'_
 
 _Benign false alarms: none_
 
@@ -59,8 +59,8 @@ _Limitation: the generator and detector were written by the same team. Out-of-le
 56 hand-written requests (English and Arabic) over 7 purposes including 'general'.
 
 - Accuracy: **96.4%** [87.9–99.0] (n=56)
-- Accuracy — English: **97.3%** [86.2–99.5] (n=37)
-- Accuracy — Arabic: **94.7%** [75.4–99.1] (n=19)
+- Accuracy, English: **97.3%** [86.2–99.5] (n=37)
+- Accuracy, Arabic: **94.7%** [75.4–99.1] (n=19)
 
 **Confusion (rows = true, columns = predicted)**
 
@@ -82,12 +82,12 @@ _When rules are unsure, the deployment can ask a local LLM to choose from the sa
 
 60 synthetic tasks over 4 purposes. 'Unnecessary' values (names, phones, IDs, exact cities…) must not leave; 'needed' facts (age band, region, amounts, dates, department…) must survive in the form the task needs.
 
-- Aegis (purpose-bound) — unnecessary values leaked: **0.0%** [0.0–1.2] (n=315)
-- Aegis (purpose-bound) — task-needed facts kept: **100.0%** [98.5–100.0] (n=255)
-- Redact everything detected — unnecessary values leaked: **0.0%** [0.0–1.2] (n=315)
-- Redact everything detected — task-needed facts kept: **0.0%** [0.0–1.5] (n=255)
-- No protection — unnecessary values leaked: **100.0%** [98.8–100.0] (n=315)
-- No protection — task-needed facts kept: **100.0%** [98.5–100.0] (n=255)
+- Aegis (purpose-bound), unnecessary values leaked: **0.0%** [0.0–1.2] (n=315)
+- Aegis (purpose-bound), task-needed facts kept: **100.0%** [98.5–100.0] (n=255)
+- Redact everything detected, unnecessary values leaked: **0.0%** [0.0–1.2] (n=315)
+- Redact everything detected, task-needed facts kept: **0.0%** [0.0–1.5] (n=255)
+- No protection, unnecessary values leaked: **100.0%** [98.8–100.0] (n=315)
+- No protection, task-needed facts kept: **100.0%** [98.5–100.0] (n=255)
 
 **Aegis per purpose**
 
@@ -106,12 +106,12 @@ _Baselines use the same detector: 'redact everything' replaces every detected va
 
 - Sessions that would identify a person if sent as written (k < 5): **54.2%** [47.9–60.4] (n=240)
 - …of those, where NO single prompt alone looks identifying: **99.2%** [95.8–99.9] (n=130)
-- Protected (k ≥ 5 at the end) — no protection: **0.0%** [0.0–2.9] (n=130)
-- Protected — purpose minimization only (budget off): **60.8%** [52.2–68.7] (n=130)
-- Protected — minimization + identifiability budget: **96.9%** [92.4–98.8] (n=130)
+- Protected (k ≥ 5 at the end), no protection: **0.0%** [0.0–2.9] (n=130)
+- Protected, purpose minimization only (budget off): **60.8%** [52.2–68.7] (n=130)
+- Protected, minimization + identifiability budget: **96.9%** [92.4–98.8] (n=130)
 - Budget intervened on a session that was not identifying: **10.9%** [6.3–18.1] (n=110)
-- Mean attributes still sent exactly — minimization only: **2.812** (n=240)
-- Mean attributes still sent exactly — with budget: **2.500** (n=240)
+- Mean attributes still sent exactly, minimization only: **2.812** (n=240)
+- Mean attributes still sent exactly, with budget: **2.500** (n=240)
 
 **Operating curve of the budget setting (same test sessions)**
 
@@ -144,16 +144,16 @@ _Independence overestimates information when attributes are correlated (age↔se
 
 Detected = score ≥ 0.5. The jailbreak dataset (Shen et al., CCS'24, MIT) labels many SEO templates that begin with 'Ignore all previous instructions' as regular prompts; Aegis treats that phrase as an injection by design, so both false-positive figures are shown. Signatures were developed only on the May-2023 split.
 
-- In-the-wild jailbreaks, held-out (Dec-2023 release) — attacks detected: **56.1%** [52.9–59.3] (n=905)
-- In-the-wild jailbreaks, held-out (Dec-2023 release) — benign flagged: **17.9%** [16.1–20.0] (n=1500)
-- In-the-wild jailbreaks, held-out (Dec-2023 release) — benign flagged, excluding prompts that literally say 'ignore previous instructions': **11.9%** [10.3–13.7] (n=1396)
-- In-the-wild jailbreaks, development split (May-2023) — attacks detected: **67.1%** [63.4–70.6] (n=653)
-- In-the-wild jailbreaks, development split (May-2023) — benign flagged: **15.7%** [14.0–17.7] (n=1500)
-- In-the-wild jailbreaks, development split (May-2023) — benign flagged, excluding prompts that literally say 'ignore previous instructions': **5.5%** [4.4–6.8] (n=1333)
-- BIPIA indirect injection in emails (test) — attacks detected: **4.0%** [1.4–11.1] (n=75)
-- BIPIA indirect injection in emails (test) — benign flagged: **2.0%** [0.4–10.5] (n=50)
-- Team-authored Arabic/English set — attacks detected: **90.0%** [74.4–96.5] (n=30)
-- Team-authored Arabic/English set — benign flagged: **3.3%** [0.6–16.7] (n=30)
+- In-the-wild jailbreaks, held-out (Dec-2023 release), attacks detected: **56.1%** [52.9–59.3] (n=905)
+- In-the-wild jailbreaks, held-out (Dec-2023 release), benign flagged: **17.9%** [16.1–20.0] (n=1500)
+- In-the-wild jailbreaks, held-out (Dec-2023 release), benign flagged, excluding prompts that literally say 'ignore previous instructions': **11.9%** [10.3–13.7] (n=1396)
+- In-the-wild jailbreaks, development split (May-2023), attacks detected: **67.1%** [63.4–70.6] (n=653)
+- In-the-wild jailbreaks, development split (May-2023), benign flagged: **15.7%** [14.0–17.7] (n=1500)
+- In-the-wild jailbreaks, development split (May-2023), benign flagged, excluding prompts that literally say 'ignore previous instructions': **5.5%** [4.4–6.8] (n=1333)
+- BIPIA indirect injection in emails (test), attacks detected: **4.0%** [1.4–11.1] (n=75)
+- BIPIA indirect injection in emails (test), benign flagged: **2.0%** [0.4–10.5] (n=50)
+- Team-authored Arabic/English set, attacks detected: **90.0%** [74.4–96.5] (n=30)
+- Team-authored Arabic/English set, benign flagged: **3.3%** [0.6–16.7] (n=30)
 
 **Summary**
 

@@ -6,7 +6,7 @@ frameworks) over stdio, using the official MCP Python SDK.
 Tools: scan_prompt, evaluate_policy, generalize_sensitive_data,
        inspect_exposure_budget, explain_security_decision, list_policies
 
-Note: an MCP server is ADVISORY — the agent chooses to call it. Mandatory
+Note: an MCP server is ADVISORY, the agent chooses to call it. Mandatory
 enforcement requires putting Aegis in the request path (the REST gateway).
 
 Run:  python -m mcp_server.server

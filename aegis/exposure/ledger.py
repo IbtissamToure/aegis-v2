@@ -44,7 +44,7 @@ class Disclosure:
     attr: str
     entity_type: str
     level: str
-    value: str  # coarse value (e.g. "jeddah", "30-34") — never a name or ID
+    value: str  # coarse value (e.g. "jeddah", "30-34"), never a name or ID
     turn: int
 
 

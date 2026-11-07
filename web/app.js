@@ -29,7 +29,7 @@ function el(tag, props, ...children) {
   return n;
 }
 const $ = (id) => document.getElementById(id);
-const fmt = (x, d = 1) => (x === null || x === undefined ? "—" : Number(x).toLocaleString(undefined, { maximumFractionDigits: d }));
+const fmt = (x, d = 1) => (x === null || x === undefined ? "-" : Number(x).toLocaleString(undefined, { maximumFractionDigits: d }));
 const tag = (action) => el("span", { class: `tag ${action}` }, action);
 function clear(node, ...children) { node.replaceChildren(...children); return node; }
 
@@ -43,6 +43,7 @@ document.querySelectorAll("#nav button").forEach((b) => b.addEventListener("clic
 
 async function init() {
   CONFIG = await api("/api/v1/config");
+  api("/api/v1/health").then((h) => { $("ver").textContent = `Aegis v${h.version}`; }).catch(() => {});
   const purposeOpts = Object.entries(CONFIG.purposes).map(([k, v]) => el("option", { value: k }, v.label));
   $("in-purpose").append(...purposeOpts.map((o) => o.cloneNode(true)));
   $("sim-purpose").append(...purposeOpts.map((o) => o.cloneNode(true)));
@@ -51,8 +52,10 @@ async function init() {
     $("pol-pick").append(el("option", { value: k }, v.label));
   }
   const llm = CONFIG.llm;
-  $("llm-status").textContent = llm.available ? `Model: ${llm.provider} (${llm.location})` : "Model: none (rules only — decisions never need a model)";
-  $("pop-name").textContent = `${CONFIG.population.name} — ${CONFIG.population.size.toLocaleString()} people, synthetic`;
+  $("llm-status").textContent = llm.available ? `Model: ${llm.provider} (${llm.location})`
+    : llm.provider === "none" ? "Model: none (server started without AEGIS_LLM_PROVIDER=ollama)"
+    : `Model: not available (${llm.problem || "unknown"})`;
+  $("pop-name").textContent = `${CONFIG.population.name}: ${CONFIG.population.size.toLocaleString()} people, synthetic`;
   loadOverview();
 }
 
@@ -60,13 +63,13 @@ async function init() {
 function bars(node, pairs, total) {
   const max = Math.max(1, ...pairs.map((p) => p[1]));
   clear(node, ...(pairs.length ? pairs.map(([label, n]) => el("div", { class: "bar-row" },
-    el("span", {}, label), el("div", { class: "bar" }, el("i", { style: `width:${(100 * n) / max}%` })), el("b", {}, String(n)))) : [el("p", { class: "muted" }, "No decisions yet — try the demo scenarios.")]));
+    el("span", {}, label), el("div", { class: "bar" }, el("i", { style: `width:${(100 * n) / max}%` })), el("b", {}, String(n)))) : [el("p", { class: "muted" }, "No decisions yet: try the demo scenarios.")]));
 }
 async function loadOverview() {
   const s = await api("/api/v1/stats");
   const k = [["Decisions", s.total], ["Blocked", s.actions.BLOCK], ["Generalized", s.actions.GENERALIZE], ["Warnings", s.actions.WARN],
     ["Injection detections", s.injection_detected], ["Exposure interventions", s.exposure_interventions],
-    ["Latency p50 / p95", s.latency_p50_ms === null ? "—" : `${fmt(s.latency_p50_ms)} / ${fmt(s.latency_p95_ms)} ms`]];
+    ["Latency p50 / p95", s.latency_p50_ms === null ? "-" : `${fmt(s.latency_p50_ms)} / ${fmt(s.latency_p95_ms)} ms`]];
   clear($("kpis"), ...k.map(([l, v]) => el("div", { class: "kpi" }, el("div", { class: "v" }, String(v)), el("div", { class: "l" }, l))));
   bars($("action-bars"), Object.entries(s.actions), s.total);
   bars($("type-bars"), s.top_types.map(([t, n]) => [CONFIG.entity_types[t]?.label || t, n]));
@@ -109,7 +112,7 @@ function exposurePanel(x, policyName) {
       el("b", { style: `left:${pos(pol.k_warn)}%` }, el("span", {}, `warn ${pol.k_warn}`))),
     el("div", { class: "metric" }, el("span", {}, "Estimated matching people (before → after)"), el("b", {}, `${fmt(x.k_estimate_before)} → ${fmt(x.k_estimate_after)}`)),
     x.k_requested !== null && x.status === "generalized" ? el("div", { class: "metric" }, el("span", {}, "If sent as requested"),
-      el("b", {}, `${x.k_requested < 1 ? "fewer than 1 (unique)" : fmt(x.k_requested)} — exact ${x.k_exact_requested ?? "—"}`)) : null,
+      el("b", {}, `${x.k_requested < 1 ? "fewer than 1 (unique)" : fmt(x.k_requested)}, exact ${x.k_exact_requested ?? "-"}`)) : null,
     x.k_exact_after !== null ? el("div", { class: "metric" }, el("span", {}, "Exact count in the synthetic directory"), el("b", {}, String(x.k_exact_after))) : null,
     el("div", { class: "metric" }, el("span", {}, "Information disclosed"), el("b", {}, `${fmt(x.bits_after, 2)} of ${fmt(x.budget_bits, 2)} bits`)),
     x.attributes.length ? el("div", { class: "table-wrap" }, table(["Attribute", "Disclosed as", "Share of population", "Bits"],
@@ -123,23 +126,44 @@ function table(headers, rows) {
 
 function renderDecision(d, prompt, content, opts = {}) {
   const root = el("div", { class: "decision-block" });
-  const verdict = el("div", { class: `verdict ${d.action}` }, el("div", { class: "a" }, d.action),
-    el("div", { class: "s" }, `${d.severity} severity · policy: ${d.policy}`), el("div", { class: "s" }, `purpose: ${d.purpose.label}`));
-  root.append(el("div", { class: "card" }, el("div", { class: "decision" }, verdict, el("ul", { class: "rationale" }, ...d.rationale.map((r) => el("li", {}, r))))));
+  const summary = {
+    ALLOW: "Safe to send as written.",
+    GENERALIZE: `Sent with ${d.changes.length} detail${d.changes.length === 1 ? "" : "s"} generalized to what the task needs.`,
+    WARN: "Needs your confirmation before sending.",
+    BLOCK: "Blocked. Nothing leaves the organization.",
+  }[d.action];
 
+  // ---------------- RESULT (top)
+  const verdict = el("div", { class: `verdict ${d.action}` }, el("div", { class: "a" }, d.action),
+    el("div", { class: "s" }, `purpose: ${d.purpose.label}`), el("div", { class: "s" }, `policy: ${d.policy}`));
+  const sentBox = d.action === "BLOCK"
+    ? el("div", { class: "out blocked" }, d.remediation[0] || "Remove the flagged content and try again.")
+    : el("div", {}, el("div", { class: "out", dir: "auto" }, d.minimized_prompt),
+      d.minimized_content ? el("div", { class: "small muted" }, "Attached content:") : null,
+      d.minimized_content ? el("div", { class: "out", dir: "auto" }, d.minimized_content) : null,
+      el("div", { class: "btns" }, el("button", { onclick: (ev) => {
+        navigator.clipboard.writeText(d.minimized_prompt + (d.minimized_content ? "\n\n" + d.minimized_content : ""));
+        ev.target.textContent = "Copied ✓"; } }, "Copy safe text")));
+  const noModel = !d.model_output && opts.forwarded && d.action !== "BLOCK" ? el("p", { class: "small muted" },
+    CONFIG.llm.available ? "The model returned no answer." : "No model is connected, so nothing was sent. Copy the safe text into your AI tool, or connect a local model.") : null;
+  if (d.model_output) root.append(el("div", { class: "card answer-card" }, el("h3", {}, "Answer"),
+    el("div", { class: "answer-text", dir: "auto" }, d.model_output),
+    el("p", { class: "small muted" }, "Produced by the model from the safe text only. It never saw the original data.")));
+  root.append(el("div", { class: "card result" },
+    el("div", { class: "decision" }, verdict, el("div", { class: "result-main" },
+      el("p", { class: "summary" }, summary),
+      el("h3", {}, d.action === "BLOCK" ? "Why it was stopped" : "What leaves the organization"), sentBox, noModel))));
+
+  // ---------------- ANALYSIS (below)
+  root.append(el("h2", { class: "section-title" }, "Analysis"));
   const pf = d.findings.filter((f) => f.segment === "prompt"), cf = d.findings.filter((f) => f.segment === "content");
   const ps = d.injection.signals.filter((s) => s.segment === "prompt"), cs = d.injection.signals.filter((s) => s.segment === "content");
-  const left = el("div", {}, el("h3", {}, "Original — what was detected"), highlight(prompt, pf, ps), content ? el("div", { class: "small muted" }, "Attached content:") : null,
-    content ? highlight(content, cf, cs) : null, legend());
-  const sent = d.action === "BLOCK" ? el("div", { class: "out blocked" }, "Nothing is sent. " + (d.remediation[0] || ""))
-    : el("div", {}, el("div", { class: "out", dir: "auto" }, d.minimized_prompt), d.minimized_content ? el("div", { class: "small muted" }, "Attached content:") : null,
-      d.minimized_content ? el("div", { class: "out", dir: "auto" }, d.minimized_content) : null);
-  const right = el("div", {}, el("h3", {}, d.action === "BLOCK" ? "Outcome" : "What leaves the organization"), sent,
-    d.action === "WARN" ? el("p", { class: "small" }, "Sending requires the user's confirmation.") : null,
-    d.model_output ? el("div", {}, el("h3", {}, "Model answer"), el("div", { class: "out", dir: "auto" }, d.model_output)) : null);
-  root.append(el("div", { class: "card two" }, left, right));
+  root.append(el("div", { class: "card two" },
+    el("div", {}, el("h3", {}, "What was detected"), highlight(prompt, pf, ps), content ? el("div", { class: "small muted" }, "Attached content:") : null,
+      content ? highlight(content, cf, cs) : null, legend()),
+    el("div", {}, el("h3", {}, "Why"), el("ul", { class: "rationale" }, ...d.rationale.map((r) => el("li", {}, r))))));
 
-  if (d.changes.length) root.append(el("div", { class: "card" }, el("h3", {}, "Generalization — before / after"),
+  if (d.changes.length) root.append(el("div", { class: "card" }, el("h3", {}, "Generalization: before / after"),
     el("div", { class: "table-wrap" }, table(["Finding", "Type", "Original (masked)", "Sent as", "Level", "Why"],
       d.changes.map((c) => [c.finding_id, CONFIG.entity_types[c.type]?.label || c.type, c.original_preview, c.replacement, c.level, c.reason])))));
   if (d.fired_rules.length) root.append(el("div", { class: "card" }, el("h3", {}, "Policy rules triggered"),
@@ -147,7 +171,7 @@ function renderDecision(d, prompt, content, opts = {}) {
       d.fired_rules.map((r) => [r.rule_id, tag(r.action), r.severity, r.description, r.finding_ids.join(", ")])))));
   const extras = el("div", { class: "grid2" });
   extras.append(el("div", { class: "card" }, el("h3", {}, "Identifiability budget"), exposurePanel(d.exposure, d.policy)));
-  extras.append(el("div", { class: "card" }, el("h3", {}, `Prompt injection — score ${fmt(d.injection.score, 2)}`),
+  extras.append(el("div", { class: "card" }, el("h3", {}, `Prompt injection: score ${fmt(d.injection.score, 2)}`),
     el("p", {}, d.injection.explanation),
     d.injection.signals.length ? table(["Family", "Where", "Weight", "Evidence"], d.injection.signals.map((s) => [s.family, s.segment, fmt(s.weight, 2), s.evidence])) : null));
   if (d.counterfactual) extras.append(el("div", { class: "card" }, el("h3", {}, "Smallest change that lowers this decision"),
@@ -164,18 +188,22 @@ function renderDecision(d, prompt, content, opts = {}) {
 }
 
 // ---------------------------------------------------------------- inspect
-async function runInspect(dry) {
+async function runInspect(dry, forward = false) {
   const body = { prompt: $("in-prompt").value, content: $("in-content").value || null, purpose: $("in-purpose").value || null,
-    policy: $("in-policy").value, session_id: $("in-session").value || null, dry_run: dry };
+    policy: $("in-policy").value, session_id: $("in-session").value || null, dry_run: dry, forward, confirm: forward };
   const out = $("inspect-out");
   if (!body.prompt.trim()) return clear(out, el("p", { class: "err" }, "Enter a prompt first."));
   try {
     const d = await api("/api/v1/evaluate", body);
-    clear(out, renderDecision(d, body.prompt, body.content || ""));
+    clear(out, renderDecision(d, body.prompt, body.content || "", { forwarded: forward }));
   } catch (e) { clear(out, el("p", { class: "err" }, e.message)); }
 }
 $("btn-eval").addEventListener("click", () => runInspect(false));
 $("btn-dry").addEventListener("click", () => runInspect(true));
+$("btn-send").addEventListener("click", async (ev) => {
+  const b = ev.target; b.disabled = true; const t = b.textContent; b.textContent = "Waiting for model…";
+  await runInspect(false, true); b.disabled = false; b.textContent = t;
+});
 
 // ---------------------------------------------------------------- exposure
 function timeline(history, pol, N) {
@@ -205,10 +233,10 @@ async function loadExposure() {
   if (!snap.exists || !snap.subjects.length) return clear(out, el("p", { class: "muted" }, "No tracked subjects in this session yet. Run the “Three harmless prompts” demo scenario, or use Inspect with this session id."));
   const pol = CONFIG.policies[CONFIG.default_policy].exposure;
   clear(out, ...snap.subjects.map((sub) => el("div", { class: "card" },
-    el("h3", {}, `${sub.label}${sub.active ? " (active)" : ""} — about ${fmt(sub.k)} of ${snap.population.toLocaleString()} people match · ${fmt(sub.bits, 2)} / ${fmt(snap.budget_bits, 2)} bits`),
+    el("h3", {}, `${sub.label}${sub.active ? " (active)" : ""}: about ${fmt(sub.k)} of ${snap.population.toLocaleString()} people match · ${fmt(sub.bits, 2)} / ${fmt(snap.budget_bits, 2)} bits`),
     sub.history.length ? timeline(sub.history, pol, snap.population) : null,
     table(["Attribute", "Disclosed as", "Share", "Bits", "Turn"], sub.contributions.map((a) => [a.attribute, `${a.value} (${a.level})`, `${fmt(100 * a.share, 2)}%`, fmt(a.bits, 2), a.turn])),
-    el("p", { class: "small muted" }, `Exact count in the synthetic directory: ${sub.k_exact ?? "—"}. Session memory expires in ${Math.round(snap.expires_in_s / 60)} min; only attribute categories are kept, never names or prompts.`))));
+    el("p", { class: "small muted" }, `Exact count in the synthetic directory: ${sub.k_exact ?? "-"}. Session memory expires in ${Math.round(snap.expires_in_s / 60)} min; only attribute categories are kept, never names or prompts.`))));
 }
 $("btn-ex").addEventListener("click", loadExposure);
 $("btn-ex-reset").addEventListener("click", async () => { await api(`/api/v1/sessions/${encodeURIComponent($("ex-session").value)}/reset`, {}); loadExposure(); });
@@ -217,7 +245,7 @@ $("btn-ex-reset").addEventListener("click", async () => { await api(`/api/v1/ses
 function simCard(name, d) {
   return el("div", { class: "card" }, el("div", { class: "step-head" }, el("h3", {}, CONFIG.policies[name].label), tag(d.action)),
     el("p", { class: "small muted" }, CONFIG.policies[name].description),
-    d.action === "BLOCK" ? el("div", { class: "out blocked" }, "Blocked — nothing is sent.") : el("div", { class: "out", dir: "auto" }, d.minimized_prompt),
+    d.action === "BLOCK" ? el("div", { class: "out blocked" }, "Blocked. Nothing is sent.") : el("div", { class: "out", dir: "auto" }, d.minimized_prompt),
     el("ul", { class: "small" }, ...d.fired_rules.map((r) => el("li", {}, `${r.rule_id} → ${r.action}: ${r.description}`))),
     d.counterfactual && d.counterfactual.steps.length ? el("p", { class: "small" }, "To lower: " + d.counterfactual.steps.join("; ")) : null);
 }
@@ -274,7 +302,7 @@ async function loadAudit() {
   clear($("audit-out"), r.rows.length ? table(["Time", "Action", "Policy", "Purpose", "Data types", "Rules", "Injection", "k after", "ms", "Demo"],
     r.rows.map((x) => [new Date(x.ts * 1000).toLocaleTimeString(), tag(x.action), x.policy, x.purpose,
       Object.entries(x.finding_types || {}).map(([t, n]) => `${t}×${n}`).join(" "), (x.rules || []).join(" "), fmt(x.injection_score, 2),
-      x.exposure_status === "not_tracked" ? "—" : fmt(x.k_estimate), fmt(x.latency_ms, 2), x.demo ? "demo" : ""])) : el("p", { class: "muted" }, "Empty."));
+      x.exposure_status === "not_tracked" ? "-" : fmt(x.k_estimate), fmt(x.latency_ms, 2), x.demo ? "demo" : ""])) : el("p", { class: "muted" }, "Empty."));
 }
 $("btn-audit").addEventListener("click", loadAudit);
 

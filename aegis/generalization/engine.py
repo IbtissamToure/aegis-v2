@@ -59,6 +59,10 @@ def apply(text: str, segment: str, findings: list[Finding], levels: dict[str, st
     """Replace each finding in ``text`` by its rendering at the chosen level (right to left)."""
     changes: list[Change] = []
     out = text
+    # number pseudonyms in reading order (PERSON_1 is the first person mentioned)
+    for f in sorted((f for f in findings if f.segment == segment), key=lambda f: f.start):
+        if levels.get(f.id) == "pseudonym":
+            (pseudo.person if f.type == "person_name" else pseudo.project)(value_key(secret, f))
     for f in sorted((f for f in findings if f.segment == segment), key=lambda f: f.start, reverse=True):
         level = levels.get(f.id, "exact")
         if level == "exact":
