@@ -23,7 +23,7 @@ All personal data in this repository (directory, demo scenarios, datasets) is **
 cd ~/Documents/aegis-v2
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-python -m pytest -q                      # 30 tests
+python -m pytest -q                      # 29 tests
 uvicorn api.server:app --port 8000       # dashboard: http://127.0.0.1:8000  ·  API docs: /api/docs
 ```
 
