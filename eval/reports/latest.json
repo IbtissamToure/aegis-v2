@@ -1,8 +1,8 @@
 {
- "generated_at": "2026-11-07 20:51 UTC",
- "version": "2.0.0",
- "machine": "Linux x86_64, Python 3.13.18",
- "runtime_s": 39.3,
+ "generated_at": "2026-11-07 23:58 UTC",
+ "version": "2.0.1",
+ "machine": "Darwin arm64, Python 3.11.0",
+ "runtime_s": 60.0,
  "figures": [
   "fig_cumulative_example.png",
   "fig_budget_ablation.png",
@@ -46,7 +46,7 @@
      "pct": false
     },
     {
-     "label": "Recall — English texts",
+     "label": "Recall, English texts",
      "value": 0.9937,
      "n": 315,
      "k": 313,
@@ -57,7 +57,7 @@
      "pct": true
     },
     {
-     "label": "Recall — Arabic texts",
+     "label": "Recall, Arabic texts",
      "value": 1.0,
      "n": 280,
      "k": 280,
@@ -68,7 +68,7 @@
      "pct": true
     },
     {
-     "label": "Recall — mixed Arabic/English texts",
+     "label": "Recall, mixed Arabic/English texts",
      "value": 0.9833,
      "n": 120,
      "k": 118,
@@ -79,7 +79,7 @@
      "pct": true
     },
     {
-     "label": "Name recall — names in the lexicon",
+     "label": "Name recall, names in the lexicon",
      "value": 1.0,
      "n": 83,
      "k": 83,
@@ -90,7 +90,7 @@
      "pct": true
     },
     {
-     "label": "Name recall — names NOT in the lexicon",
+     "label": "Name recall, names NOT in the lexicon",
      "value": 0.9474,
      "n": 76,
      "k": 72,
@@ -101,7 +101,7 @@
      "pct": true
     },
     {
-     "label": "Arabic name recall — in lexicon",
+     "label": "Arabic name recall, in lexicon",
      "value": 1.0,
      "n": 34,
      "k": 34,
@@ -112,7 +112,7 @@
      "pct": true
     },
     {
-     "label": "Arabic name recall — not in lexicon",
+     "label": "Arabic name recall, not in lexicon",
      "value": 1.0,
      "n": 22,
      "k": 22,
@@ -135,7 +135,7 @@
     },
     {
      "label": "Detection latency p50",
-     "value": 1.0127,
+     "value": 0.8271,
      "unit": "ms",
      "n": 400,
      "pct": false
@@ -181,6 +181,20 @@
        "1.000"
       ],
       [
+       "Department",
+       40,
+       "0.851",
+       "1.000",
+       "0.920"
+      ],
+      [
+       "Email address",
+       40,
+       "1.000",
+       "1.000",
+       "1.000"
+      ],
+      [
        "National ID / Iqama",
        40,
        "1.000",
@@ -193,20 +207,6 @@
        "1.000",
        "1.000",
        "1.000"
-      ],
-      [
-       "Email address",
-       40,
-       "1.000",
-       "1.000",
-       "1.000"
-      ],
-      [
-       "Department",
-       40,
-       "0.851",
-       "1.000",
-       "0.920"
       ],
       [
        "Job title",
@@ -230,21 +230,21 @@
        "1.000"
       ],
       [
-       "Date of birth",
-       15,
-       "1.000",
-       "1.000",
-       "1.000"
-      ],
-      [
-       "Password",
-       15,
-       "1.000",
-       "1.000",
-       "1.000"
-      ],
-      [
        "Age",
+       15,
+       "1.000",
+       "1.000",
+       "1.000"
+      ],
+      [
+       "Confidentiality marker",
+       15,
+       "1.000",
+       "1.000",
+       "1.000"
+      ],
+      [
+       "Date of birth",
        15,
        "1.000",
        "1.000",
@@ -258,14 +258,14 @@
        "1.000"
       ],
       [
-       "Payment card",
+       "Password",
        15,
        "1.000",
        "1.000",
        "1.000"
       ],
       [
-       "Confidentiality marker",
+       "Payment card",
        15,
        "1.000",
        "1.000",
@@ -296,8 +296,8 @@
     }
    ],
    "notes": [
-    "Error analysis — misses: [en] missed person_name: 'Hector Rossi'; [en] missed person_name: 'Bader Fernandes'; [mixed] missed person_name: 'عبدالمجيد الشهراني'; [mixed] missed person_name: 'عبدالمجيد الجهني'",
-    "Error analysis — false positives: [en] extra department: 'HR'; [en] extra department: 'HR'; [en] extra department: 'HR'; [en] extra department: 'HR'; [en] extra department: 'HR'",
+    "Error analysis, misses: [en] missed person_name: 'Hector Rossi'; [en] missed person_name: 'Bader Fernandes'; [mixed] missed person_name: 'عبدالمجيد الشهراني'; [mixed] missed person_name: 'عبدالمجيد الجهني'",
+    "Error analysis, false positives: [en] extra department: 'HR'; [en] extra department: 'HR'; [en] extra department: 'HR'; [en] extra department: 'HR'; [en] extra department: 'HR'",
     "Benign false alarms: none",
     "Limitation: the generator and detector were written by the same team. Out-of-lexicon names are included to measure generalization."
    ]
@@ -319,7 +319,7 @@
      "pct": true
     },
     {
-     "label": "Accuracy — English",
+     "label": "Accuracy, English",
      "value": 0.973,
      "n": 37,
      "k": 36,
@@ -330,7 +330,7 @@
      "pct": true
     },
     {
-     "label": "Accuracy — Arabic",
+     "label": "Accuracy, Arabic",
      "value": 0.9474,
      "n": 19,
      "k": 18,
@@ -439,7 +439,7 @@
    "description": "60 synthetic tasks over 4 purposes. 'Unnecessary' values (names, phones, IDs, exact cities…) must not leave; 'needed' facts (age band, region, amounts, dates, department…) must survive in the form the task needs.",
    "metrics": [
     {
-     "label": "Aegis (purpose-bound) — unnecessary values leaked",
+     "label": "Aegis (purpose-bound), unnecessary values leaked",
      "value": 0.0,
      "n": 315,
      "k": 0,
@@ -450,7 +450,7 @@
      "pct": true
     },
     {
-     "label": "Aegis (purpose-bound) — task-needed facts kept",
+     "label": "Aegis (purpose-bound), task-needed facts kept",
      "value": 1.0,
      "n": 255,
      "k": 255,
@@ -461,7 +461,7 @@
      "pct": true
     },
     {
-     "label": "Redact everything detected — unnecessary values leaked",
+     "label": "Redact everything detected, unnecessary values leaked",
      "value": 0.0,
      "n": 315,
      "k": 0,
@@ -472,7 +472,7 @@
      "pct": true
     },
     {
-     "label": "Redact everything detected — task-needed facts kept",
+     "label": "Redact everything detected, task-needed facts kept",
      "value": 0.0,
      "n": 255,
      "k": 0,
@@ -483,7 +483,7 @@
      "pct": true
     },
     {
-     "label": "No protection — unnecessary values leaked",
+     "label": "No protection, unnecessary values leaked",
      "value": 1.0,
      "n": 315,
      "k": 315,
@@ -494,7 +494,7 @@
      "pct": true
     },
     {
-     "label": "No protection — task-needed facts kept",
+     "label": "No protection, task-needed facts kept",
      "value": 1.0,
      "n": 255,
      "k": 255,
@@ -569,7 +569,7 @@
      "pct": true
     },
     {
-     "label": "Protected (k ≥ 5 at the end) — no protection",
+     "label": "Protected (k ≥ 5 at the end), no protection",
      "value": 0.0,
      "n": 130,
      "k": 0,
@@ -580,7 +580,7 @@
      "pct": true
     },
     {
-     "label": "Protected — purpose minimization only (budget off)",
+     "label": "Protected, purpose minimization only (budget off)",
      "value": 0.6077,
      "n": 130,
      "k": 79,
@@ -591,7 +591,7 @@
      "pct": true
     },
     {
-     "label": "Protected — minimization + identifiability budget",
+     "label": "Protected, minimization + identifiability budget",
      "value": 0.9692,
      "n": 130,
      "k": 126,
@@ -613,14 +613,14 @@
      "pct": true
     },
     {
-     "label": "Mean attributes still sent exactly — minimization only",
+     "label": "Mean attributes still sent exactly, minimization only",
      "value": 2.8125,
      "unit": null,
      "n": 240,
      "pct": false
     },
     {
-     "label": "Mean attributes still sent exactly — with budget",
+     "label": "Mean attributes still sent exactly, with budget",
      "value": 2.5,
      "unit": null,
      "n": 240,
@@ -728,7 +728,7 @@
    "description": "Detected = score ≥ 0.5. The jailbreak dataset (Shen et al., CCS'24, MIT) labels many SEO templates that begin with 'Ignore all previous instructions' as regular prompts; Aegis treats that phrase as an injection by design, so both false-positive figures are shown. Signatures were developed only on the May-2023 split.",
    "metrics": [
     {
-     "label": "In-the-wild jailbreaks, held-out (Dec-2023 release) — attacks detected",
+     "label": "In-the-wild jailbreaks, held-out (Dec-2023 release), attacks detected",
      "value": 0.5613,
      "n": 905,
      "k": 508,
@@ -739,7 +739,7 @@
      "pct": true
     },
     {
-     "label": "In-the-wild jailbreaks, held-out (Dec-2023 release) — benign flagged",
+     "label": "In-the-wild jailbreaks, held-out (Dec-2023 release), benign flagged",
      "value": 0.1793,
      "n": 1500,
      "k": 269,
@@ -750,7 +750,7 @@
      "pct": true
     },
     {
-     "label": "In-the-wild jailbreaks, held-out (Dec-2023 release) — benign flagged, excluding prompts that literally say 'ignore previous instructions'",
+     "label": "In-the-wild jailbreaks, held-out (Dec-2023 release), benign flagged, excluding prompts that literally say 'ignore previous instructions'",
      "value": 0.1189,
      "n": 1396,
      "k": 166,
@@ -761,7 +761,7 @@
      "pct": true
     },
     {
-     "label": "In-the-wild jailbreaks, development split (May-2023) — attacks detected",
+     "label": "In-the-wild jailbreaks, development split (May-2023), attacks detected",
      "value": 0.6708,
      "n": 653,
      "k": 438,
@@ -772,7 +772,7 @@
      "pct": true
     },
     {
-     "label": "In-the-wild jailbreaks, development split (May-2023) — benign flagged",
+     "label": "In-the-wild jailbreaks, development split (May-2023), benign flagged",
      "value": 0.1573,
      "n": 1500,
      "k": 236,
@@ -783,7 +783,7 @@
      "pct": true
     },
     {
-     "label": "In-the-wild jailbreaks, development split (May-2023) — benign flagged, excluding prompts that literally say 'ignore previous instructions'",
+     "label": "In-the-wild jailbreaks, development split (May-2023), benign flagged, excluding prompts that literally say 'ignore previous instructions'",
      "value": 0.0548,
      "n": 1333,
      "k": 73,
@@ -794,7 +794,7 @@
      "pct": true
     },
     {
-     "label": "BIPIA indirect injection in emails (test) — attacks detected",
+     "label": "BIPIA indirect injection in emails (test), attacks detected",
      "value": 0.04,
      "n": 75,
      "k": 3,
@@ -805,7 +805,7 @@
      "pct": true
     },
     {
-     "label": "BIPIA indirect injection in emails (test) — benign flagged",
+     "label": "BIPIA indirect injection in emails (test), benign flagged",
      "value": 0.02,
      "n": 50,
      "k": 1,
@@ -816,7 +816,7 @@
      "pct": true
     },
     {
-     "label": "Team-authored Arabic/English set — attacks detected",
+     "label": "Team-authored Arabic/English set, attacks detected",
      "value": 0.9,
      "n": 30,
      "k": 27,
@@ -827,7 +827,7 @@
      "pct": true
     },
     {
-     "label": "Team-authored Arabic/English set — benign flagged",
+     "label": "Team-authored Arabic/English set, benign flagged",
      "value": 0.0333,
      "n": 30,
      "k": 1,
@@ -1020,18 +1020,18 @@
   {
    "title": "8 · Latency (end-to-end gateway, no LLM)",
    "key": "latency",
-   "description": "All gateway evaluations made during this run, measured on x86_64 / Linux / Python 3.13.18.",
+   "description": "All gateway evaluations made during this run, measured on arm64 / Darwin / Python 3.11.0.",
    "metrics": [
     {
      "label": "End-to-end p50",
-     "value": 3.265,
+     "value": 3.436,
      "unit": "ms",
      "n": 5017,
      "pct": false
     },
     {
      "label": "End-to-end p95",
-     "value": 8.901,
+     "value": 9.198,
      "unit": "ms",
      "n": 5017,
      "pct": false
@@ -1051,51 +1051,51 @@
       [
        "injection",
        5017,
-       "0.08",
-       "0.16",
-       "0.73"
+       "0.05",
+       "0.09",
+       "0.65"
       ],
       [
        "detection",
        5017,
-       "0.89",
-       "1.41",
-       "3.44"
+       "0.66",
+       "0.84",
+       "2.34"
       ],
       [
        "purpose",
        5017,
+       "0.00",
        "0.01",
-       "0.01",
-       "0.27"
+       "1.07"
       ],
       [
        "policy",
        5017,
-       "0.02",
-       "0.04",
-       "0.34"
+       "0.01",
+       "0.01",
+       "0.07"
       ],
       [
        "exposure",
        5017,
-       "2.26",
-       "7.81",
-       "39.16"
+       "2.78",
+       "8.48",
+       "39.81"
       ],
       [
        "generalization",
        5017,
-       "0.03",
-       "0.08",
-       "0.85"
+       "0.01",
+       "0.02",
+       "0.42"
       ],
       [
        "total",
        5017,
-       "3.27",
-       "8.90",
-       "40.78"
+       "3.44",
+       "9.20",
+       "40.62"
       ]
      ]
     }

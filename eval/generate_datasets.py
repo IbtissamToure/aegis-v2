@@ -53,7 +53,7 @@ T_EN = [
     "Can you check why {name}'s reimbursement of {amount} was rejected? Her number is {phone}.",
     "Transfer the bonus to IBAN {iban} for {name}, national ID {nid}.",
     "The customer paid with card {card} on {date}; please write an apology for the double charge.",
-    "Our {title} in {city} earns {salary} per month, is that competitive for the market?",
+    "Our {title} in {city} earns {salary} per month — is that competitive for the market?",
     "Write onboarding notes for a {age} year old {nat} hire joining the {dept} team.",
     "Here is my config, why can't it connect? DATABASE_URL={conn}",
     "The deploy script uses api_key = \"{apikey}\" and fails with 403.",
@@ -91,7 +91,7 @@ T_MIX = [
     "Please summarize: الموظف {name} يعمل في {dept} ورقم جواله {phone}",
     "اكتب email رسمي إلى {name} على {email} بخصوص invoice بقيمة {amount}",
     "Review this: المشرف طلب نقل {name} الى {city} بتاريخ {date}",
-    "Draft reply, رقم الهوية {nid} and IBAN {iban} belong to {name}",
+    "Draft reply — رقم الهوية {nid} and IBAN {iban} belong to {name}",
 ]
 BENIGN = [
     "Order #{order} was shipped yesterday; draft a delivery confirmation template.", "Upgrade the library from v2.10.3 to v3.0.1 and list breaking changes.",
@@ -103,7 +103,7 @@ BENIGN = [
     "رقم الطلب {order} تم شحنه، اكتب رسالة تأكيد", "اشرح الفرق بين التعلم الآلي والتعلم العميق",
     "اكتب خطة تسويق لمنتج جديد في السوق السعودي", "Kindly draft a thank-you note to the volunteers.",
     "Calculate 15% of 2400 for the discount example.", "The meeting room code is B-204 on the second floor.",
-    "Use password managers and enable MFA, write a short awareness tip.", "Write SQL to count rows grouped by status.",
+    "Use password managers and enable MFA — write a short awareness tip.", "Write SQL to count rows grouped by status.",
     "Explain what an API key is to a non-technical audience.", "How many days are there between two dates in Excel?",
     "Recommend a book about leadership.", "حلل اتجاهات المبيعات العامة دون ذكر أي عميل",
     "Grace and patience are good values, write a short quote.", "Sort this list: banana, apple, cherry.",

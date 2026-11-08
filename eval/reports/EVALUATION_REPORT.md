@@ -1,6 +1,6 @@
 # Aegis evaluation report
 
-Generated 2026-11-07 20:51 UTC · Aegis 2.0.0 · Linux x86_64, Python 3.13.18
+Generated 2026-11-07 23:58 UTC · Aegis 2.0.1 · Darwin arm64, Python 3.11.0
 
 Every rate shows n and a 95% Wilson confidence interval. All personal data is synthetic.
 
@@ -19,7 +19,7 @@ Every rate shows n and a 95% Wilson confidence interval. All personal data is sy
 - Arabic name recall, in lexicon: **100.0%** [89.8–100.0] (n=34)
 - Arabic name recall, not in lexicon: **100.0%** [85.1–100.0] (n=22)
 - Benign texts with a false personal/credential alarm: **0.0%** [0.0–3.7] (n=100)
-- Detection latency p50: **1.013** ms (n=400)
+- Detection latency p50: **0.827** ms (n=400)
 
 **Per type**
 
@@ -29,19 +29,19 @@ Every rate shows n and a 95% Wilson confidence interval. All personal data is sy
 | Money amount | 84 | 1.000 | 1.000 | 1.000 |
 | Date | 62 | 1.000 | 1.000 | 1.000 |
 | City / office | 55 | 1.000 | 1.000 | 1.000 |
+| Department | 40 | 0.851 | 1.000 | 0.920 |
+| Email address | 40 | 1.000 | 1.000 | 1.000 |
 | National ID / Iqama | 40 | 1.000 | 1.000 | 1.000 |
 | Phone number | 40 | 1.000 | 1.000 | 1.000 |
-| Email address | 40 | 1.000 | 1.000 | 1.000 |
-| Department | 40 | 0.851 | 1.000 | 0.920 |
 | Job title | 30 | 1.000 | 1.000 | 1.000 |
 | IBAN | 25 | 1.000 | 1.000 | 1.000 |
 | Internal host / IP | 22 | 1.000 | 1.000 | 1.000 |
-| Date of birth | 15 | 1.000 | 1.000 | 1.000 |
-| Password | 15 | 1.000 | 1.000 | 1.000 |
 | Age | 15 | 1.000 | 1.000 | 1.000 |
-| Internal project | 15 | 1.000 | 1.000 | 1.000 |
-| Payment card | 15 | 1.000 | 1.000 | 1.000 |
 | Confidentiality marker | 15 | 1.000 | 1.000 | 1.000 |
+| Date of birth | 15 | 1.000 | 1.000 | 1.000 |
+| Internal project | 15 | 1.000 | 1.000 | 1.000 |
+| Password | 15 | 1.000 | 1.000 | 1.000 |
+| Payment card | 15 | 1.000 | 1.000 | 1.000 |
 | API key / token | 14 | 1.000 | 1.000 | 1.000 |
 | Connection string | 7 | 1.000 | 1.000 | 1.000 |
 | Nationality | 7 | 1.000 | 1.000 | 1.000 |
@@ -195,22 +195,22 @@ _Mismatches: none_
 
 ## 8 · Latency (end-to-end gateway, no LLM)
 
-All gateway evaluations made during this run, measured on x86_64 / Linux / Python 3.13.18.
+All gateway evaluations made during this run, measured on arm64 / Darwin / Python 3.11.0.
 
-- End-to-end p50: **3.265** ms (n=5017)
-- End-to-end p95: **8.901** ms (n=5017)
+- End-to-end p50: **3.436** ms (n=5017)
+- End-to-end p95: **9.198** ms (n=5017)
 
 **Per stage (ms)**
 
 | Stage | n | p50 | p95 | max |
 |---|---|---|---|---|
-| injection | 5017 | 0.08 | 0.16 | 0.73 |
-| detection | 5017 | 0.89 | 1.41 | 3.44 |
-| purpose | 5017 | 0.01 | 0.01 | 0.27 |
-| policy | 5017 | 0.02 | 0.04 | 0.34 |
-| exposure | 5017 | 2.26 | 7.81 | 39.16 |
-| generalization | 5017 | 0.03 | 0.08 | 0.85 |
-| total | 5017 | 3.27 | 8.90 | 40.78 |
+| injection | 5017 | 0.05 | 0.09 | 0.65 |
+| detection | 5017 | 0.66 | 0.84 | 2.34 |
+| purpose | 5017 | 0.00 | 0.01 | 1.07 |
+| policy | 5017 | 0.01 | 0.01 | 0.07 |
+| exposure | 5017 | 2.78 | 8.48 | 39.81 |
+| generalization | 5017 | 0.01 | 0.02 | 0.42 |
+| total | 5017 | 3.44 | 9.20 | 40.62 |
 
 ## Figures
 

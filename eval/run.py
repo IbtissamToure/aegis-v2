@@ -129,7 +129,7 @@ def eval_detection(a: Aegis):
                 if len(fp_examples) < 8:
                     fp_examples.append(f"[{r['lang']}] extra {f.type}: '{f.text}'")
     table = []
-    for t in sorted(eval_types, key=lambda t: -(tp[t] + fn[t])):
+    for t in sorted(eval_types, key=lambda t: (-(tp[t] + fn[t]), ENTITY_TYPES[t]["label"])):
         p = tp[t] / (tp[t] + fp[t]) if tp[t] + fp[t] else 0
         rc = tp[t] / (tp[t] + fn[t]) if tp[t] + fn[t] else 0
         f1 = 2 * p * rc / (p + rc) if p + rc else 0
