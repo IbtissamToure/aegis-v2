@@ -112,7 +112,7 @@ function exposurePanel(x, policyName) {
       el("b", { style: `left:${pos(pol.k_warn)}%` }, el("span", {}, `warn ${pol.k_warn}`))),
     el("div", { class: "metric" }, el("span", {}, "Estimated matching people (before → after)"), el("b", {}, `${fmt(x.k_estimate_before)} → ${fmt(x.k_estimate_after)}`)),
     x.k_requested !== null && x.status === "generalized" ? el("div", { class: "metric" }, el("span", {}, "If sent as requested"),
-      el("b", {}, `${x.k_requested < 1 ? "fewer than 1 (unique)" : fmt(x.k_requested)}, exact ${x.k_exact_requested ?? "-"}`)) : null,
+      el("b", {}, `${x.k_requested < 1 ? "fewer than 1 (unique)" : fmt(x.k_requested)}${x.k_exact_requested ? `, exact ${x.k_exact_requested}` : ""}`)) : null,
     x.k_exact_after !== null ? el("div", { class: "metric" }, el("span", {}, "Exact count in the synthetic directory"), el("b", {}, String(x.k_exact_after))) : null,
     el("div", { class: "metric" }, el("span", {}, "Information disclosed"), el("b", {}, `${fmt(x.bits_after, 2)} of ${fmt(x.budget_bits, 2)} bits`)),
     x.attributes.length ? el("div", { class: "table-wrap" }, table(["Attribute", "Disclosed as", "Share of population", "Bits"],
