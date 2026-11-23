@@ -179,4 +179,11 @@ app.mount("/static", StaticFiles(directory=WEB), name="static")
 
 @app.get("/")
 def index():
+    """Product site (story, capabilities, results, architecture)."""
     return FileResponse(WEB / "index.html")
+
+
+@app.get("/app")
+def live_demo():
+    """Live demo: the full dashboard (inspect, scenarios, exposure, simulator, policies, audit, evaluation)."""
+    return FileResponse(WEB / "app.html")

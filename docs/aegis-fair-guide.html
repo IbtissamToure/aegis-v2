@@ -1,0 +1,1143 @@
+<title>دليل عرض درع</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Readex+Pro:wght@400;600;700&display=swap">
+<style>
+/* Layout: a presenter's field manual. Sticky section rail, wide reading column, speech blocks styled like cue cards. Bilingual: one switch flips language and direction. Dark-first (matches the AEGIS site), light theme mirrored. */
+:root {
+  --bg: #0A1120;
+  --panel: #101A2E;
+  --panel-2: #15223A;
+  --line: #24334F;
+  --fg: #E7EDF6;
+  --muted: #95A3BA;
+  --accent: #56C4E6;
+  --accent-ink: #06202B;
+  --cue: #E5B964;
+  --cue-bg: rgba(229, 185, 100, 0.08);
+  --ok: #52C48E;
+  --bad: #EE8A6E;
+  --bad-bg: rgba(238, 138, 110, 0.08);
+  --f-display: "Readex Pro", "IBM Plex Sans Arabic", "Geeza Pro", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans Arabic", "Geeza Pro", "SF Arabic", system-ui, sans-serif;
+  --f-latin: "Readex Pro", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #F3F6FA; --panel: #FFFFFF; --panel-2: #EEF2F8; --line: #D6DEEA; --fg: #0E1A2D; --muted: #55627A;
+    --accent: #0A7EA4; --accent-ink: #FFFFFF; --cue: #8A5D0E; --cue-bg: rgba(178, 124, 22, 0.08);
+    --ok: #1C8655; --bad: #B24E2C; --bad-bg: rgba(178, 78, 44, 0.07); color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #F3F6FA; --panel: #FFFFFF; --panel-2: #EEF2F8; --line: #D6DEEA; --fg: #0E1A2D; --muted: #55627A;
+  --accent: #0A7EA4; --accent-ink: #FFFFFF; --cue: #8A5D0E; --cue-bg: rgba(178, 124, 22, 0.08);
+  --ok: #1C8655; --bad: #B24E2C; --bad-bg: rgba(178, 78, 44, 0.07); color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 16px; line-height: 1.85; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+
+/* language switching */
+#root[data-ui="ar"] [data-l="en"], #root[data-ui="en"] [data-l="ar"] { display: none !important; }
+#root .cue.both .say { display: grid !important; }
+.cue.both .say + .say { border-top: 1px dashed color-mix(in srgb, var(--cue) 35%, transparent); padding-top: 10px; }
+.cue.both .say + .say p { font-size: 15.5px; color: var(--muted); }
+[data-l="en"] { font-family: var(--f-latin); }
+[data-l="ar"] { font-family: var(--f-body); }
+#root[dir="ltr"] { font-family: var(--f-latin); line-height: 1.7; }
+#root[dir="ltr"] h1, #root[dir="ltr"] h2, #root[dir="ltr"] h3, #root[dir="ltr"] h4 { font-family: var(--f-latin); }
+
+.wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.inner { max-width: 1060px; margin-inline: auto; }
+a { color: var(--accent); }
+h1, h2, h3, h4 { font-family: var(--f-display); line-height: 1.35; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+code, .mono { font-family: var(--f-mono); font-size: 0.88em; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+/* top bar */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.top .inner { display: flex; align-items: center; gap: 14px; min-height: 60px; }
+.brand { display: flex; align-items: center; gap: 10px; font-family: var(--f-display); font-weight: 700; white-space: nowrap; text-decoration: none; color: var(--fg); }
+.brand img { width: 26px; height: 31px; }
+.brand small { font-weight: 500; color: var(--muted); font-size: 13px; }
+.rail { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; flex: 1; min-width: 0; }
+.rail::-webkit-scrollbar { display: none; }
+.rail a { text-decoration: none; color: var(--muted); font-size: 14px; padding: 6px 11px; border-radius: 999px; white-space: nowrap; }
+.rail a:hover { color: var(--fg); background: var(--panel-2); }
+.rail a.on { color: var(--accent-ink); background: var(--accent); }
+.ui-switch { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 2px; background: var(--panel); flex: none; }
+.ui-switch button { font-size: 13px; font-weight: 600; color: var(--muted); background: none; border: 0; border-radius: 999px; padding: 4px 11px; cursor: pointer; }
+.ui-switch button[aria-pressed="true"] { color: var(--accent-ink); background: var(--accent); }
+.ui-switch button:first-child { font-family: var(--f-body); }
+.ui-switch button:last-child { font-family: var(--f-latin); }
+
+/* hero */
+.hero { padding-block: 56px 40px; border-bottom: 1px solid var(--line); }
+.hero .inner { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: center; }
+.eyebrow { font-size: 13px; font-weight: 600; letter-spacing: 0.04em; color: var(--accent); }
+.hero h1 { font-size: clamp(30px, 5vw, 50px); font-weight: 700; margin-block: 8px 14px; }
+.hero .lead { color: var(--muted); font-size: 18px; max-width: 62ch; }
+.hero-shield { width: 120px; height: auto; filter: drop-shadow(0 10px 30px rgba(86, 196, 230, 0.25)); }
+.meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; padding: 4px 11px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); background: var(--panel); }
+.chip b { color: var(--fg); font-weight: 600; }
+
+/* sections */
+section.s { padding-block: 52px 8px; }
+.s-head { display: grid; gap: 6px; margin-bottom: 24px; }
+.s-head h2 { font-size: clamp(24px, 3.2vw, 32px); }
+.s-head p { color: var(--muted); max-width: 70ch; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.stack { display: grid; gap: 16px; }
+.mt { margin-top: 16px; }
+.mb { margin-bottom: 8px; }
+
+/* cue card = what to say */
+.cue { background: var(--cue-bg); border: 1px dashed color-mix(in srgb, var(--cue) 55%, transparent); border-radius: 12px; padding: 16px 18px; display: grid; gap: 8px; }
+.cue-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.cue-label { display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700; letter-spacing: 0.05em; color: var(--cue); }
+.cue-label svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.other-btn { font-size: 12.5px; color: var(--muted); background: none; border: 1px solid var(--line); border-radius: 7px; padding: 2px 10px; cursor: pointer; }
+.other-btn:hover { color: var(--fg); border-color: var(--cue); }
+.say { display: grid; gap: 6px; }
+.say p { font-size: 17.5px; line-height: 1.95; }
+.say[data-l="en"] p { line-height: 1.7; font-size: 17px; }
+
+/* pitch */
+.pitch { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; }
+.pitch .say p { font-size: 19px; }
+.copy-btn { justify-self: start; font-size: 13px; color: var(--fg); background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 5px 12px; cursor: pointer; }
+.copy-btn:hover { border-color: var(--accent); }
+.three { display: grid; gap: 12px; }
+.three > div { display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: start; }
+.three .n { font-family: var(--f-mono); font-weight: 600; color: var(--accent); font-size: 14px; padding-top: 3px; }
+.three h4 { font-size: 16px; }
+.three p { color: var(--muted); font-size: 15px; }
+
+/* checklist */
+.check { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
+.check label { display: grid; grid-template-columns: 22px 1fr; gap: 10px; padding: 8px 10px; border-radius: 9px; cursor: pointer; }
+.check label:hover { background: var(--panel-2); }
+.check input { width: 18px; height: 18px; margin-top: 6px; accent-color: var(--ok); }
+.check input:checked + span { color: var(--muted); text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--muted) 60%, transparent); }
+.cmd { display: block; direction: ltr; text-align: left; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin-top: 6px; overflow-x: auto; white-space: pre; font-family: var(--f-mono); font-size: 13px; line-height: 1.6; color: var(--fg); }
+.check input:checked + span .cmd { text-decoration: none; }
+.progress { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); margin-top: 10px; }
+.bar { flex: 1; height: 6px; border-radius: 4px; background: var(--panel-2); overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--ok); transition: width .25s ease; }
+.reset-link { font-size: 13px; color: var(--muted); background: none; border: 0; text-decoration: underline; cursor: pointer; padding: 0; }
+
+/* timings */
+.plan-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.plan-tabs button, .seg button, .cats button { font-size: 14px; color: var(--muted); background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+.plan-tabs button[aria-selected="true"], .seg button[aria-pressed="true"], .cats button[aria-pressed="true"] { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.timeline li { display: grid; grid-template-columns: 74px 1fr; gap: 14px; padding: 12px 0; border-top: 1px solid var(--line); }
+.timeline li:first-child { border-top: 0; }
+.timeline .t { font-family: var(--f-mono); font-size: 13px; color: var(--accent); padding-top: 3px; }
+.timeline b { font-weight: 600; }
+.timeline span { color: var(--muted); }
+.roles .panel h4 { font-size: 17px; margin-bottom: 4px; }
+.roles .panel p { color: var(--muted); font-size: 15px; }
+.roles .who { font-size: 12.5px; color: var(--accent); font-weight: 700; letter-spacing: .04em; }
+
+/* tour */
+.stop { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 18px; padding-block: 26px; border-top: 1px solid var(--line); }
+.stop:first-of-type { border-top: 0; padding-top: 4px; }
+.letter { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-family: var(--f-mono); font-weight: 600; font-size: 20px; color: var(--accent); background: var(--panel); border: 1px solid var(--line); }
+.stop h3 { font-size: 22px; }
+.stop .sub { color: var(--muted); font-size: 14px; }
+.stop-body { display: grid; gap: 14px; min-width: 0; }
+.facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.fact { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.fact h5 { margin: 0 0 4px; font-size: 12.5px; font-weight: 700; letter-spacing: .04em; color: var(--muted); }
+.fact p, .fact li { font-size: 15px; }
+.fact ul { margin: 0; padding-inline-start: 18px; }
+.next { font-size: 14px; color: var(--muted); }
+.next b { color: var(--fg); font-weight: 600; }
+.warnline { font-size: 14px; color: var(--bad); }
+
+/* scenarios */
+.scn { display: grid; gap: 12px; }
+.scn .head { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: baseline; }
+.scn h4 { font-size: 18px; }
+.tag { font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.tag.star { color: var(--cue); border-color: color-mix(in srgb, var(--cue) 50%, transparent); }
+.d { font-family: var(--f-mono); font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 6px; }
+.d.allow { color: var(--ok); background: color-mix(in srgb, var(--ok) 14%, transparent); }
+.d.gen { color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); }
+.d.block { color: var(--bad); background: color-mix(in srgb, var(--bad) 14%, transparent); }
+
+/* numbers */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { padding: 11px 14px; text-align: start; vertical-align: top; border-top: 1px solid var(--line); }
+thead th { border-top: 0; font-size: 12.5px; letter-spacing: .04em; color: var(--muted); font-weight: 700; background: var(--panel-2); }
+td.num { font-family: var(--f-mono); font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
+td.num.hi { color: var(--accent); font-size: 17px; }
+td.num.lo { color: var(--bad); }
+td .say-n { color: var(--muted); font-size: 14px; }
+.big3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 16px; }
+.big3 .panel { display: grid; gap: 4px; }
+.big3 .v { font-family: var(--f-mono); font-size: 38px; font-weight: 600; color: var(--accent); line-height: 1.1; font-variant-numeric: tabular-nums; }
+.big3 .l { font-size: 15px; }
+.big3 .c { font-size: 13px; color: var(--muted); }
+
+/* compare */
+.cmp th:last-child, .cmp td:last-child { color: var(--fg); font-weight: 600; background: color-mix(in srgb, var(--accent) 7%, transparent); }
+
+/* Q&A */
+.qa-tools { display: grid; gap: 12px; margin-bottom: 18px; }
+.qa-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.search { flex: 1 1 260px; min-width: 0; font-size: 15px; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 9px 14px; }
+.search::placeholder { color: var(--muted); }
+.seg { display: inline-flex; gap: 4px; }
+.cats { display: flex; flex-wrap: wrap; gap: 6px; }
+.cats button { font-size: 13px; padding: 4px 12px; }
+.qa-count { font-size: 13px; color: var(--muted); }
+.qa-list { display: grid; gap: 10px; }
+details.qa { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; }
+details.qa[open] { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+details.qa summary { cursor: pointer; list-style: none; padding: 14px 18px; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: start; }
+details.qa summary::-webkit-details-marker { display: none; }
+.qa .qh { display: flex; flex-direction: column; min-width: 0; }
+.qa .q-ar { font-family: var(--f-display); font-weight: 600; font-size: 16.5px; text-align: right; }
+.qa .q-en { font-family: var(--f-latin); font-size: 14px; color: var(--muted); margin-top: 2px; text-align: left; }
+#root[data-ui="en"] .qa .q-en { order: -1; font-weight: 600; font-size: 16px; color: var(--fg); margin: 0 0 2px; }
+#root[data-ui="en"] .qa .q-ar { font-family: var(--f-body); font-weight: 400; font-size: 14px; color: var(--muted); }
+.qa .cat { font-size: 11.5px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 1px 9px; white-space: nowrap; margin-top: 4px; }
+.qa .ans { padding: 0 18px 16px; display: flex; flex-direction: column; gap: 12px; }
+.qa .a { padding: 12px 14px; border-radius: 10px; background: var(--panel-2); font-size: 15.5px; }
+.qa .a h6 { margin: 0 0 4px; font-size: 11.5px; letter-spacing: .06em; color: var(--accent); font-weight: 700; }
+.qa .a.ar { font-family: var(--f-body); text-align: right; line-height: 1.85; }
+.qa .a.en { font-family: var(--f-latin); font-size: 14.5px; line-height: 1.7; text-align: left; }
+#root[data-ui="en"] .qa .a.en { order: -1; }
+.qa .tip { font-size: 13.5px; color: var(--cue); }
+#root.qa-ar .qa .a.en, #root.qa-ar .qa .q-en { display: none; }
+#root.qa-en .qa .a.ar, #root.qa-en .qa .q-ar { display: none; }
+.empty { padding: 20px; text-align: center; color: var(--muted); }
+
+/* avoid */
+.avoid { display: grid; gap: 10px; }
+.avoid > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.avoid .no, .avoid .yes { padding: 12px 16px; font-size: 15px; }
+.avoid .no { background: var(--bad-bg); }
+.avoid .yes { background: var(--panel); }
+.avoid h6 { margin: 0 0 2px; font-size: 11.5px; letter-spacing: .06em; font-weight: 700; }
+.avoid .no h6 { color: var(--bad); }
+.avoid .yes h6 { color: var(--ok); }
+
+button { font-family: inherit; }
+footer { margin-top: 56px; padding-block: 28px 40px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+footer .inner { display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: space-between; }
+
+@media (max-width: 860px) {
+  .pitch, .grid2, .grid3, .big3, .facts { grid-template-columns: minmax(0, 1fr); }
+  .hero .inner { grid-template-columns: 1fr; }
+  .hero-shield { display: none; }
+  .brand small { display: none; }
+}
+@media (max-width: 560px) {
+  .stop { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .letter { width: 42px; height: 42px; font-size: 17px; }
+  .avoid > div { grid-template-columns: minmax(0, 1fr); }
+  .timeline li { grid-template-columns: 58px 1fr; }
+  .say p { font-size: 16.5px; }
+  .brand .bt { display: none; }
+}
+</style>
+
+<div id="root" dir="rtl" lang="ar" data-ui="ar">
+
+<header class="top wrap">
+  <div class="inner">
+    <a class="brand" href="#top"><img src="data:image/png;base64,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" alt="" width="26" height="31"><span class="bt">درع AEGIS</span> <small><span data-l="ar">دليل العرض</span><span data-l="en">Fair guide</span></small></a>
+    <nav class="rail" id="rail" aria-label="Sections">
+      <a href="#pitch"><span data-l="ar">العرض في دقيقة</span><span data-l="en">1-minute pitch</span></a>
+      <a href="#prep"><span data-l="ar">قبل العرض</span><span data-l="en">Setup</span></a>
+      <a href="#plan"><span data-l="ar">خطة العرض</span><span data-l="en">Run of show</span></a>
+      <a href="#tour"><span data-l="ar">جولة الموقع</span><span data-l="en">Site tour</span></a>
+      <a href="#demo"><span data-l="ar">العرض الحي</span><span data-l="en">Live demo</span></a>
+      <a href="#numbers"><span data-l="ar">الأرقام</span><span data-l="en">Numbers</span></a>
+      <a href="#compare"><span data-l="ar">المقارنة</span><span data-l="en">Comparison</span></a>
+      <a href="#qa"><span data-l="ar">الأسئلة</span><span data-l="en">Q&amp;A</span></a>
+      <a href="#avoid"><span data-l="ar">قل ولا تقل</span><span data-l="en">Say / don't say</span></a>
+    </nav>
+    <div class="ui-switch" role="group" aria-label="Language / اللغة">
+      <button type="button" data-ui-btn="ar" aria-pressed="true">العربية</button>
+      <button type="button" data-ui-btn="en" aria-pressed="false">English</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero wrap" id="top">
+  <div class="inner">
+    <div>
+      <div class="eyebrow"><span data-l="ar">دليل الفريق للمعرض · للاستخدام الداخلي</span><span data-l="en">Team guide for the fair · internal use</span></div>
+      <h1><span data-l="ar">كيف نعرض درع، وماذا نقول في كل جزء، وكيف نجيب عن أي سؤال</span><span data-l="en">How to present AEGIS, what to say in every part, and how to answer any question</span></h1>
+      <p class="lead" data-l="ar">جولة كاملة في موقع درع وفي العرض الحي، مع نصوص جاهزة تقولونها في كل قسم، والأرقام التي يجب حفظها، وأربعين سؤالًا متوقعًا من المحكّمين والمتخصصين مع إجاباتها بالعربية والإنجليزية.</p>
+      <p class="lead" data-l="en">A full walkthrough of the AEGIS site and live demo, with ready-to-say scripts for every section, the numbers to memorise, and forty questions judges and specialists are likely to ask, answered in Arabic and English.</p>
+      <div class="meta-row">
+        <span class="chip"><span data-l="ar">الموقع</span><span data-l="en">Site</span> <b class="mono">127.0.0.1:8010</b></span>
+        <span class="chip"><span data-l="ar">العرض الحي</span><span data-l="en">Live demo</span> <b class="mono">/app</b></span>
+        <span class="chip"><span data-l="ar">النموذج المحلي</span><span data-l="en">Local model</span> <b class="mono">qwen3:1.7b</b></span>
+        <span class="chip"><span data-l="ar">الأرقام من</span><span data-l="en">Numbers from</span> <b class="mono">eval/reports/latest.json</b></span>
+      </div>
+    </div>
+    <img class="hero-shield" src="data:image/png;base64,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" alt="AEGIS" width="120" height="145">
+  </div>
+</section>
+
+<main class="wrap">
+<div class="inner">
+
+<!-- ============ PITCH ============ -->
+<section class="s" id="pitch">
+  <div class="s-head">
+    <div class="eyebrow"><span data-l="ar">ابدأ من هنا</span><span data-l="en">Start here</span></div>
+    <h2><span data-l="ar">العرض في دقيقة واحدة</span><span data-l="en">The one-minute pitch</span></h2>
+    <p data-l="ar">احفظوا هذه الفقرة حرفيًا. هي أول ما يسمعه أي زائر أو محكّم، وكل ما بعدها تفصيل لها.</p>
+    <p data-l="en">Memorise this word for word. It's the first thing any visitor or judge hears; everything after it is detail.</p>
+  </div>
+  <div class="pitch">
+    <div class="cue" id="pitch-cue">
+      <div class="say" data-l="ar">
+        <p>الموظفون اليوم يلصقون أسماء العملاء وأرقام الهوية والرواتب في أدوات الذكاء الاصطناعي لإنجاز أعمالهم. الأدوات الحالية تسأل: هل هذه البيانات حساسة؟ فإما أن تمنع العمل، أو تسمح به كاملًا.</p>
+        <p><strong>درع تسأل سؤالًا مختلفًا: ما الذي تحتاجه هذه المهمة فعلًا؟</strong> فتعيد صياغة الطلب ليخرج منه فقط ما تحتاجه المهمة: العمر يصبح فئة عمرية، والمدينة تصبح منطقة، والاسم يصبح اسمًا مستعارًا، ورقم الهوية يُحذف.</p>
+        <p>والأهم: درع تتذكر ما خرج عبر المحادثة كلها. فلو كانت كل رسالة بريئة وحدها، لكنها مجتمعةً تشير إلى موظف واحد، توقفها درع. في اختباراتنا رفع ذلك الحماية من 61٪ إلى 97٪، مع الحفاظ على 100٪ من المعلومات التي تحتاجها المهمة. وكل ذلك يعمل محليًا، بالعربية والإنجليزية، وبقرارات قابلة للتدقيق.</p>
+      </div>
+      <div class="say" data-l="en">
+        <p>Employees paste customer names, national IDs and salaries into AI tools to get their work done. Today's tools ask "is this data sensitive?", so they either block useful work or let everything through.</p>
+        <p><strong>AEGIS asks a different question: what does this task actually need?</strong> It rewrites the request so only that leaves: age becomes an age band, city becomes a region, the name becomes a pseudonym, the ID is removed.</p>
+        <p>And it remembers what has already left across the whole conversation. If each message is harmless alone but together they point to one employee, AEGIS stops it. In our tests that raised protection from 61% to 97% while keeping 100% of the facts the task needed. It all runs locally, in Arabic and English, with auditable decisions.</p>
+      </div>
+      <button type="button" class="copy-btn" id="copy-pitch"></button>
+    </div>
+    <div class="panel three">
+      <h3><span data-l="ar">ثلاث أفكار يجب أن يخرج بها كل زائر</span><span data-l="en">Three ideas every visitor should leave with</span></h3>
+      <div><span class="n">01</span><div><h4><span data-l="ar">الضرورة، لا الحساسية</span><span data-l="en">Necessity, not sensitivity</span></h4><p data-l="ar">لكل مهمة "عقد إفصاح" يحدد أقل صيغة كاشفة تحتاجها. النتيجة: 0٪ تسرّب لما لا يلزم، و100٪ حفظ لما يلزم.</p><p data-l="en">Each task has a "disclosure contract" setting the least revealing form it needs. Result: 0% of what isn't needed leaks, 100% of what is needed is kept.</p></div></div>
+      <div><span class="n">02</span><div><h4><span data-l="ar">ذاكرة عبر الرسائل</span><span data-l="en">Memory across messages</span></h4><p data-l="ar">ميزانية قابلية التعرّف تقيس، بالبِتّات، كم شخصًا ما زال يطابق ما خرج. أقل من 5 أشخاص يعني تعميمًا أو منعًا.</p><p data-l="en">The identifiability budget measures, in bits, how many people still match what has left. Fewer than 5 means generalize or block.</p></div></div>
+      <div><span class="n">03</span><div><h4><span data-l="ar">محلي وحتمي وعربي</span><span data-l="en">Local, deterministic, Arabic</span></h4><p data-l="ar">القواعد تقرر لا النموذج اللغوي، والسجل لا يحفظ أي نص، ويعمل على حاسب بذاكرة 8 جيجابايت دون إنترنت.</p><p data-l="en">Rules decide, not the language model. The log stores no text. It runs on an 8 GB laptop with no internet.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PREP ============ -->
+<section class="s" id="prep">
+  <div class="s-head">
+    <div class="eyebrow"><span data-l="ar">قبل وصول الزوار</span><span data-l="en">Before visitors arrive</span></div>
+    <h2><span data-l="ar">قائمة التجهيز</span><span data-l="en">Setup checklist</span></h2>
+    <p data-l="ar">علّموا على كل بند عند إنجازه. العلامات تُحفظ في متصفحكم فقط.</p>
+    <p data-l="en">Tick each item when it's done. Ticks are saved in your own browser only.</p>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <h3 class="mb"><span data-l="ar">تشغيل النظام</span><span data-l="en">Start the system</span></h3>
+      <ul class="check">
+        <li><label><input type="checkbox" data-k="c1"><span><span data-l="ar">شغّلوا النموذج المحلي في نافذة طرفية:</span><span data-l="en">Start the local model in a terminal window:</span><code class="cmd">ollama serve</code></span></label></li>
+        <li><label><input type="checkbox" data-k="c2"><span><span data-l="ar">شغّلوا درع على المنفذ 8010 مع النموذج:</span><span data-l="en">Start AEGIS on port 8010 with the model:</span><code class="cmd">cd ~/Documents/aegis-v2
+AEGIS_LLM_PROVIDER=ollama .venv/bin/uvicorn api.server:app --host 127.0.0.1 --port 8010</code></span></label></li>
+        <li><label><input type="checkbox" data-k="c3"><span><span data-l="ar">افتحوا <code>http://127.0.0.1:8010</code> وتأكدوا أن مؤشر الحالة في الشريط العلوي أخضر.</span><span data-l="en">Open <code>http://127.0.0.1:8010</code> and check the status pill in the top bar is green.</span></span></label></li>
+        <li><label><input type="checkbox" data-k="c4"><span><span data-l="ar">"سخّنوا" النموذج: في <code>/app</code> ← افحص طلبًا ← "حلّل وأرسل إلى النموذج" مرة واحدة. أول استدعاء بطيء لأنه يحمّل النموذج في الذاكرة.</span><span data-l="en">Warm up the model: <code>/app</code> → Inspect a request → "Analyze &amp; send to model" once. The first call is slow because it loads the model into memory.</span></span></label></li>
+        <li><label><input type="checkbox" data-k="c5"><span><span data-l="ar">في سيناريوهات العرض، شغّلوا السيناريوهات الستة مرة واحدة للتأكد أنها تعمل.</span><span data-l="en">In Demo scenarios, run all six once to confirm they work.</span></span></label></li>
+        <li><label><input type="checkbox" data-k="c6"><span><span data-l="ar">قبل كل زائر جديد: صفحة "ميزانية التعرّض" ← "إعادة ضبط الجلسة"، حتى تبدأ القصة من الصفر.</span><span data-l="en">Before each new visitor: Exposure budget → "Reset session", so the story starts from zero.</span></span></label></li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3 class="mb"><span data-l="ar">الجهاز والخطة البديلة</span><span data-l="en">Laptop and backup plan</span></h3>
+      <ul class="check">
+        <li><label><input type="checkbox" data-k="c7"><span><span data-l="ar">الشاحن موصول، ووضع "عدم الإزعاج" مفعّل، والإشعارات مغلقة.</span><span data-l="en">Charger plugged in, Do Not Disturb on, notifications off.</span></span></label></li>
+        <li><label><input type="checkbox" data-k="c8"><span><span data-l="ar">كبّروا المتصفح (⌘ +) إلى 110٪ أو 125٪ حتى يقرأ الواقفون الشاشة.</span><span data-l="en">Zoom the browser (⌘ +) to 110% or 125% so people standing can read it.</span></span></label></li>
+        <li><label><input type="checkbox" data-k="c9"><span><span data-l="ar">جهّزوا نافذتين: الموقع <code>/</code> والعرض الحي <code>/app#demo</code>.</span><span data-l="en">Keep two windows ready: the site <code>/</code> and the live demo <code>/app#demo</code>.</span></span></label></li>
+        <li><label><input type="checkbox" data-k="c10"><span><span data-l="ar">النظام لا يحتاج إنترنت. إن تعطّلت الشبكة فلا مشكلة.</span><span data-l="en">The system needs no internet. If the venue Wi-Fi fails, nothing breaks.</span></span></label></li>
+        <li><label><input type="checkbox" data-k="c11"><span><span data-l="ar">خطة بديلة: الصور الجاهزة في <code>eval/reports/screenshots/</code> والرسوم في <code>eval/reports/figures/</code> مفتوحة في نافذة احتياطية.</span><span data-l="en">Backup: screenshots in <code>eval/reports/screenshots/</code> and figures in <code>eval/reports/figures/</code> open in a spare window.</span></span></label></li>
+        <li><label><input type="checkbox" data-k="c12"><span><span data-l="ar">شغّلوا الاختبارات صباحًا للاطمئنان (29 اختبارًا):</span><span data-l="en">Run the tests in the morning for peace of mind (29 tests):</span><code class="cmd">.venv/bin/python -m pytest -q</code></span></label></li>
+      </ul>
+      <div class="progress"><span id="prog-txt">0 / 12</span><div class="bar"><i id="prog-bar"></i></div><button type="button" class="reset-link" id="reset-check"><span data-l="ar">مسح العلامات</span><span data-l="en">Clear ticks</span></button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PLAN ============ -->
+<section class="s" id="plan">
+  <div class="s-head">
+    <div class="eyebrow"><span data-l="ar">حسب وقت الزائر</span><span data-l="en">Fit it to the visitor's time</span></div>
+    <h2><span data-l="ar">خطة العرض وتوزيع الأدوار</span><span data-l="en">Run of show and team roles</span></h2>
+    <p data-l="ar">اختاروا المسار حسب الوقت المتاح. المحكّم غالبًا يعطي 5 إلى 7 دقائق، والزائر العادي دقيقة أو اثنتين.</p>
+    <p data-l="en">Pick the track that fits the time available. Judges usually give 5 to 7 minutes; a casual visitor one or two.</p>
+  </div>
+  <div class="plan-tabs" role="tablist">
+    <button type="button" role="tab" aria-selected="false" data-plan="p1"><span data-l="ar">دقيقة واحدة</span><span data-l="en">1 minute</span></button>
+    <button type="button" role="tab" aria-selected="true" data-plan="p3"><span data-l="ar">3 دقائق</span><span data-l="en">3 minutes</span></button>
+    <button type="button" role="tab" aria-selected="false" data-plan="p7"><span data-l="ar">7 دقائق (للمحكّمين)</span><span data-l="en">7 minutes (judges)</span></button>
+  </div>
+  <div class="panel">
+    <ol class="timeline" data-panel="p1" hidden>
+      <li><span class="t">0:00</span><div data-l="ar"><b>العرض في دقيقة</b><br><span>قولوا الفقرة المحفوظة وأنتم تشيرون إلى بطاقة "قبل وبعد" في أعلى الموقع.</span></div><div data-l="en"><b>The pitch</b><br><span>Say the memorised paragraph while pointing at the before/after cards at the top of the site.</span></div></li>
+      <li><span class="t">0:45</span><div data-l="ar"><b>رقم واحد</b><br><span>"رفعنا حماية المحادثات الكاشفة للهوية من 61٪ إلى 97٪، دون أن نفقد أي معلومة تحتاجها المهمة."</span></div><div data-l="en"><b>One number</b><br><span>"We raised protection of identifying conversations from 61% to 97% without losing any fact the task needed."</span></div></li>
+      <li><span class="t">0:55</span><div data-l="ar"><b>دعوة</b><br><span>"هل تريد أن ترى ثلاث رسائل بريئة تكشف موظفًا؟" ثم انتقلوا إلى سيناريو التراكم إن بقي الزائر.</span></div><div data-l="en"><b>Invitation</b><br><span>"Want to see three harmless messages expose an employee?" If they stay, go to the cumulative scenario.</span></div></li>
+    </ol>
+    <ol class="timeline" data-panel="p3">
+      <li><span class="t">0:00</span><div data-l="ar"><b>الواجهة (A)</b><br><span>العرض في دقيقة، مع الإشارة إلى "الطلب كما كُتب" و"ما يغادر المؤسسة".</span></div><div data-l="en"><b>Hero (A)</b><br><span>The pitch, pointing at "The prompt as written" and "What leaves the organization".</span></div></li>
+      <li><span class="t">0:40</span><div data-l="ar"><b>المشكلة (B)</b><br><span>جملتان: الحساسية ليست الضرورة، والخطر تراكمي (99.2٪).</span></div><div data-l="en"><b>Problem (B)</b><br><span>Two sentences: sensitivity isn't necessity, and risk is cumulative (99.2%).</span></div></li>
+      <li><span class="t">1:00</span><div data-l="ar"><b>العرض الحي: سيناريو التراكم</b><br><span>افتحوا <code>/app#demo</code> وشغّلوا "ثلاث رسائل بريئة تشير إلى شخص واحد". هذه لحظة العرض الأهم.</span></div><div data-l="en"><b>Live demo: cumulative scenario</b><br><span>Open <code>/app#demo</code> and run "Three harmless prompts that add up to one person". This is the key moment.</span></div></li>
+      <li><span class="t">2:00</span><div data-l="ar"><b>النتائج (E)</b><br><span>97٪ مقابل 61٪ مقابل 0٪، ثم 0٪ تسرّب و100٪ حفظ.</span></div><div data-l="en"><b>Results (E)</b><br><span>97% vs 61% vs 0%, then 0% leaked and 100% kept.</span></div></li>
+      <li><span class="t">2:40</span><div data-l="ar"><b>الختام</b><br><span>"محلي، عربي، قابل للتدقيق، ويعمل الآن على هذا الحاسب." ثم ادعوا للأسئلة.</span></div><div data-l="en"><b>Close</b><br><span>"Local, Arabic, auditable, and running right now on this laptop." Then invite questions.</span></div></li>
+    </ol>
+    <ol class="timeline" data-panel="p7" hidden>
+      <li><span class="t">0:00</span><div data-l="ar"><b>الواجهة والمشكلة (A + B)</b><br><span>العرض في دقيقة، ثم قصة الخطوات الأربع.</span></div><div data-l="en"><b>Hero and problem (A + B)</b><br><span>The pitch, then the four-step story.</span></div></li>
+      <li><span class="t">1:15</span><div data-l="ar"><b>آلية العمل (C)</b><br><span>المراحل الخمس، مع التأكيد أن القرار بالقواعد لا بالنموذج. اذكروا حدود النطاق قبل أن يسأل المحكّم.</span></div><div data-l="en"><b>How it works (C)</b><br><span>The five stages, stressing that rules decide, not the model. State the scope limits before the judge asks.</span></div></li>
+      <li><span class="t">2:15</span><div data-l="ar"><b>العرض الحي</b><br><span>سيناريو "الضرورة لا الحساسية"، ثم "التراكم"، ثم صفحة ميزانية التعرّض لترى المنحنى.</span></div><div data-l="en"><b>Live demo</b><br><span>"Necessity, not sensitivity", then the cumulative scenario, then the Exposure budget page to show the curve.</span></div></li>
+      <li><span class="t">4:00</span><div data-l="ar"><b>محاكي السياسات</b><br><span>طلب واحد وثلاث سياسات: "السياسة تقرر، لا الكود". ثم سيناريو العربية.</span></div><div data-l="en"><b>Policy simulator</b><br><span>One request, three policies: "policy decides, not code". Then the Arabic scenario.</span></div></li>
+      <li><span class="t">5:00</span><div data-l="ar"><b>النتائج والمنهجية (E)</b><br><span>الأرقام الرئيسية، وفصل التطوير عن الاختبار، والمعايير الخارجية، وفترات الثقة. اذكروا رقم 4٪ بأنفسكم.</span></div><div data-l="en"><b>Results and method (E)</b><br><span>Headline numbers, dev/test separation, external benchmarks, confidence intervals. Bring up the 4% yourselves.</span></div></li>
+      <li><span class="t">6:00</span><div data-l="ar"><b>البنية والمستقبل (G + H)</b><br><span>REST وMCP ولوحة التحكم، ثم الخطوات القادمة: تجربة على بيانات حقيقية، كاشف حقن بنموذج، وكيل إلزامي.</span></div><div data-l="en"><b>Architecture and future (G + H)</b><br><span>REST, MCP and the dashboard, then next steps: real-data pilot, model-based injection detector, mandatory proxy.</span></div></li>
+    </ol>
+  </div>
+  <div class="grid3 roles mt">
+    <div class="panel"><div class="who"><span data-l="ar">الدور الأول</span><span data-l="en">Role 1</span></div><h4><span data-l="ar">المتحدث الرئيسي</span><span data-l="en">Lead speaker</span></h4><p data-l="ar">يقول العرض في دقيقة ويقود القصة. يحفظ الأرقام الثلاثة الكبرى، ولا يلمس الحاسب.</p><p data-l="en">Delivers the pitch and leads the story. Knows the three headline numbers by heart and never touches the laptop.</p></div>
+    <div class="panel"><div class="who"><span data-l="ar">الدور الثاني</span><span data-l="en">Role 2</span></div><h4><span data-l="ar">مشغّل العرض</span><span data-l="en">Demo operator</span></h4><p data-l="ar">يتحكم في الشاشة ويسبق المتحدث بخطوة: يفتح القسم قبل أن يُذكر، ويعيد ضبط الجلسة بين الزوار.</p><p data-l="en">Drives the screen one step ahead of the speaker: opens each section before it's mentioned and resets the session between visitors.</p></div>
+    <div class="panel"><div class="who"><span data-l="ar">الدور الثالث</span><span data-l="en">Role 3</span></div><h4><span data-l="ar">خبير الأسئلة</span><span data-l="en">Q&amp;A expert</span></h4><p data-l="ar">يتولى الأسئلة التقنية والإحصائية (نموذج البِتّات، افتراض الاستقلال، فترات الثقة) ويعرف قسم القيود جيدًا.</p><p data-l="en">Takes technical and statistical questions (the bits model, the independence assumption, confidence intervals) and knows the limitations well.</p></div>
+  </div>
+</section>
+
+<!-- ============ TOUR ============ -->
+<section class="s" id="tour">
+  <div class="s-head">
+    <div class="eyebrow"><span data-l="ar">موقع المنتج</span><span data-l="en">Product site</span> · 127.0.0.1:8010</div>
+    <h2><span data-l="ar">جولة الموقع، قسمًا قسمًا</span><span data-l="en">Site tour, section by section</span></h2>
+    <p data-l="ar">لكل قسم: ما يظهر على الشاشة، وما يفعله مشغّل العرض، وما يقوله المتحدث، وجملة الانتقال للقسم التالي. الموقع نفسه يعمل بالعربية من زر اللغة في شريطه العلوي، ويتذكر اختياركم.</p>
+    <p data-l="en">For each section: what's on screen, what the operator does, what the speaker says, and the line that leads into the next section. The site itself switches to Arabic from the language button in its top bar and remembers the choice.</p>
+  </div>
+
+  <article class="stop">
+    <div class="letter">A</div>
+    <div class="stop-body">
+      <div><h3><span data-l="ar">الواجهة الرئيسية</span><span data-l="en">Hero</span></h3><div class="sub">"Your AI. Your Data. Your Control." · "ذكاؤك الاصطناعي. بياناتك. تحت سيطرتك."</div></div>
+      <div class="facts">
+        <div class="fact"><h5><span data-l="ar">على الشاشة</span><span data-l="en">On screen</span></h5><p data-l="ar">الشعار والعنوان، وبطاقتان: "الطلب كما كُتب" و"ما يغادر المؤسسة". البطاقة الثانية ناتجة فعلًا عن المحرك عند تحميل الصفحة، ومكتوب تحتها "مخرجات حقيقية من المحرك العامل".</p><p data-l="en">The logo and headline, and two cards: "The prompt as written" and "What leaves the organization". The second card is produced by the engine when the page loads, labelled "real output from the running engine".</p></div>
+        <div class="fact"><h5><span data-l="ar">ماذا تفعل</span><span data-l="en">What to do</span></h5><p data-l="ar">أشيروا من الاسم في البطاقة الأولى إلى الاسم المستعار في الثانية، ثم من رقم الهوية إلى اختفائه، ثم إلى القرار. لا تضغطوا شيئًا بعد.</p><p data-l="en">Point from the name in the first card to the pseudonym in the second, then from the ID to where it disappeared, then to the decision. Don't click anything yet.</p></div>
+      </div>
+      <div class="cue">
+        <div class="say" data-l="ar"><p>"على اليسار ما كتبه الموظف. وعلى اليمين ما خرج فعلًا من المؤسسة. لاحظ: الاسم أصبح اسمًا مستعارًا، ورقم الهوية حُذف، لكن الطلب ما زال مفهومًا ويمكن للذكاء الاصطناعي أن يجيب عنه. هذه ليست صورة؛ هذا ناتج المحرك الآن على هذا الحاسب."</p></div>
+        <div class="say" data-l="en"><p>"On one side is what the employee typed. On the other is what actually left the organization. The name is now a pseudonym and the ID is gone, but the request still makes sense and the AI can still answer it. This isn't a screenshot: it's the engine's live output on this laptop."</p></div>
+      </div>
+      <p class="next" data-l="ar">انتقال: <b>"لماذا نحتاج هذا أصلًا؟"</b> ثم مرّروا إلى قسم المشكلة.</p>
+      <p class="next" data-l="en">Transition: <b>"Why do we need this at all?"</b> then scroll to the problem section.</p>
+    </div>
+  </article>
+
+  <article class="stop">
+    <div class="letter">B</div>
+    <div class="stop-body">
+      <div><h3><span data-l="ar">المشكلة</span><span data-l="en">The problem</span></h3><div class="sub"><span data-l="ar">قصة من أربع خطوات</span><span data-l="en">A four-step story</span></div></div>
+      <div class="facts">
+        <div class="fact"><h5><span data-l="ar">على الشاشة</span><span data-l="en">On screen</span></h5>
+          <ul data-l="ar"><li>موظف يطلب المساعدة من أداة ذكاء اصطناعي</li><li>بيانات حساسة تدخل في الطلب</li><li>البيانات تغادر البيئة المحمية</li><li>المخاطر تتراكم بصمت</li></ul>
+          <ul data-l="en"><li>An employee asks an AI tool for help</li><li>Sensitive data goes into the prompt</li><li>The data leaves the protected environment</li><li>Risk accumulates silently</li></ul>
+          <p data-l="ar">وتحتها فجوتان: "الحساسية ليست هي الضرورة" و"التعرّض للمخاطر تراكمي".</p><p data-l="en">Below them, two gaps: "Sensitivity is not necessity" and "Exposure is cumulative".</p></div>
+        <div class="fact"><h5><span data-l="ar">ماذا تفعل</span><span data-l="en">What to do</span></h5><p data-l="ar">القصة تتحرك تلقائيًا. يمكنكم الضغط على أي خطوة لإيقافها عندها. توقفوا عند الخطوة الرابعة لأنها مدخل الفكرة الأقوى.</p><p data-l="en">The story plays automatically; click any step to hold it. Stop on step four, because it sets up the strongest idea.</p></div>
+      </div>
+      <div class="cue">
+        <div class="say" data-l="ar"><p>"موظف يريد تلخيص طلب إجازة، فيلصقه في روبوت محادثة عام بما فيه الاسم ورقم الهوية. بمجرد الإرسال تخرج البيانات، ولا يبقى لدى المؤسسة أي سجل."</p><p>"لكن هناك مشكلتان لا تحلهما الأدوات الحالية. الأولى: الحقل نفسه قد يكون ضروريًا لمهمة وزائدًا لأخرى؛ العمر ضروري للتحليل الديموغرافي وزائد لتلخيص شكوى. والثانية أخطر: في اختباراتنا، 99.2٪ من المحادثات التي كشفت هوية شخص لم تحتوِ على رسالة واحدة كاشفة بمفردها. لذلك فحص كل رسالة وحدها لا يكفي."</p></div>
+        <div class="say" data-l="en"><p>"An employee wants to summarize a leave request and pastes it into a public chatbot, name and ID included. Once it's sent, the data is gone and the organization has no record."</p><p>"Two problems remain that current tools don't solve. First, the same field can be necessary for one task and excessive for another: age matters for demographic analysis, not for summarizing a complaint. Second, and worse: in our tests, 99.2% of conversations that identified a person contained no single message that was identifying on its own. Checking one message at a time isn't enough."</p></div>
+      </div>
+      <p class="next" data-l="ar">انتقال: <b>"إذن كيف تعمل درع؟"</b></p>
+      <p class="next" data-l="en">Transition: <b>"So how does AEGIS work?"</b></p>
+    </div>
+  </article>
+
+  <article class="stop">
+    <div class="letter">C</div>
+    <div class="stop-body">
+      <div><h3><span data-l="ar">كيف تعمل درع</span><span data-l="en">How AEGIS works</span></h3><div class="sub"><span data-l="ar">خمس مراحل تفاعلية</span><span data-l="en">Five interactive stages</span></div></div>
+      <div class="facts">
+        <div class="fact"><h5><span data-l="ar">على الشاشة</span><span data-l="en">On screen</span></h5><p data-l="ar">خمس مراحل: التفاعل مع الذكاء الاصطناعي ← الفحص ← الكشف ← الحماية ← الرؤية. تحت كل مرحلة اسم الملفات البرمجية الحقيقية التي تنفذها، ومربع "ما تقوم به درع اليوم، بدقة".</p><p data-l="en">Five stages: AI interaction → Inspection → Detection → Protection → Visibility. Each names the real source files that implement it, plus a box titled "What AEGIS does today, precisely".</p></div>
+        <div class="fact"><h5><span data-l="ar">ماذا تفعل</span><span data-l="en">What to do</span></h5><p data-l="ar">اضغطوا على المراحل بالترتيب (أو استخدموا الأسهم في لوحة المفاتيح). توقفوا عند "الحماية" أطول وقت، ثم أشيروا إلى مربع النطاق.</p><p data-l="en">Click the stages in order (or use the arrow keys). Spend the longest on "Protection", then point to the scope box.</p></div>
+      </div>
+      <div class="cue">
+        <div class="say" data-l="ar"><p>"يصل الطلب إلى درع من لوحة التحكم أو من أي تطبيق عبر واجهة برمجية، أو من وكيل ذكاء اصطناعي عبر MCP. أولًا نوحّد النص ونفك أي تمويه، ونحدد غرض المهمة. ثم نكشف البيانات: أرقام الهوية والإقامة والآيبان نتحقق منها بخانة التحقق، لا بمجرد شكلها. ثم الحماية: قواعد مكتوبة بملفات يملكها مسؤول حماية البيانات تقرر السماح أو التحذير أو التعميم أو المنع. وأخيرًا كل قرار يُسجَّل دون أي نص من الطلب."</p><p>"ونقطة مهمة: القرار يتخذه نظام قواعد حتمي. النموذج اللغوي لا يقرر أبدًا. نفس الطلب يعطي نفس القرار في كل مرة."</p></div>
+        <div class="say" data-l="en"><p>"A request reaches AEGIS from the dashboard, from any app through the REST API, or from an AI agent through MCP. We normalize the text, undo obfuscation and recognize the task's purpose. Then detection: Saudi IDs, Iqama and IBANs are verified by their check digits, not just their shape. Then protection: rules in files owned by the data-protection officer decide ALLOW, WARN, GENERALIZE or BLOCK. Finally every decision is logged with none of the prompt's text."</p><p>"One important point: decisions come from deterministic rules. The language model never decides. The same request always gets the same decision."</p></div>
+      </div>
+      <p class="warnline" data-l="ar">قولوها قبل أن يسألوا: درع لا تعترض حركة المتصفح إلى ChatGPT اليوم. تحمي ما يمر عبرها. الاعتراض الإلزامي عبر وكيل مخطط له.</p>
+      <p class="warnline" data-l="en">Say it before they ask: AEGIS does not intercept browser traffic to ChatGPT today. It protects what is routed through it. Mandatory interception through a proxy is planned.</p>
+      <p class="next" data-l="ar">انتقال: <b>"لنرَ ذلك في أربع قدرات عملية."</b></p>
+      <p class="next" data-l="en">Transition: <b>"Let's see that in four practical capabilities."</b></p>
+    </div>
+  </article>
+
+  <article class="stop">
+    <div class="letter">D</div>
+    <div class="stop-body">
+      <div><h3><span data-l="ar">القدرات الأساسية</span><span data-l="en">Core capabilities</span></h3><div class="sub"><span data-l="ar">أربعة تبويبات، ثلاثة منها تشغّل المحرك الحقيقي</span><span data-l="en">Four tabs; three run the real engine</span></div></div>
+      <div class="grid2">
+        <div class="fact"><h5><span data-l="ar">حوكمة الذكاء الاصطناعي الخفي</span><span data-l="en">Shadow AI governance</span></h5><p data-l="ar">زر "قارن السياسات" يرسل طلبًا واحدًا إلى السياسات الثلاث ويعرض قرار كل منها. مكتوب عليها "مُنفَّذة جزئيًا" لأن الاكتشاف التلقائي للأدوات غير المعتمدة غير موجود.</p><p data-l="en">"Compare policies" sends one request to all three policies and shows each decision. It's labelled "partly implemented" because automatic discovery of unapproved tools doesn't exist.</p></div>
+        <div class="fact"><h5><span data-l="ar">تقليل البيانات</span><span data-l="en">Data minimization</span></h5><p data-l="ar">زر "قلّل البيانات" يرسل نفس النص لأغراض مختلفة: التحليل الديموغرافي، ملخص قضية موارد بشرية، ملخص دعم. شاهدوا كيف يتغير ما يخرج.</p><p data-l="en">"Minimize" sends the same text for different purposes: demographic analysis, HR case summary, support summary. Watch what leaves change.</p></div>
+        <div class="fact"><h5><span data-l="ar">كشف حقن الأوامر</span><span data-l="en">Prompt-injection detection</span></h5><p data-l="ar">أربعة أمثلة: هجوم مباشر، مخفي في رسالة بريد، هجوم بالعربية، وطلب سليم. يظهر لكل منها "درجة الحقن".</p><p data-l="en">Four examples: a direct attack, one hidden in an email, an Arabic attack, and a clean request. Each shows an injection score.</p></div>
+        <div class="fact"><h5><span data-l="ar">لوحة الحوكمة</span><span data-l="en">Governance dashboard</span></h5><p data-l="ar">أرقام حية من سجل التدقيق على هذا الجهاز، مع ملاحظة بعدد السجلات القادمة من سيناريوهات العرض.</p><p data-l="en">Live figures from this machine's audit log, with a note on how many entries come from demo scenarios.</p></div>
+      </div>
+      <div class="cue" data-label-ar="قل (عند تبويب تقليل البيانات)" data-label-en="Say (on the Data minimization tab)">
+        <div class="say" data-l="ar"><p>"هذا قلب الفكرة. نفس النص، لكن لأغراض مختلفة. في التحليل الديموغرافي يبقى العمر لكن كفئة من خمس سنوات، لأن التحليل يحتاجه. وفي ملخص شكوى دعم يُحذف العمر تمامًا لأنه لا يلزم. نحن لا نحذف كل شيء حساس، بل نرسل الحد الأدنى الذي تحتاجه المهمة. ومن يحدد ذلك؟ مسؤول حماية البيانات، في ملف واضح يمكن تدقيقه."</p></div>
+        <div class="say" data-l="en"><p>"This is the core idea. Same text, different purposes. For demographic analysis, age stays, as a five-year band, because the analysis needs it. For a support-ticket summary, age is removed because it isn't needed. We don't delete everything sensitive; we send the minimum the task needs. And who decides that? The data-protection officer, in a readable, auditable file."</p></div>
+      </div>
+      <div class="cue" data-label-ar="قل (عند تبويب حقن الأوامر)" data-label-en="Say (on the Prompt-injection tab)">
+        <div class="say" data-l="ar"><p>"حقن الأوامر هو أن يخفي أحدهم تعليمات داخل بريد أو مستند حتى يطيعها النموذج. نكشف الأنماط المعروفة بالعربية والإنجليزية حتى لو كانت مموّهة. ونقولها بصراحة: هذه مشكلة غير محلولة عالميًا، ونسبتنا على الهجمات الواقعية 56٪، ونعرضها في الموقع كما هي."</p></div>
+        <div class="say" data-l="en"><p>"Prompt injection is hiding instructions inside an email or document so the model obeys them. We catch known patterns in Arabic and English, even when obfuscated. And we say it plainly: this is unsolved industry-wide. Our rate on real-world attacks is 56%, and we show that on the site as it is."</p></div>
+      </div>
+      <p class="next" data-l="ar">انتقال: <b>"وكل هذا قسناه بالأرقام."</b></p>
+      <p class="next" data-l="en">Transition: <b>"And we measured all of this."</b></p>
+    </div>
+  </article>
+
+  <article class="stop">
+    <div class="letter">E</div>
+    <div class="stop-body">
+      <div><h3><span data-l="ar">النتائج</span><span data-l="en">Results</span></h3><div class="sub"><span data-l="ar">كل رقم يُقرأ مباشرة من تقرير التقييم</span><span data-l="en">Every number is read live from the evaluation report</span></div></div>
+      <div class="facts">
+        <div class="fact"><h5><span data-l="ar">على الشاشة</span><span data-l="en">On screen</span></h5><p data-l="ar">ستة أرقام كبرى، ثم خمسة رسوم: الحماية بثلاثة إعدادات، الخصوصية مقابل الفائدة، الكشف حسب اللغة، حقن الأوامر (أين ينجح وأين لا)، وزمن كل مرحلة. وتحتها تنبيه أن البيانات اصطناعية.</p><p data-l="en">Six headline numbers, then five charts: protection under three settings, privacy vs usefulness, detection by language, prompt injection (where it works and where it doesn't), and per-stage latency. Below them, a note that the data is synthetic.</p></div>
+        <div class="fact"><h5><span data-l="ar">ماذا تفعل</span><span data-l="en">What to do</span></h5><p data-l="ar">ابدأوا بالرسم الأول (0٪ ← 61٪ ← 97٪)، ثم رسم الخصوصية مقابل الفائدة. اتركوا رسم حقن الأوامر للأسئلة إلا إن كان المحكّم أمنيًا.</p><p data-l="en">Start with the first chart (0% → 61% → 97%), then privacy vs usefulness. Leave the injection chart for questions unless the judge is a security person.</p></div>
+      </div>
+      <div class="cue">
+        <div class="say" data-l="ar"><p>"أخذنا 130 محادثة كانت ستكشف هوية موظف لو أُرسلت كما هي. دون حماية: لم تُحمَ أي منها. مع تقليل البيانات وحده: 61٪. ومع ميزانية قابلية التعرّف: 97٪. أي أن ميزة التذكّر عبر الرسائل وحدها أضافت 36 نقطة."</p><p>"وفي الخصوصية مقابل الفائدة: إخفاء كل شيء يمنع التسرّب لكنه يدمر الفائدة، صفر من المعلومات اللازمة يبقى. درع: صفر تسرّب لما لا يلزم، و100٪ من المعلومات اللازمة محفوظة. ولكل رقم حجم العينة وفترة ثقة 95٪، والتقييم على مجموعة اختبار منفصلة عن التطوير."</p></div>
+        <div class="say" data-l="en"><p>"We took 130 conversations that would identify an employee if sent as written. No protection: none protected. Purpose minimization alone: 61%. With the identifiability budget: 97%. Memory across messages alone added 36 points."</p><p>"On privacy versus usefulness: redacting everything stops leaks but destroys usefulness, zero needed facts survive. AEGIS: zero unnecessary values leaked and 100% of needed facts kept. Every figure has its sample size and a 95% confidence interval, on a test split held apart from development."</p></div>
+      </div>
+      <p class="next" data-l="ar">انتقال: <b>"لكن لا تصدقوا الأرقام فقط، جربوها بأنفسكم."</b></p>
+      <p class="next" data-l="en">Transition: <b>"But don't just trust the numbers: try it yourself."</b></p>
+    </div>
+  </article>
+
+  <article class="stop">
+    <div class="letter">F</div>
+    <div class="stop-body">
+      <div><h3><span data-l="ar">جرّب درع</span><span data-l="en">Experience AEGIS</span></h3><div class="sub"><span data-l="ar">بوابة إلى العرض الحي</span><span data-l="en">The gateway to the live demo</span></div></div>
+      <div class="facts">
+        <div class="fact"><h5><span data-l="ar">على الشاشة</span><span data-l="en">On screen</span></h5><p data-l="ar">ثماني بطاقات، لكل صفحة من صفحات العرض الحي بطاقة، وزر "شغّل العرض الحي". كل بطاقة تفتح الصفحة المقابلة مباشرة.</p><p data-l="en">Eight cards, one per live-demo view, and a "Launch live demo" button. Each card opens its view directly.</p></div>
+        <div class="fact"><h5><span data-l="ar">ماذا تفعل</span><span data-l="en">What to do</span></h5><p data-l="ar">اضغطوا "سيناريوهات العرض". التفاصيل في قسم <a href="#demo">العرض الحي</a> أدناه.</p><p data-l="en">Click "Demo scenarios". Details are in the <a href="#demo">Live demo</a> section below.</p></div>
+      </div>
+      <div class="cue">
+        <div class="say" data-l="ar"><p>"هذا ليس عرضًا تقديميًا؛ هذا التطبيق الكامل. كل زر يستدعي الواجهة البرمجية الحقيقية على هذا الحاسب. والأشخاص والأرقام في السيناريوهات كلها اصطناعية."</p></div>
+        <div class="say" data-l="en"><p>"This isn't a slide deck; it's the full application. Every button calls the real API on this laptop. All people and numbers in the scenarios are synthetic."</p></div>
+      </div>
+    </div>
+  </article>
+
+  <article class="stop">
+    <div class="letter">G</div>
+    <div class="stop-body">
+      <div><h3><span data-l="ar">البنية التقنية</span><span data-l="en">Architecture</span></h3><div class="sub"><span data-l="ar">مخطط تفاعلي من الكود الفعلي</span><span data-l="en">An interactive diagram of the actual code</span></div></div>
+      <div class="facts">
+        <div class="fact"><h5><span data-l="ar">على الشاشة</span><span data-l="en">On screen</span></h5><p data-l="ar">ثلاثة مداخل (لوحة التحكم، وكلاء MCP، أي تطبيق REST) ← بوابة درع بمراحلها الست ← مزوّد النموذج، وسجل التدقيق، وملفات الإعداد. الضغط على أي عقدة يشرحها.</p><p data-l="en">Three entry points (dashboard, MCP agents, any REST app) → the AEGIS gateway with its six stages → the model provider, audit log and config files. Clicking any node explains it.</p></div>
+        <div class="fact"><h5><span data-l="ar">ماذا تفعل</span><span data-l="en">What to do</span></h5><p data-l="ar">اضغطوا على "سجل التدقيق" ثم "النموذج اللغوي". هما أكثر ما يسأل عنه المتخصصون.</p><p data-l="en">Click "Audit log", then the language model node. Those are what specialists ask about most.</p></div>
+      </div>
+      <div class="cue">
+        <div class="say" data-l="ar"><p>"درع بوابة محلية مكتوبة بـ Python وFastAPI. يمكن الوصول إليها بثلاث طرق: لوحة تحكم، أو واجهة REST لأي تطبيق داخلي، أو خادم MCP رسمي لوكلاء الذكاء الاصطناعي. سجل التدقيق قاعدة SQLite لا تحفظ أي نص، فقط القرار وأنواع البيانات وبصمات مشفّرة، وعندنا اختبار آلي يتأكد من ذلك. والنموذج اللغوي اختياري ومحلي، ويرى الطلب المقلَّل فقط."</p></div>
+        <div class="say" data-l="en"><p>"AEGIS is a local gateway in Python and FastAPI, reachable three ways: a dashboard, a REST API for any internal app, and an official MCP server for AI agents. The audit log is SQLite and stores no text, only the decision, data types and keyed hashes, and an automated test enforces that. The language model is optional, local, and only ever sees the minimized prompt."</p></div>
+      </div>
+    </div>
+  </article>
+
+  <article class="stop">
+    <div class="letter">H</div>
+    <div class="stop-body">
+      <div><h3><span data-l="ar">الختام</span><span data-l="en">Closing</span></h3><div class="sub">"Take control…"</div></div>
+      <div class="cue">
+        <div class="say" data-l="ar"><p>"الذكاء الاصطناعي لن يتوقف، والموظفون سيستخدمونه في كل الأحوال. السؤال هو: هل تعرف المؤسسة ما الذي يخرج منها؟ درع تعطي المؤسسة الإجابة: نرسل ما تحتاجه المهمة فقط، ونتذكر ما خرج، ونسجل كل قرار، محليًا وبالعربية. شكرًا لكم، ويسعدنا أي سؤال."</p></div>
+        <div class="say" data-l="en"><p>"AI use isn't going to stop, and employees will use it either way. The question is whether the organization knows what is leaving. AEGIS answers that: send only what the task needs, remember what has left, log every decision, locally and in Arabic. Thank you, we'd be glad to take questions."</p></div>
+      </div>
+    </div>
+  </article>
+</section>
+
+<!-- ============ DEMO ============ -->
+<section class="s" id="demo">
+  <div class="s-head">
+    <div class="eyebrow"><span data-l="ar">العرض الحي</span><span data-l="en">Live demo</span> · 127.0.0.1:8010/app</div>
+    <h2><span data-l="ar">السيناريوهات الستة وما تقولونه في كل منها</span><span data-l="en">The six scenarios and what to say for each</span></h2>
+    <p data-l="ar">في القائمة الجانبية: "سيناريوهات العرض". كل خطوة تستدعي المحرك الحقيقي. ابدأوا بالسيناريو المميز بنجمة إن كان الوقت قصيرًا.</p>
+    <p data-l="en">In the sidebar: "Demo scenarios". Every step calls the real engine. If time is short, start with the starred scenario.</p>
+  </div>
+  <div class="stack">
+
+    <div class="panel scn">
+      <div class="head"><h4><span data-l="ar">ثلاث رسائل بريئة تشير إلى شخص واحد</span><span data-l="en">Three harmless prompts that add up to one person</span></h4><span class="tag star"><span data-l="ar">الأهم · ابدأ به</span><span data-l="en">Most important · start here</span></span><span class="d allow">ALLOW</span><span class="d gen">GENERALIZE</span><span class="d gen">GENERALIZE</span></div>
+      <p class="next" data-l="ar">الرسائل: موظفة في قسم المالية ← أخصائية منذ مدة ← تعمل في مكتب أبها وانضمت عام 2016. بعد الرسالة الأولى يطابق 413 موظفًا، وبعد الثانية نحو 100. الرسالة الثالثة لو أُرسلت كما هي لطابقها <strong>شخص واحد فقط</strong>؛ بعد التعميم يبقى 24 شخصًا مطابقًا.</p>
+      <p class="next" data-l="en">The messages: an employee in Finance → a specialist there for a while → works from the Abha office and joined in 2016. After message one, 413 employees match; after message two, about 100. Sent as written, message three would match <strong>exactly one person</strong>; after generalization, 24 still match.</p>
+      <div class="cue">
+        <div class="say" data-l="ar"><p>"انظر إلى الرسائل الثلاث. لا يوجد فيها اسم ولا رقم هوية. أي أداة حالية ستسمح بها كلها. لكن درع تحسب: كم موظفًا في المؤسسة ما زال يطابق ما قيل حتى الآن؟ بعد الرسالة الأولى يطابق 413 موظفًا. بعد الثانية نحو مئة. أما الثالثة فلو أُرسلت كما هي، فالمالية وأخصائية وأبها و2016 معًا تشير إلى موظفة واحدة فقط. لذلك تعمّم درع تفاصيل الرسالة الثالثة، فيبقى 24 شخصًا مطابقًا ولا يُكشف أحد. والموظف ما زال يحصل على مساعدته في كتابة التقييم."</p></div>
+        <div class="say" data-l="en"><p>"Look at these three messages. No name, no ID. Any current tool would allow all of them. But AEGIS counts how many employees still match what has been said. After the first message 413 employees match; after the second, about a hundred. Sent as written, the third would leave exactly one: Finance, specialist, Abha and 2016 point to a single employee. So AEGIS generalizes the third message's details, 24 people still match, nobody is exposed, and the employee still gets help writing the review."</p></div>
+      </div>
+      <p class="next" data-l="ar">بعدها: افتحوا "ميزانية التعرّض" بالجلسة نفسها لإظهار المنحنى وعدد الأشخاص المطابقين في كل رسالة.</p>
+      <p class="next" data-l="en">Then: open "Exposure budget" for the same session to show the curve and the number of matching people at each message.</p>
+    </div>
+
+    <div class="panel scn">
+      <div class="head"><h4><span data-l="ar">الضرورة لا الحساسية: نفس الجدول لغرضين</span><span data-l="en">Necessity, not sensitivity: the same table, two purposes</span></h4><span class="tag"><span data-l="ar">الفكرة الأولى</span><span data-l="en">Idea one</span></span></div>
+      <p class="next" data-l="ar">جدول عملاء واحد: مرة لحساب متوسط العمر حسب المنطقة والجنس، ومرة لتلخيص الشكاوى.</p>
+      <p class="next" data-l="en">One customer table: once for average age by region and gender, once to summarize complaint themes.</p>
+      <div class="cue">
+        <div class="say" data-l="ar"><p>"نفس البيانات بالضبط. في الطلب الأول يحتاج التحليل العمر، فيبقى كفئة من خمس سنوات. وفي الثاني لا حاجة له، فيُحذف. أداة تقليدية كانت ستعامل الطلبين بالطريقة نفسها."</p></div>
+        <div class="say" data-l="en"><p>"Exactly the same data. In the first request the analysis needs age, so it stays as a five-year band. In the second it isn't needed, so it's removed. A traditional tool would treat both requests the same way."</p></div>
+      </div>
+    </div>
+
+    <div class="panel scn">
+      <div class="head"><h4><span data-l="ar">سر مُلصق في سؤال برمجي</span><span data-l="en">A secret pasted into a code question</span></h4><span class="tag"><span data-l="ar">للمحكّمين التقنيين</span><span data-l="en">For technical judges</span></span><span class="d block">BLOCK</span></div>
+      <p class="next" data-l="ar">مطوّر يسأل عن خطأ 401 ويلصق مفتاح API وكلمة مرور قاعدة بيانات.</p>
+      <p class="next" data-l="en">A developer asks about a 401 error and pastes an API key and a database password.</p>
+      <div class="cue">
+        <div class="say" data-l="ar"><p>"هذا من أكثر التسريبات شيوعًا. المفتاح هنا يُكتشف بشكله وبقياس عشوائيته. والقرار في السياسة المتوازنة هو المنع، مع شرح السبب وما هو أصغر تغيير يجعل الطلب مقبولًا: احذف المفتاح وأعد الإرسال."</p></div>
+        <div class="say" data-l="en"><p>"This is one of the most common leaks. The key is detected by its shape and by measuring its randomness. Under the balanced policy the decision is BLOCK, with the reason and the smallest change that would make it acceptable: remove the key and resend."</p></div>
+      </div>
+    </div>
+
+    <div class="panel scn">
+      <div class="head"><h4><span data-l="ar">تعليمات مخفية داخل بريد (حقن غير مباشر)</span><span data-l="en">Hidden instructions inside an email (indirect injection)</span></h4><span class="tag"><span data-l="ar">أمن</span><span data-l="en">Security</span></span></div>
+      <p class="next" data-l="ar">المستخدم يطلب "لخص هذا البريد في ثلاث نقاط"، والبريد المرفق يحتوي تعليمات مخفية.</p>
+      <p class="next" data-l="en">The user asks "Summarize this email in three bullet points", and the attached email contains hidden instructions.</p>
+      <div class="cue">
+        <div class="say" data-l="ar"><p>"المستخدم بريء تمامًا، لكن المحتوى المرفق ليس كذلك. درع تعامل كل محتوى مرفق كبيانات غير موثوقة، وتفحصه بوزن أعلى للحقن غير المباشر، فترصد التعليمات قبل أن تصل للنموذج."</p></div>
+        <div class="say" data-l="en"><p>"The user is completely innocent, but the attachment isn't. AEGIS treats all attached content as untrusted data and weights it as possible indirect injection, so it catches the instructions before they reach the model."</p></div>
+      </div>
+    </div>
+
+    <div class="panel scn">
+      <div class="head"><h4><span data-l="ar">طلب واحد، ثلاث سياسات</span><span data-l="en">One request, three policies</span></h4><span class="tag"><span data-l="ar">للحوكمة والإدارة</span><span data-l="en">For governance and management</span></span></div>
+      <p class="next" data-l="ar">رد على موظف بخصوص راتبه المتأخر، مع رقم هويته وكلمة "سري". يمكن أيضًا استخدام صفحة "محاكي السياسات".</p>
+      <p class="next" data-l="en">A reply to an employee about a late salary, with his ID and the word "confidential". The Policy simulator page works too.</p>
+      <div class="cue">
+        <div class="say" data-l="ar"><p>"نفس الطلب، والنتيجة تختلف حسب سياسة المؤسسة: المتساهلة تحذّر، والمتوازنة تعمّم، والصارمة تمنع. في 75٪ من سيناريوهات الاختبار اختلفت السياسات في قرارها. المعنى: المؤسسة هي من تقرر عبر ملفات واضحة، لا المبرمج ولا الذكاء الاصطناعي."</p></div>
+        <div class="say" data-l="en"><p>"Same request, and the outcome depends on the organization's policy: permissive warns, balanced generalizes, strict blocks. In 75% of our test scenarios the policies disagreed. The point: the organization decides, through readable files, not the developer and not the AI."</p></div>
+      </div>
+    </div>
+
+    <div class="panel scn">
+      <div class="head"><h4><span data-l="ar">طلب بالعربية فيه بيانات شخصية</span><span data-l="en">An Arabic request with personal data</span></h4><span class="tag"><span data-l="ar">للجمهور المحلي</span><span data-l="en">For local audiences</span></span></div>
+      <p class="next" data-l="ar">تلخيص طلب إجازة لموظفة: الاسم، العمر، الوظيفة، المدينة، رقم الهوية، الجوال.</p>
+      <p class="next" data-l="en">Summarizing an employee's leave request: name, age, job, city, national ID, mobile number.</p>
+      <div class="cue">
+        <div class="say" data-l="ar"><p>"معظم أدوات الحماية مصممة للإنجليزية. درع تفهم العربية: الأسماء مع "آل" والنسبة، والحروف المتصلة مثل "و" و"ب"، ورقم الهوية السعودي برقم التحقق الخاص به. والنص الناتج يبقى عربيًا سليمًا نحويًا."</p></div>
+        <div class="say" data-l="en"><p>"Most protection tools are built for English. AEGIS understands Arabic: names with 'Al-' and nisba forms, attached prefixes like 'wa-' and 'bi-', and the Saudi national ID with its own check digit. The rewritten text stays grammatically correct Arabic."</p></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3 class="mb"><span data-l="ar">صفحات أخرى مفيدة في العرض الحي</span><span data-l="en">Other useful live-demo views</span></h3>
+      <div class="grid2">
+        <div class="fact"><h5><span data-l="ar">افحص طلبًا</span><span data-l="en">Inspect a request</span></h5><p data-l="ar">لطلب يقترحه الزائر نفسه. "حلّل" يعرض القرار والسبب، و"حلّل وأرسل إلى النموذج" يرسل النص المقلَّل فقط إلى النموذج المحلي ويعرض إجابته. اطلبوا من الزائر أن يكتب، فذلك أقوى من أي سيناريو جاهز.</p><p data-l="en">For a request the visitor suggests. "Analyze" shows the decision and reason; "Analyze &amp; send to model" sends only the minimized text to the local model and shows its answer. Ask the visitor to type: that beats any prepared scenario.</p></div>
+        <div class="fact"><h5><span data-l="ar">ميزانية التعرّض</span><span data-l="en">Exposure budget</span></h5><p data-l="ar">منحنى عدد الأشخاص المطابقين بعد كل رسالة، مع خط الحد الأدنى (k = 5).</p><p data-l="en">A curve of matching people after each message, with the floor line (k = 5).</p></div>
+        <div class="fact"><h5><span data-l="ar">السياسات والأغراض</span><span data-l="en">Policies &amp; purposes</span></h5><p data-l="ar">عقود الإفصاح السبعة، ونص ملف YAML لكل سياسة. أظهروه عندما يسأل أحد "من يقرر؟".</p><p data-l="en">The seven disclosure contracts and each policy's YAML source. Show it when someone asks "who decides?".</p></div>
+        <div class="fact"><h5><span data-l="ar">سجل التدقيق</span><span data-l="en">Audit log</span></h5><p data-l="ar">أظهروه عندما يسأل أحد "هل تخزنون البيانات؟". لا يوجد عمود فيه نص الطلب.</p><p data-l="en">Show it when someone asks "do you store the data?". No column holds prompt text.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NUMBERS ============ -->
+<section class="s" id="numbers">
+  <div class="s-head">
+    <div class="eyebrow"><span data-l="ar">من eval/reports/latest.json · مجموعة الاختبار</span><span data-l="en">From eval/reports/latest.json · test split</span></div>
+    <h2><span data-l="ar">الأرقام التي يجب حفظها</span><span data-l="en">Numbers to memorise</span></h2>
+    <p data-l="ar">الثلاثة الأولى يحفظها كل الفريق. الباقي يحفظه خبير الأسئلة. عند ذكر أي رقم، اذكروا أنه على بيانات اصطناعية إن سُئلتم عن المصدر.</p>
+    <p data-l="en">The whole team memorises the first three. The Q&amp;A expert knows the rest. If asked where a number comes from, say it's on synthetic data.</p>
+  </div>
+  <div class="big3">
+    <div class="panel"><div class="v"><bdi>96.9%</bdi></div><div class="l"><span data-l="ar">من المحادثات الكاشفة للهوية تمت حمايتها</span><span data-l="en">of identifying conversations protected</span></div><div class="c"><span data-l="ar">126 من 130 · مقابل 60.8٪ دون الميزانية و0٪ دون حماية</span><span data-l="en">126 of 130 · vs 60.8% without the budget and 0% unprotected</span></div></div>
+    <div class="panel"><div class="v"><bdi>0%</bdi></div><div class="l"><span data-l="ar">تسرّب للقيم الشخصية غير الضرورية</span><span data-l="en">of unnecessary personal values leaked</span></div><div class="c"><span data-l="ar">0 من 315 · فترة الثقة 0 إلى 1.2٪</span><span data-l="en">0 of 315 · 95% CI 0 to 1.2%</span></div></div>
+    <div class="panel"><div class="v"><bdi>100%</bdi></div><div class="l"><span data-l="ar">من المعلومات اللازمة للمهمة محفوظة</span><span data-l="en">of task-needed facts kept</span></div><div class="c"><span data-l="ar">255 من 255 · مقابل 0٪ في "إخفاء كل شيء"</span><span data-l="en">255 of 255 · vs 0% for "redact everything"</span></div></div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th><span data-l="ar">ما قسناه</span><span data-l="en">What we measured</span></th><th><span data-l="ar">النتيجة</span><span data-l="en">Result</span></th><th><span data-l="ar">كيف تقوله</span><span data-l="en">How to say it</span></th></tr></thead>
+      <tbody>
+        <tr><td><span data-l="ar">محادثات كاشفة لم يكن فيها رسالة كاشفة بمفردها</span><span data-l="en">Identifying conversations with no single identifying message</span></td><td class="num hi"><bdi>99.2%</bdi></td><td><span class="say-n" data-l="ar">"الفحص رسالةً رسالة لا يرى الخطر أصلًا."</span><span class="say-n" data-l="en">"Checking message by message can't even see the risk."</span></td></tr>
+        <tr><td><span data-l="ar">ثمن الحماية: تدخل في محادثات غير كاشفة</span><span data-l="en">Cost: interventions on non-identifying conversations</span></td><td class="num"><bdi>10.9%</bdi></td><td><span class="say-n" data-l="ar">12 من 110. قابل للضبط: بالعد الدقيق من دليل الموظفين 93٪ حماية و0٪ تدخل.</span><span class="say-n" data-l="en">12 of 110. Tunable: exact counts from an HR directory give 93% protection and 0% interventions.</span></td></tr>
+        <tr><td><span data-l="ar">كشف البيانات الحساسة، 20 نوعًا (عربي/إنجليزي/مختلط)</span><span data-l="en">Sensitive-data detection, 20 types (Arabic/English/mixed)</span></td><td class="num hi"><bdi>F1 0.987</bdi></td><td><span class="say-n" data-l="ar">دقة 97.9٪، استدعاء 99.4٪، على 715 كيانًا. العربية 100٪ (280).</span><span class="say-n" data-l="en">Precision 97.9%, recall 99.4%, over 715 entities. Arabic 100% (280).</span></td></tr>
+        <tr><td><span data-l="ar">أسماء لم يرها النظام من قبل</span><span data-l="en">Names the system had never seen</span></td><td class="num"><bdi>94.7%</bdi></td><td><span class="say-n" data-l="ar">أول تجربة على بيانات التطوير كانت 19٪، وهذا ما دفعنا لبناء قواعد الأسماء.</span><span class="say-n" data-l="en">The first dev run found only 19%, which drove us to build the structural name rules.</span></td></tr>
+        <tr><td><span data-l="ar">نصوص سليمة أُطلق عليها إنذار خاطئ</span><span data-l="en">Benign texts with a false alarm</span></td><td class="num"><bdi>0%</bdi></td><td><span class="say-n" data-l="ar">0 من 100 نص يحتوي أرقامًا وكلمات مشابهة.</span><span class="say-n" data-l="en">0 of 100 texts containing look-alike numbers and words.</span></td></tr>
+        <tr><td><span data-l="ar">التعرّف على غرض المهمة (قواعد فقط)</span><span data-l="en">Task-purpose recognition (rules only)</span></td><td class="num"><bdi>96.4%</bdi></td><td><span class="say-n" data-l="ar">54 من 56 طلبًا. الغامض يذهب للعقد العام الأكثر تحفظًا.</span><span class="say-n" data-l="en">54 of 56 requests. Ambiguous ones fall back to the most conservative general contract.</span></td></tr>
+        <tr><td><span data-l="ar">المقدِّر مقابل العد الدقيق</span><span data-l="en">Estimator vs exact counts</span></td><td class="num"><bdi>ρ = 0.99</bdi></td><td><span class="say-n" data-l="ar">يلتقط 97٪ من حالات "أقل من 5 أشخاص" باستخدام جداول التكرار فقط.</span><span class="say-n" data-l="en">Catches 97% of "fewer than 5 people" cases using frequency tables alone.</span></td></tr>
+        <tr><td><span data-l="ar">قرارات السياسات قابلة للتكرار ومطابقة للمتوقع</span><span data-l="en">Policy decisions repeatable and as specified</span></td><td class="num hi"><bdi>100%</bdi></td><td><span class="say-n" data-l="ar">36 تشغيلًا، والنتائج المتوقعة كُتبت قبل التشغيل.</span><span class="say-n" data-l="en">36 runs; expected results were written before running.</span></td></tr>
+        <tr><td><span data-l="ar">زمن المعالجة الكامل دون نموذج (Mac M1)</span><span data-l="en">End-to-end latency, no model (Mac M1)</span></td><td class="num"><bdi>3.4 ms</bdi></td><td><span class="say-n" data-l="ar">الوسيط. p95 = 9.2 ملّي ثانية. أي غير محسوس للمستخدم.</span><span class="say-n" data-l="en">Median. p95 = 9.2 ms. Users won't notice it.</span></td></tr>
+        <tr><td><span data-l="ar">حقن الأوامر: مجموعة الفريق عربي/إنجليزي</span><span data-l="en">Prompt injection: team Arabic/English set</span></td><td class="num"><bdi>90%</bdi></td><td><span class="say-n" data-l="ar">3.3٪ إنذار خاطئ (30 + 30).</span><span class="say-n" data-l="en">3.3% false alarms (30 + 30).</span></td></tr>
+        <tr><td><span data-l="ar">حقن الأوامر: محاولات كسر حماية واقعية محجوزة</span><span data-l="en">Prompt injection: held-out real-world jailbreaks</span></td><td class="num lo"><bdi>56.1%</bdi></td><td><span class="say-n" data-l="ar">905 هجمات من معيار عام (CCS 2024). نذكره بصراحة.</span><span class="say-n" data-l="en">905 attacks from a public benchmark (CCS 2024). Say it openly.</span></td></tr>
+        <tr><td><span data-l="ar">حقن غير مباشر في البريد (BIPIA)</span><span data-l="en">Indirect injection in emails (BIPIA)</span></td><td class="num lo"><bdi>4%</bdi></td><td><span class="say-n" data-l="ar">تعليمات خارج المهمة بلا كلمات تجاوز. ضعف معروف لطريقة التوقيعات.</span><span class="say-n" data-l="en">Off-task instructions with no override wording. A known weakness of signature methods.</span></td></tr>
+        <tr><td><span data-l="ar">الاختبارات الآلية</span><span data-l="en">Automated tests</span></td><td class="num"><bdi>29</bdi></td><td><span class="say-n" data-l="ar">وحدات، تكامل، أمن، واختبار MCP كامل بالعميل الرسمي.</span><span class="say-n" data-l="en">Unit, integration, security, and a full MCP test with the official client.</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="panel mt">
+    <h3 class="mb"><span data-l="ar">المثال الذي يُفهم في عشر ثوانٍ</span><span data-l="en">The example anyone gets in ten seconds</span></h3>
+    <p data-l="ar">أربع رسائل عن موظفة في قسم اللوجستيات: عمرها 35، في جدة، انضمت عام 2024. كما كُتبت، <strong>يطابقها شخص واحد</strong> من 5,000. درع ترسل "30 إلى 39" و"المنطقة الغربية" وتحذف السنة، <strong>فيطابقها 23 شخصًا</strong>.</p>
+    <p data-l="en">Four messages about a Logistics employee: age 35, Jeddah, joined 2024. As written, <strong>one person</strong> out of 5,000 matches. AEGIS sends "30–39" and "Western Region" and drops the year, so <strong>23 people still match</strong>.</p>
+  </div>
+</section>
+
+<!-- ============ COMPARE ============ -->
+<section class="s" id="compare">
+  <div class="s-head">
+    <div class="eyebrow"><span data-l="ar">لماذا درع مختلفة</span><span data-l="en">Why AEGIS is different</span></div>
+    <h2><span data-l="ar">المقارنة مع البدائل</span><span data-l="en">Comparison with alternatives</span></h2>
+    <p data-l="ar">استخدموها عند سؤال "ما الفرق بينكم وبين…؟". لا تذكروا أسماء شركات تجارية بعينها؛ قولوا "أدوات منع تسرب البيانات التقليدية".</p>
+    <p data-l="en">Use this for "how are you different from…?". Don't name specific commercial vendors; say "traditional data-loss-prevention tools".</p>
+  </div>
+  <div class="table-wrap">
+    <table class="cmp">
+      <thead><tr><th><span data-l="ar">المعيار</span><span data-l="en">Criterion</span></th><th><span data-l="ar">أدوات DLP التقليدية</span><span data-l="en">Traditional DLP</span></th><th><span data-l="ar">أبحاث (AirGapAgent)</span><span data-l="en">Research (AirGapAgent)</span></th><th><span data-l="ar">درع</span><span data-l="en">AEGIS</span></th></tr></thead>
+      <tbody>
+        <tr><td><span data-l="ar">على أي أساس تقرر؟</span><span data-l="en">Decides based on</span></td><td><span data-l="ar">حساسية البيانات</span><span data-l="en">Data sensitivity</span></td><td><span data-l="ar">حكم نموذج لغوي</span><span data-l="en">LLM judgment</span></td><td><span data-l="ar">عقد الغرض (قابل للتدقيق)</span><span data-l="en">Purpose contract (auditable)</span></td></tr>
+        <tr><td><span data-l="ar">تتذكر عبر الرسائل؟</span><span data-l="en">Remembers across messages?</span></td><td><span data-l="ar">لا</span><span data-l="en">No</span></td><td><span data-l="ar">لا</span><span data-l="en">No</span></td><td><span data-l="ar">نعم، ميزانية قابلية التعرّف</span><span data-l="en">Yes, identifiability budget</span></td></tr>
+        <tr><td><span data-l="ar">تحفظ فائدة الطلب؟</span><span data-l="en">Keeps the request useful?</span></td><td><span data-l="ar">غالبًا تمنع أو تحذف</span><span data-l="en">Often blocks or redacts</span></td><td><span data-l="ar">نعم</span><span data-l="en">Yes</span></td><td><span data-l="ar">نعم، 100٪ من المعلومات اللازمة</span><span data-l="en">Yes, 100% of needed facts</span></td></tr>
+        <tr><td><span data-l="ar">العربية والهوية السعودية</span><span data-l="en">Arabic and Saudi IDs</span></td><td><span data-l="ar">محدود</span><span data-l="en">Limited</span></td><td><span data-l="ar">لا</span><span data-l="en">No</span></td><td><span data-l="ar">نعم، مع رقم التحقق</span><span data-l="en">Yes, with check digits</span></td></tr>
+        <tr><td><span data-l="ar">القرار حتمي؟</span><span data-l="en">Deterministic decisions?</span></td><td><span data-l="ar">نعم</span><span data-l="en">Yes</span></td><td><span data-l="ar">لا</span><span data-l="en">No</span></td><td><span data-l="ar">نعم، 100٪ تكرار</span><span data-l="en">Yes, 100% repeatable</span></td></tr>
+        <tr><td><span data-l="ar">تعمل محليًا دون GPU</span><span data-l="en">Runs locally without a GPU</span></td><td><span data-l="ar">يختلف</span><span data-l="en">Varies</span></td><td><span data-l="ar">يحتاج نموذجًا</span><span data-l="en">Needs a model</span></td><td><span data-l="ar">نعم، حاسب 8 جيجابايت</span><span data-l="en">Yes, 8 GB laptop</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ Q&A ============ -->
+<section class="s" id="qa">
+  <div class="s-head">
+    <div class="eyebrow"><span data-l="ar">من المحكّمين والمتخصصين</span><span data-l="en">From judges and specialists</span></div>
+    <h2><span data-l="ar">الأسئلة المتوقعة وإجاباتها</span><span data-l="en">Expected questions and answers</span></h2>
+    <p data-l="ar">كل سؤال بالعربية والإنجليزية مع إجابة باللغتين. ابحثوا بكلمة، أو اختاروا فئة، أو اعرضوا لغة واحدة فقط للمراجعة السريعة.</p>
+    <p data-l="en">Every question is in Arabic and English with an answer in both. Search by keyword, pick a category, or show one language only for quick review.</p>
+  </div>
+  <div class="qa-tools">
+    <div class="qa-row">
+      <input class="search" id="qa-search" type="search">
+      <div class="seg" role="group">
+        <button type="button" data-lang="both" aria-pressed="true"><span data-l="ar">اللغتان</span><span data-l="en">Both</span></button>
+        <button type="button" data-lang="ar" aria-pressed="false">عربي</button>
+        <button type="button" data-lang="en" aria-pressed="false">English</button>
+      </div>
+      <button type="button" class="copy-btn" id="qa-toggle"></button>
+    </div>
+    <div class="cats" id="qa-cats" role="group"></div>
+    <div class="qa-count" id="qa-count"></div>
+  </div>
+  <div class="qa-list" id="qa-list"></div>
+</section>
+
+<!-- ============ AVOID ============ -->
+<section class="s" id="avoid">
+  <div class="s-head">
+    <div class="eyebrow"><span data-l="ar">المصداقية تكسب المحكّمين</span><span data-l="en">Credibility wins judges</span></div>
+    <h2><span data-l="ar">قل ولا تقل</span><span data-l="en">Say / don't say</span></h2>
+    <p data-l="ar">المحكّم المتخصص يبحث عن ادعاء مبالغ فيه. أول مبالغة تُكتشف تُسقط ثقته في كل الأرقام. هذه الصياغات الآمنة.</p>
+    <p data-l="en">A specialist judge is looking for an overclaim. The first one they catch undermines every number you show. These are the safe phrasings.</p>
+  </div>
+  <div class="avoid" id="avoid-list"></div>
+</section>
+
+</div>
+</main>
+
+<footer class="wrap">
+  <div class="inner">
+    <span><span data-l="ar">درع AEGIS · دليل الفريق للمعرض · كل الأرقام من</span><span data-l="en">AEGIS · team fair guide · all numbers from</span> <span class="mono">python -m eval.run</span> <span data-l="ar">(تقرير 2026-11-07، الإصدار 2.0.1)</span><span data-l="en">(report 2026-11-07, v2.0.1)</span></span>
+    <span><span data-l="ar">كل الأشخاص والبيانات في العرض اصطناعية</span><span data-l="en">All people and data in the demo are synthetic</span></span>
+  </div>
+</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var root = document.getElementById("root");
+  var store = {
+    get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  };
+  var UI = "ar";
+  function T(ar, en) { return UI === "en" ? en : ar; }
+  function mk(tag, cls, text, attrs) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    if (attrs) for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  function each(sel, fn, ctx) { Array.prototype.forEach.call((ctx || document).querySelectorAll(sel), fn); }
+  each("[data-l]", function (e) { e.setAttribute("lang", e.getAttribute("data-l")); });
+  each('.say[data-l="ar"]', function (e) { e.setAttribute("dir", "rtl"); });
+  each('.say[data-l="en"]', function (e) { e.setAttribute("dir", "ltr"); });
+
+  /* ---------- cue cards: label + "other language" toggle ---------- */
+  var MIC = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
+  each(".cue", function (c) {
+    var top = mk("div", "cue-top");
+    var lab = mk("div", "cue-label");
+    lab.innerHTML = MIC;
+    var labTxt = mk("span");
+    lab.appendChild(labTxt);
+    var btn = mk("button", "other-btn", null, { type: "button" });
+    btn.addEventListener("click", function () { c.classList.toggle("both"); paintCue(); });
+    top.appendChild(lab); top.appendChild(btn);
+    c.insertBefore(top, c.firstChild);
+    function paintCue() {
+      labTxt.textContent = T(c.getAttribute("data-label-ar") || "قل", c.getAttribute("data-label-en") || "Say");
+      var both = c.classList.contains("both");
+      btn.textContent = both ? T("إخفاء الترجمة", "Hide translation") : T("عرض الإنجليزية", "Show Arabic");
+      btn.setAttribute("aria-pressed", both ? "true" : "false");
+      var says = c.querySelectorAll(".say");
+      if (says.length === 2 && says[0].getAttribute("data-l") !== UI) c.insertBefore(says[1], says[0]);
+    }
+    c._paint = paintCue;
+  });
+
+  /* ---------- Q&A data: [category, question AR, question EN, answer AR, answer EN, team note [AR, EN] or null] ---------- */
+  var CATS = {
+    value: ["الفكرة والقيمة", "Idea & value"], tech: ["التقنية", "Technical"], privacy: ["الخصوصية والنظام", "Privacy & PDPL"],
+    eval: ["التقييم والأرقام", "Evaluation"], sec: ["الأمن وحقن الأوامر", "Security & injection"], llm: ["النموذج اللغوي", "Language model"],
+    biz: ["النشر والسوق", "Deployment & market"], hard: ["أسئلة محرجة", "Tough questions"]
+  };
+  var QA = [
+    ["value", "ما الفرق بين درع وأدوات منع تسرب البيانات (DLP) التقليدية؟", "How is AEGIS different from a traditional DLP tool?",
+     "أدوات DLP تسأل: هل البيانات حساسة؟ وتفحص كل رسالة وحدها، فإما تمنع العمل أو تسمح به كاملًا. درع تسأل: ما الذي تحتاجه هذه المهمة؟ عبر عقود الغرض، وتتذكر ما خرج عبر المحادثة كلها بميزانية قابلية التعرّف. النتيجة: 0٪ تسرّب لما لا يلزم و100٪ حفظ لما يلزم، بينما الإخفاء الشامل يحفظ 0٪.",
+     "DLP asks 'is this sensitive?' and checks one message at a time, so it either blocks the work or lets it all through. AEGIS asks 'what does this task need?' through purpose contracts, and remembers what has left across the conversation with an identifiability budget. Result: 0% unnecessary values leaked and 100% of needed facts kept, where blanket redaction keeps 0%.",
+     ["ابدأوا بالجملة: الضرورة، لا الحساسية.", "Open with the line: necessity, not sensitivity."]],
+    ["value", "لماذا لا تمنع المؤسسة استخدام ChatGPT ببساطة؟", "Why not just ban ChatGPT?",
+     "المنع يدفع الموظفين إلى حلول التفافية من أجهزتهم الشخصية، وهذا هو الذكاء الاصطناعي الخفي، فتفقد المؤسسة الرؤية تمامًا. درع توفر مسارًا معتمدًا يسمح بالاستفادة مع إرسال الحد الأدنى فقط، وتسجل كل قرار.",
+     "Bans push employees to workarounds on personal devices, which is shadow AI, and the organization loses all visibility. AEGIS offers an approved route that keeps the productivity, sends only the minimum, and logs every decision.", null],
+    ["value", "ما الجديد في مشروعكم؟ ما الابتكار؟", "What is actually novel here?",
+     "فكرتان معًا. الأولى: الضرورة لا الحساسية، أي عقد إفصاح لكل غرض يحدد أقل صيغة كاشفة لكل نوع بيانات. والثانية: ذاكرة عبر الرسائل، أي ميزانية قابلية تعرّف تُقاس بالبِتّات وتُطبَّق عند البوابة. لم نجد أداة تجارية ولا بحثًا مثل AirGapAgent يجمع الاثنين مع دعم العربية والهوية السعودية.",
+     "Two ideas together. First, necessity rather than sensitivity: a disclosure contract per purpose that sets the least revealing form of each data type. Second, memory across messages: an identifiability budget measured in bits and enforced at the gateway. We found no commercial tool or research system such as AirGapAgent that combines both with Arabic and Saudi identifiers.", null],
+    ["value", "من العميل المستهدف؟", "Who is the target customer?",
+     "المؤسسات التي تتعامل مع بيانات شخصية وتخضع لنظام حماية البيانات الشخصية: الموارد البشرية، والبنوك، والصحة، والجهات الحكومية، وفرق التطوير التي تستخدم المساعدات البرمجية. والمستخدم المباشر هو مسؤول حماية البيانات وفريق الأمن.",
+     "Organizations that handle personal data under the Saudi PDPL: HR, banking, healthcare, government, and engineering teams using coding assistants. The direct users are the data-protection officer and the security team.", null],
+    ["tech", "كيف تحسبون عدد الأشخاص الذين ما زالوا يطابقون؟", "How do you compute how many people still match?",
+     "لكل صفة نأخذ احتمالها من جداول تكرار في مجتمع مرجعي، وهو دليل اصطناعي من 5,000 موظف. المعلومات المكشوفة I تساوي مجموع سالب لوغاريتم الاحتمال للأساس 2، والعدد المقدَّر يساوي N في 2 أس سالب I. الميزانية الكلية log₂ 5000 أي نحو 12.3 بت. إذا قلّ العدد عن 5 مضروبًا في معامل أمان 2، نعمّم التفاصيل الجديدة خطوة خطوة، أو نمنع.",
+     "For each attribute we take its probability from frequency tables of a reference population, a synthetic 5,000-employee directory. Information disclosed I = Σ −log₂ p(a); estimated matches k̂ = N · 2^−I. The total budget is log₂ 5000 ≈ 12.3 bits. If k̂ falls below 5 × a safety factor of 2, we coarsen the new details one step at a time, or block.",
+     ["ارسموها على ورقة إن أمكن: كل صفة تقسم المجتمع.", "Sketch it on paper if you can: each attribute splits the population."]],
+    ["tech", "افتراض استقلال الصفات غير صحيح في الواقع، أليس كذلك؟", "Isn't the independence assumption unrealistic?",
+     "صحيح، هو تبسيط، ولذلك قسناه. الارتباط بين التقدير والعدد الفعلي Spearman 0.99، ويلتقط 97٪ من حالات أقل من 5 أشخاص. التقدير متحفظ في 72٪ من الحالات لأن الصفات المترابطة مثل العمر والأقدمية تجعله يبالغ في المعلومات. ومعامل الأمان 2 اخترناه على بيانات التطوير لا الاختبار. وإن توفر دليل الموظفين يمكن العد الدقيق: 93٪ حماية و0٪ تدخل غير ضروري.",
+     "It's a simplification, so we measured it. Spearman correlation with exact counts is 0.99, and it catches 97% of 'fewer than 5' cases. It is conservative in 72% of cases because correlated attributes such as age and seniority make it overstate information. The safety factor of 2 was chosen on the dev split, not the test split. With a real directory, exact counting gives 93% protection with 0% unnecessary interventions.", null],
+    ["tech", "كيف تعرفون أن الرسائل المتتالية تتحدث عن الشخص نفسه؟", "How do you link messages to the same person?",
+     "بقواعد: ذكر اسم يحدد الشخص، و'موظف آخر' يعني شخصًا جديدًا، والضمائر وصيغ الغائب في العربية أو أي تفصيل متتبَّع بعد ذكر شخص يُنسب إليه افتراضيًا، وهذا اختيار متحفظ. هي مقاربة استدلالية، ونذكر في القيود أن الحديث عن شخصين بالتناوب قد يُربط خطأً.",
+     "With rules: a name identifies the person, 'another employee' starts a new subject, and pronouns, Arabic third-person forms or any tracked detail after a person is introduced attach to that person by default, which is the conservative choice. It is heuristic, and we list in our limitations that alternating between two people can be mis-linked.", null],
+    ["tech", "كيف تكشفون البيانات في النصوص العربية؟", "How does Arabic detection work?",
+     "أربع طبقات: مدققات برقم التحقق للهوية الوطنية والإقامة وIBAN بطريقة mod-97 وبطاقات الدفع بخوارزمية Luhn؛ ومعاجم ثنائية اللغة تراعي اللواحق العربية مثل و، ب، ال؛ وقواعد بنيوية للأسماء مثل آل والنسبة؛ وتحديد أنواع أعمدة الجداول. الاستدعاء على النصوص العربية 100٪ على 280 كيانًا، مع التنبيه أن البيانات اصطناعية.",
+     "Four layers: check-digit validators for national ID, Iqama, IBAN (mod-97) and payment cards (Luhn); bilingual lexicons that handle Arabic clitics such as wa-, bi-, al-; structural name rules (Al-, nisba); and CSV column typing. Recall on Arabic texts is 100% over 280 entities, on synthetic data.", null],
+    ["tech", "هل هذا مجرد تعابير نمطية (regex)؟", "Isn't this just regex?",
+     "التعابير النمطية جزء صغير. الأرقام تُتحقق برقم التحقق لا بالشكل فقط، والأسماء غير المعروفة تُكشف بقواعد بنيوية (94.7٪)، والأسرار تُقاس بعشوائيتها. ثم فوق الكشف: محرك سياسات، وسلالم تعميم لكل نوع بيانات، ونموذج معلوماتي لقابلية التعرّف عبر المحادثة. القيمة ليست في الكشف وحده بل في تقرير ما يخرج وبأي صيغة.",
+     "Patterns are a small part. Numbers are verified by check digit, not shape; unseen names are caught by structural rules (94.7%); secrets are scored by entropy. On top of detection sit a policy engine, generalization ladders per data type, and an information-theoretic model of identifiability across the conversation. The value is deciding what leaves and in what form, not detection alone.", null],
+    ["tech", "كيف تتكامل درع مع أنظمة المؤسسة؟", "How does AEGIS integrate with existing systems?",
+     "ثلاث طرق: واجهة REST يستدعيها أي تطبيق داخلي قبل إرسال الطلب لأي نموذج؛ وخادم MCP رسمي بست أدوات لوكلاء الذكاء الاصطناعي مثل Claude Desktop؛ ولوحة تحكم للموظفين وفريق الأمن. والإعدادات كلها ملفات YAML.",
+     "Three ways: a REST API any internal app calls before sending to a model; an official MCP server with six tools for AI agents such as Claude Desktop; and a dashboard for staff and the security team. All configuration is YAML.", null],
+    ["tech", "ما زمن الاستجابة؟ هل يبطئ العمل؟", "What is the latency? Does it slow people down?",
+     "الوسيط 3.4 ملّي ثانية والـ p95 نحو 9.2 ملّي ثانية لكل طلب على حاسب Mac M1 دون نموذج لغوي. أكثر الوقت في حساب التعرّض. هذا أقل بكثير من زمن أي نموذج لغوي، فلا يلاحظه المستخدم.",
+     "Median 3.4 ms and p95 about 9.2 ms per request on a Mac M1 without a language model. Most of it is the exposure calculation. That is far below any model's response time, so users don't notice it.", null],
+    ["privacy", "هل تخزنون نصوص الطلبات أو البيانات المكتشفة؟", "Do you store prompts or detected values?",
+     "لا. سجل التدقيق يحفظ القرار والقواعد المفعّلة وأنواع البيانات وبصمات مشفّرة بمفتاح وأرقام التعرّض والزمن فقط. ولدينا اختبار أمني آلي يتأكد أن أي قيمة خام لا تصل للسجل. ودفتر التعرّض يحتفظ بقيم معمّمة في الذاكرة فقط مع مدة صلاحية.",
+     "No. The audit log stores the decision, fired rules, data types, keyed hashes, exposure numbers and latency only, and an automated security test checks that no raw value reaches it. The exposure ledger keeps generalized values in memory only, with a time-to-live.",
+     ["افتحوا صفحة سجل التدقيق وأروهم الأعمدة.", "Open the Audit log view and show them the columns."]],
+    ["privacy", "هل درع متوافقة مع نظام حماية البيانات الشخصية (PDPL)؟", "Is AEGIS PDPL compliant?",
+     "كل قاعدة في السياسات مربوطة بمبدأ من مبادئ النظام: تحديد الغرض وتقليل البيانات في المادة 11. هذه مواءمة تساعد المؤسسة على الامتثال، وليست شهادة امتثال؛ الامتثال يُقيَّم للمؤسسة لا للأداة.",
+     "Every policy rule is mapped to a PDPL principle: purpose limitation and data minimization under Article 11. That is alignment that helps an organization comply, not a certification; compliance is assessed for the organization, not the tool.",
+     ["لا تقولوا 'معتمد' أبدًا.", "Never say 'certified'."]],
+    ["privacy", "من يحدد ما تحتاجه كل مهمة؟", "Who decides what each task needs?",
+     "مسؤول حماية البيانات، في ملف purposes.yaml. لكل غرض من الأغراض السبعة يحدد أعلى مستوى إفصاح مسموح لكل نوع بيانات، وما لا يُذكر يُحذف. لا المبرمج ولا النموذج اللغوي يقرر ذلك.",
+     "The data-protection officer, in purposes.yaml. For each of the seven purposes it sets the most revealing level allowed per data type; anything not listed is removed. Neither developers nor the language model decide this.", null],
+    ["privacy", "أين تُعالَج البيانات؟", "Where is the data processed?",
+     "محليًا على جهاز أو خادم المؤسسة. يعمل دون إنترنت على حاسب بذاكرة 8 جيجابايت. ومزوّدو النماذج الخارجية معطّلون افتراضيًا، وإن فُعّلوا فلا يصلهم إلا الطلب المقلَّل.",
+     "Locally, on the organization's machine or server. It runs offline on an 8 GB laptop. External model providers are off by default, and if enabled they only ever receive the minimized prompt.", null],
+    ["privacy", "وماذا لو احتاج الموظف البيانات الكاملة فعلًا؟", "What if the employee genuinely needs the full data?",
+     "حسب السياسة: قد يكون القرار تحذيرًا فيؤكد الموظف ويتحمل المسؤولية ويُسجَّل ذلك، أو يختار غرضًا آخر يسمح بالمستوى المطلوب، أو تعدّل المؤسسة السياسة. وكل قرار يأتي مع تفسير مضاد: أصغر تغيير يجعل الطلب مقبولًا.",
+     "It depends on policy: the decision may be a WARN the employee confirms, which is logged; they can choose a purpose that allows that level; or the organization can change the policy. Every decision includes a counterfactual: the smallest change that would allow the request.", null],
+    ["eval", "بياناتكم اصطناعية، فكيف نثق بالأرقام؟", "Your data is synthetic. Why should we trust the numbers?",
+     "نعترف بذلك صراحة، ولهذا نعتبر الأرقام حدًا أعلى. لكننا اتخذنا خطوات: فصلنا بيانات التطوير عن الاختبار ببذور جديدة وأسماء لم يرها النظام، وأضفنا معيارين عامين خارجيين، ونعرض فترات ثقة 95٪ وخطوط أساس للمقارنة. والخطوة القادمة تجربة على بيانات حقيقية بموافقة، نحو ثلاثة أشهر.",
+     "We say so openly, which is why we treat the figures as an upper bound. We separated dev from test with fresh seeds and unseen names, added two external public benchmarks, and report 95% confidence intervals and baselines. The next step is a consented pilot on real data, about three months.", null],
+    ["eval", "ماذا يعني رقم 96.9٪ بالضبط؟", "What exactly does 96.9% mean?",
+     "من 240 جلسة اختبار، 130 كانت ستكشف هوية موظف لو أُرسلت كما هي، أي يطابقها أقل من 5 أشخاص. من هذه الـ130 انتهت 126 مع درع بخمسة أشخاص مطابقين أو أكثر. دون الميزانية 60.8٪، ودون حماية 0٪. واحتسبنا أي قيمة خام فاتنا كشفها ضدنا.",
+     "Of 240 test sessions, 130 would identify an employee if sent as written, meaning fewer than 5 people match. Of those 130, 126 ended with 5 or more people still matching under AEGIS. Without the budget: 60.8%; without protection: 0%. Any raw value we failed to detect was counted against us.", null],
+    ["eval", "ما ثمن هذه الحماية؟ هل تتدخلون بلا داعٍ؟", "What's the cost? Do you intervene unnecessarily?",
+     "نعم أحيانًا: 10.9٪ من الجلسات غير الكاشفة حصل فيها تدخل، 12 من 110. وهو قابل للضبط: معامل أمان 1 يعطي 90٪ حماية و3٪ تدخل، ومعامل 3 يعطي 98٪ و17٪، والعد الدقيق من دليل الموظفين 93٪ و0٪. المؤسسة تختار نقطة التوازن.",
+     "Sometimes: 10.9% of non-identifying sessions saw an intervention, 12 of 110. It's tunable: safety factor 1 gives 90% protection with 3% interventions, factor 3 gives 98% and 17%, and exact directory counts give 93% and 0%. The organization picks the trade-off.", null],
+    ["eval", "من كتب بيانات الاختبار؟ أليس الفريق نفسه؟", "Who wrote the test data? The same team?",
+     "نعم، المولّد والكاشف من الفريق نفسه، وهذا قيد معروف ومكتوب. لذلك أدخلنا أسماء خارج المعجم لقياس التعميم، وأضفنا معيارين خارجيين لم نكتبهما: معيار محاولات كسر الحماية الواقعية (Shen وآخرون، CCS 2024) ومعيار BIPIA من مايكروسوفت.",
+     "Yes, the generator and detector come from the same team, which is a known, documented limitation. That's why we included out-of-lexicon names to measure generalization and added two external benchmarks we didn't write: in-the-wild jailbreaks (Shen et al., CCS 2024) and Microsoft's BIPIA.", null],
+    ["eval", "هل يمكن إعادة إنتاج أرقامكم؟", "Can your results be reproduced?",
+     "نعم، بأمر واحد: python -m eval.run يعيد كل التقييم في أقل من دقيقة وينتج التقرير والرسوم. والموقع نفسه يقرأ الأرقام مباشرة من ملف التقرير، فلا يوجد رقم مكتوب يدويًا.",
+     "Yes, with one command: python -m eval.run reruns the whole evaluation in under a minute and produces the report and figures. The website reads its numbers directly from that report file, so no figure is typed by hand.", null],
+    ["eval", "لماذا تعرضون أرقامًا ضعيفة مثل 4٪؟", "Why show weak results like 4%?",
+     "لأن الشفافية جزء من المنتج الأمني. معيار BIPIA يحتوي تعليمات خارج المهمة بلا كلمات تجاوز، مثل 'اقترح كتابًا جيدًا' داخل بريد، وطرق التوقيعات ضعيفة عليها بطبيعتها. أداة أمن تخفي نقاط ضعفها أخطر من أداة تعرضها.",
+     "Because transparency is part of a security product. BIPIA attacks are off-task instructions with no override wording, such as 'recommend a good book' inside an email, and signature methods are weak on them by construction. A security tool that hides its weaknesses is more dangerous than one that shows them.", null],
+    ["sec", "كيف تكشفون حقن الأوامر؟", "How do you detect prompt injection?",
+     "عائلات من التوقيعات: تجاوز التعليمات، وانتحال الأدوار، واستخراج التعليمات المخفية، وتجاوز الضوابط، والتسريب، وعلامات الحقن غير المباشر. تُطبَّق على نص موحّد ومفكوك التمويه، مثل base64 والحروف المتباعدة واستبدال الحروف بالأرقام، وتُجمع في درجة واحدة، والمحتوى المرفق يُوزن كحقن غير مباشر.",
+     "Signature families: instruction override, role hijack, prompt extraction, guardrail bypass, exfiltration and indirect markers. They run on normalized, de-obfuscated text (base64, spaced letters, leetspeak), combine into one noisy-OR score, and attached content is weighted as indirect.", null],
+    ["sec", "لماذا لا تستخدمون نموذجًا لكشف الحقن؟", "Why not use a model to detect injection?",
+     "اخترنا الحتمية والسرعة والعمل دون GPU وقابلية التدقيق. لكن البنية فيها واجهة إضافات جاهزة، وإضافة كاشف قائم على نموذج لرفع النسبة فوق 56٪ هي من أولويات العمل القادم.",
+     "We chose determinism, speed, no GPU and auditability. The architecture has a plug-in interface ready, and adding a model-based detector to lift recall above 56% is a priority for future work.", null],
+    ["sec", "هل يمكن خداع درع؟", "Can AEGIS be fooled?",
+     "نعم، خاصة بحقن غير مباشر خفي أو بأسماء نادرة جدًا لا تتبع أي نمط. لذلك نقدمها كطبقة ضمن دفاع متعدد الطبقات لا كحل نهائي، ونعرض أماكن ضعفها في الموقع.",
+     "Yes, particularly with subtle indirect injection or very rare names that follow no pattern. That's why we present it as one layer in defense in depth, not a final answer, and show where it is weak on the site itself.", null],
+    ["sec", "هل البوابة نفسها آمنة؟", "Is the gateway itself secure?",
+     "تعمل على localhost افتراضيًا، والمدخلات تُتحقق بـ Pydantic مع حدود للحجم، ورسائل الخطأ عامة لا تعيد النص ولا تتبع الأخطاء، والواجهة بسياسة أمان محتوى صارمة دون سكربتات مضمّنة، وكل نص يُعرض كنص لا كـ HTML. والأسرار في متغيرات البيئة أو ملف بصلاحيات 600.",
+     "It binds to localhost by default; inputs are validated with Pydantic size limits; error messages are generic with no echo or stack traces; the web UI runs under a strict Content Security Policy with no inline scripts and renders all user text as text, never HTML. Secrets live in environment variables or a 0600 key file.", null],
+    ["llm", "أين الذكاء الاصطناعي في مشروعكم إذا كانت القواعد هي التي تقرر؟", "Where is the AI if rules make the decisions?",
+     "المشروع حوكمة للذكاء الاصطناعي، وقرار أمني يجب أن يكون حتميًا وقابلًا للتدقيق، فلا نتركه لنموذج قد يُخدع. النموذج المحلي qwen3 يستخدم لترجيح الغرض عند الغموض من قائمة مغلقة، وللإجابة على الطلب بعد تقليله. والجانب الذكي الأعمق هو نموذج قابلية التعرّف الإحصائي الذي يقيس المعلومات بالبِتّات.",
+     "This is governance for AI, and a security decision must be deterministic and auditable, so we don't hand it to a model that can be manipulated. The local qwen3 model breaks ties in purpose recognition from a closed list and answers the minimized request. The deeper intelligence is the statistical identifiability model that measures information in bits.",
+     ["سؤال شائع جدًا. أجيبوا بثقة: هذا قرار تصميمي مقصود.", "A very common question. Answer confidently: it's a deliberate design decision."]],
+    ["llm", "ألا يمكن خداع النموذج المحلي نفسه؟", "Can't the local model itself be manipulated?",
+     "دوره محدود جدًا: يرى الطلب كبيانات مقتبسة ويعيد مفتاحًا واحدًا فقط من قائمة مغلقة من الأغراض. لا يستطيع تغيير القرار ولا السياسة، والقواعد تتحقق من مخرجاته.",
+     "Its role is tightly bounded: it sees the request as quoted data and can return only one key from a closed list of purposes. It cannot change the decision or the policy, and the rules validate its output.", null],
+    ["llm", "هل يعمل مع GPT أو Claude أو نماذج سحابية أخرى؟", "Does it work with GPT, Claude or other hosted models?",
+     "نعم، يوجد مزوّد متوافق مع واجهة OpenAI، لكنه معطّل افتراضيًا ويحتاج تفعيلًا صريحًا. وفي كل الأحوال لا يُرسل إلا الطلب بعد تقليله.",
+     "Yes, there is an OpenAI-compatible provider, but it is off by default and needs explicit opt-in. Either way, only the minimized prompt is sent.", null],
+    ["biz", "هل تعترض درع كل حركة الموظفين إلى مواقع الذكاء الاصطناعي؟", "Does AEGIS intercept all employee traffic to AI websites?",
+     "ليس اليوم. درع تحمي ما يمر عبرها: لوحة التحكم، والتطبيقات عبر REST، والوكلاء عبر MCP، وMCP استشاري أي أن الوكيل يقرر استدعاءه. الاعتراض الإلزامي عبر وكيل شبكي (proxy) هو الخطوة القادمة في خطتنا، والمحرك نفسه جاهز لذلك.",
+     "Not today. AEGIS protects what is routed through it: the dashboard, apps via REST, and agents via MCP, and MCP is advisory, meaning the agent chooses to call it. Mandatory interception through a network proxy is our next step, and the engine is ready for it.",
+     ["قولوها بثقة لا باعتذار: المحرك هو الجزء الصعب.", "Say it with confidence, not apology: the engine is the hard part."]],
+    ["biz", "كيف تُنشر درع في مؤسسة حقيقية؟", "How would an organization deploy AEGIS?",
+     "بوابة محلية على خادم المؤسسة. التطبيقات الداخلية تستدعي الواجهة البرمجية قبل أي نموذج، ووكلاء الذكاء الاصطناعي يتصلون عبر MCP، ومسؤول حماية البيانات يملك ملفات السياسات والأغراض. البداية المقترحة: تجربة في قسم واحد مثل الموارد البشرية.",
+     "As a local gateway on the organization's server. Internal apps call the API before any model, AI agents connect via MCP, and the data-protection officer owns the policy and purpose files. Suggested start: a pilot in one department such as HR.", null],
+    ["biz", "كم يكلف التشغيل؟ هل يحتاج بنية قوية؟", "What does it cost to run? Heavy infrastructure?",
+     "لا. يعمل على حاسب Mac M1 بذاكرة 8 جيجابايت دون GPU ودون Docker ودون إنترنت. النموذج اللغوي اختياري وحجمه نحو 1.4 جيجابايت.",
+     "No. It runs on an 8 GB Mac M1 with no GPU, no Docker and no internet. The language model is optional and about 1.4 GB.", null],
+    ["biz", "هل جرّبتم الأداء تحت حمل كبير؟", "Have you load-tested it?",
+     "لا، لم نجرِ اختبار حمل بعد. ما نعرفه: الطلب الواحد يستغرق نحو 3 ملّي ثانية، ودفتر التعرّض في الذاكرة. للتوسع على عدة خوادم نحتاج مخزنًا مشتركًا للدفتر، وهذا ضمن خطة النشر.",
+     "No, not yet. What we know: one request takes about 3 ms, and the exposure ledger lives in memory. Scaling across several servers needs a shared ledger store, which is part of the deployment plan.", null],
+    ["biz", "ما خطواتكم القادمة؟", "What are your next steps?",
+     "ثلاث: تجربة على نصوص حقيقية بموافقة ودليل موظفين حقيقي لمعايرة المقدِّر، نحو ثلاثة أشهر؛ وكاشف حقن قائم على نموذج ونموذج تعرّف على الأسماء العربية عبر واجهة الإضافات الموجودة؛ واعتراض إلزامي عبر وكيل لوكلاء الذكاء الاصطناعي.",
+     "Three: a consented pilot on real text and a real HR directory to calibrate the estimator, about three months; a model-based injection detector and Arabic NER through the existing plug-in interface; and mandatory proxy enforcement for AI agents.", null],
+    ["biz", "ما نموذج العمل التجاري؟", "What is the business model?",
+     "اقتراح للفريق، عدّلوه حسب خطتكم: ترخيص مؤسسي للبوابة تُثبَّت على خوادم العميل، مع خدمة إعداد السياسات وعقود الأغراض حسب القطاع، ودعم سنوي. الميزة البيعية: يعمل محليًا، فلا تغادر البيانات المؤسسة حتى إلى مزوّد الأداة.",
+     "Team suggestion, adjust to your plan: an enterprise licence for an on-premises gateway, plus a service to set up sector-specific policies and purpose contracts, and annual support. The selling point: it runs locally, so data never leaves the organization, not even to the tool vendor.",
+     ["هذه الإجابة ليست من المشروع؛ اتفقوا عليها كفريق قبل المعرض.", "This answer isn't from the project; agree on it as a team before the fair."]],
+    ["hard", "ما أكبر نقطة ضعف في مشروعكم؟", "What is your biggest weakness?",
+     "اثنتان، ونذكرهما بوضوح: البيانات اصطناعية فالأرقام حد أعلى، وكشف الحقن غير المباشر ضعيف (4٪ على BIPIA). وكلاهما في خطة العمل القادمة. ونضيف أن الاعتراض الإلزامي غير مُنفَّذ بعد.",
+     "Two, stated plainly: the data is synthetic so the figures are an upper bound, and indirect injection detection is weak (4% on BIPIA). Both are in our roadmap. Mandatory interception is also not built yet.",
+     ["إجابة صريحة هنا ترفع ثقة المحكّم أكثر من أي رقم.", "A frank answer here builds more trust with a judge than any number."]],
+    ["hard", "ماذا لو بدأ المستخدم جلسة جديدة ليتجاوز الميزانية؟", "What if a user starts a new session to reset the budget?",
+     "في النموذج الأولي الميزانية مرتبطة بمعرّف الجلسة، فجلسة جديدة تبدأ من الصفر. في النشر الحقيقي يجب ربطها بهوية المستخدم أو بالشخص المذكور عبر الجلسات، وهذا غير مُنفَّذ بعد ونذكره كعمل قادم.",
+     "In the prototype the budget is tied to the session ID, so a new session starts fresh. A real deployment should tie it to the user's identity or to the subject across sessions; that is not implemented yet and we list it as future work.", null],
+    ["hard", "لماذا الحد 5 أشخاص؟ من أين جاء هذا الرقم؟", "Why k = 5? Where does that number come from?",
+     "من مفهوم k-anonymity المعروف (Sweeney، 2002): أي معلومة يجب أن تنطبق على k أشخاص على الأقل. الرقم 5 شائع في الممارسة، وهو إعداد في ملف السياسة تغيّره المؤسسة حسب حساسية بياناتها.",
+     "From k-anonymity (Sweeney, 2002): any disclosure should match at least k people. Five is a common choice in practice, and it is a policy setting the organization can change for its own data.", null],
+    ["hard", "ألا يضرّ التعميم بجودة إجابة النموذج؟", "Doesn't generalization hurt the model's answer quality?",
+     "لهذا وُجدت عقود الغرض: نعمّم فقط إلى المستوى الذي ما زالت المهمة تعمل به، فالتحليل الديموغرافي يحتفظ بالفئة العمرية لا يحذفها. قسنا ذلك: 100٪ من المعلومات اللازمة للمهمة بقيت، مقابل 0٪ في الإخفاء الشامل. لم نقس جودة إجابة النموذج نفسها، وهذا تقييم مستقبلي.",
+     "That's what purpose contracts are for: we generalize only to the level the task still works with, so demographic analysis keeps the age band rather than dropping it. We measured 100% of task-needed facts kept versus 0% for blanket redaction. We did not measure the model's answer quality itself; that is future evaluation.", null],
+    ["hard", "لماذا نثق بكم أكثر من شركة أمن كبيرة؟", "Why trust you over a big security vendor?",
+     "لا نطلب الثقة، بل نعرض كل شيء: القرارات قواعد مكتوبة يقرؤها مسؤول حماية البيانات، والأرقام تُعاد بأمر واحد، والقيود منشورة في الموقع، والكود يعمل محليًا فلا تغادر البيانات. ونضيف ما لا تقدمه الأدوات العامة: الذاكرة عبر الرسائل، والعربية والهوية السعودية.",
+     "We don't ask for trust; we show everything: decisions are written rules the DPO can read, results reproduce with one command, limitations are published on the site, and it runs locally so data never leaves. And we add what generic tools don't: memory across messages, Arabic, and Saudi identifiers.", null]
+  ];
+
+  var AVOID = [
+    ["\"درع تعترض كل ما يرسله الموظفون إلى ChatGPT.\"", "\"AEGIS intercepts everything employees send to ChatGPT.\"",
+     "\"درع تحمي كل ما يمر عبرها: لوحة التحكم، والتطبيقات عبر API، والوكلاء عبر MCP. الاعتراض الإلزامي عبر وكيل هو الخطوة القادمة.\"", "\"AEGIS protects everything routed through it: the dashboard, apps via the API, agents via MCP. Mandatory interception through a proxy is the next step.\""],
+    ["\"متوافقة مع نظام حماية البيانات الشخصية\" أو \"معتمدة\".", "\"PDPL compliant\" or \"certified\".",
+     "\"قواعدنا مربوطة بمبادئ النظام: تحديد الغرض وتقليل البيانات، المادة 11. هذه مواءمة، لا شهادة امتثال.\"", "\"Our rules map to PDPL principles: purpose limitation and data minimization, Article 11. That's alignment, not certification.\""],
+    ["\"نحمي من حقن الأوامر\" بشكل مطلق.", "\"We protect against prompt injection\", full stop.",
+     "\"نكشف 90٪ من مجموعتنا و56٪ من الهجمات الواقعية، ونضعف على الحقن غير المباشر. لا ندّعي حماية كاملة.\"", "\"We detect 90% of our own set and 56% of real-world attacks, and we're weak on indirect injection. We don't claim complete protection.\""],
+    ["\"دقة 99٪\" دون سياق.", "\"99% accuracy\" with no context.",
+     "\"استدعاء 99.4٪ على بيانات اصطناعية، فهو حد أعلى. والأسماء غير المعروفة 94.7٪.\"", "\"99.4% recall on synthetic data, so it's an upper bound. Unseen names: 94.7%.\""],
+    ["\"الذكاء الاصطناعي يقرر ما هو حساس.\"", "\"The AI decides what's sensitive.\"",
+     "\"القواعد تقرر. النموذج المحلي اختياري، يرجّح الغرض من قائمة مغلقة، ويجيب على الطلب المقلَّل.\"", "\"Rules decide. The local model is optional: it breaks ties on purpose from a closed list and answers the minimized request.\""],
+    ["\"نكتشف أدوات الذكاء الاصطناعي الخفية في الشبكة.\"", "\"We discover shadow AI tools on the network.\"",
+     "\"نوفر المسار المعتمد البديل ونسجله. الاكتشاف التلقائي للأدوات غير المعتمدة غير مُنفَّذ.\"", "\"We provide the approved alternative route and log it. Automatic discovery of unapproved tools isn't built.\""],
+    ["\"جربناه على بيانات موظفين حقيقية.\"", "\"We tested it on real employee data.\"",
+     "\"كل البيانات اصطناعية، مع معيارين عامين خارجيين. التجربة على بيانات حقيقية بموافقة هي الخطوة القادمة.\"", "\"All data is synthetic, plus two external public benchmarks. A consented pilot on real data is the next step.\""],
+    ["\"لا يمكن خداع النظام.\"", "\"The system can't be fooled.\"",
+     "\"هو طبقة دفاع، ونعرض أين يضعف في الموقع نفسه.\"", "\"It's one layer of defense, and we show where it's weak on the site itself.\""]
+  ];
+
+  /* ---------- Q&A render ---------- */
+  var list = document.getElementById("qa-list");
+  var catsEl = document.getElementById("qa-cats");
+  var countEl = document.getElementById("qa-count");
+  var search = document.getElementById("qa-search");
+  var toggle = document.getElementById("qa-toggle");
+  var activeCat = "all";
+  var items = [];
+
+  QA.forEach(function (q, i) {
+    var d = mk("details", "qa");
+    d.id = "q" + (i + 1);
+    var s = mk("summary");
+    var head = mk("div", "qh");
+    head.appendChild(mk("div", "q-ar", q[1], { dir: "rtl", lang: "ar" }));
+    head.appendChild(mk("div", "q-en", q[2], { dir: "ltr", lang: "en" }));
+    s.appendChild(head);
+    var cat = mk("span", "cat");
+    s.appendChild(cat);
+    d.appendChild(s);
+    var ans = mk("div", "ans");
+    var ar = mk("div", "a ar", null, { dir: "rtl", lang: "ar" });
+    ar.appendChild(mk("h6", null, "الإجابة"));
+    ar.appendChild(mk("p", null, q[3]));
+    var en = mk("div", "a en", null, { dir: "ltr", lang: "en" });
+    en.appendChild(mk("h6", null, "ANSWER"));
+    en.appendChild(mk("p", null, q[4]));
+    ans.appendChild(ar);
+    ans.appendChild(en);
+    var tip = null;
+    if (q[5]) { tip = mk("p", "tip"); ans.appendChild(tip); }
+    d.appendChild(ans);
+    list.appendChild(d);
+    items.push({ el: d, cat: q[0], catEl: cat, tip: tip, tipTxt: q[5], text: (q[1] + " " + q[2] + " " + q[3] + " " + q[4]).toLowerCase() });
+  });
+  var empty = mk("div", "empty");
+  empty.hidden = true;
+  list.appendChild(empty);
+
+  function catBtn(key) {
+    var b = mk("button", null, null, { type: "button", "aria-pressed": key === activeCat ? "true" : "false" });
+    b.dataset.cat = key;
+    b.addEventListener("click", function () {
+      activeCat = key;
+      each("button", function (c) { c.setAttribute("aria-pressed", c.dataset.cat === key ? "true" : "false"); }, catsEl);
+      filter();
+    });
+    catsEl.appendChild(b);
+  }
+  catBtn("all");
+  Object.keys(CATS).forEach(catBtn);
+
+  function filter() {
+    var term = search.value.trim().toLowerCase();
+    var n = 0;
+    items.forEach(function (it) {
+      var show = (activeCat === "all" || it.cat === activeCat) && (!term || it.text.indexOf(term) !== -1);
+      it.el.hidden = !show;
+      if (show) n++;
+    });
+    empty.hidden = n !== 0;
+    countEl.textContent = T(n + " من " + items.length + " سؤالًا", n + " of " + items.length + " questions");
+  }
+  search.addEventListener("input", filter);
+
+  var allOpen = false;
+  toggle.addEventListener("click", function () {
+    allOpen = !allOpen;
+    items.forEach(function (it) { if (!it.el.hidden) it.el.open = allOpen; });
+    paintToggle();
+  });
+  function paintToggle() { toggle.textContent = allOpen ? T("إغلاق الكل", "Collapse all") : T("فتح الكل", "Expand all"); }
+
+  function setQaLang(l) {
+    root.classList.remove("qa-ar", "qa-en");
+    if (l !== "both") root.classList.add("qa-" + l);
+    each(".seg button", function (b) { b.setAttribute("aria-pressed", b.dataset.lang === l ? "true" : "false"); });
+    store.set("aegis-guide-lang", l);
+  }
+  each(".seg button", function (b) { b.addEventListener("click", function () { setQaLang(b.dataset.lang); }); });
+  setQaLang(store.get("aegis-guide-lang") || "both");
+
+  /* ---------- say / don't say ---------- */
+  var avoidEl = document.getElementById("avoid-list");
+  var avoidRows = AVOID.map(function (r) {
+    var row = mk("div");
+    var no = mk("div", "no"); var noH = mk("h6"); var noT = mk("div"); no.appendChild(noH); no.appendChild(noT);
+    var yes = mk("div", "yes"); var yesH = mk("h6"); var yesT = mk("div"); yes.appendChild(yesH); yes.appendChild(yesT);
+    row.appendChild(no); row.appendChild(yes);
+    avoidEl.appendChild(row);
+    return { r: r, noH: noH, noT: noT, yesH: yesH, yesT: yesT };
+  });
+
+  /* ---------- page language ---------- */
+  var copyBtn = document.getElementById("copy-pitch");
+  function setUI(l) {
+    UI = l === "en" ? "en" : "ar";
+    root.setAttribute("data-ui", UI);
+    root.setAttribute("dir", UI === "en" ? "ltr" : "rtl");
+    root.setAttribute("lang", UI);
+    document.documentElement.setAttribute("lang", UI);
+    each("[data-ui-btn]", function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-ui-btn") === UI ? "true" : "false"); });
+    each(".cue", function (c) { if (c._paint) c._paint(); });
+    each("button", function (b) { b.textContent = b.dataset.cat === "all" ? T("الكل", "All") : T(CATS[b.dataset.cat][0], CATS[b.dataset.cat][1]); }, catsEl);
+    items.forEach(function (it) {
+      it.catEl.textContent = T(CATS[it.cat][0], CATS[it.cat][1]);
+      if (it.tip) it.tip.textContent = T("ملاحظة للفريق: " + it.tipTxt[0], "Team note: " + it.tipTxt[1]);
+    });
+    avoidRows.forEach(function (a) {
+      a.noH.textContent = T("لا تقل", "Don't say"); a.yesH.textContent = T("قل", "Say");
+      a.noT.textContent = T(a.r[0], a.r[1]); a.yesT.textContent = T(a.r[2], a.r[3]);
+    });
+    search.placeholder = T("ابحث: خصوصية، بيانات اصطناعية، PDPL، حقن…", "Search: privacy, synthetic, PDPL, injection…");
+    search.setAttribute("aria-label", T("بحث في الأسئلة", "Search questions"));
+    empty.textContent = T("لا توجد أسئلة مطابقة. جرّبوا كلمة أخرى.", "No matching questions. Try another word.");
+    copyBtn.textContent = T("نسخ النص العربي", "Copy English text");
+    paintToggle();
+    filter();
+    store.set("aegis-guide-ui", UI);
+  }
+  each("[data-ui-btn]", function (b) { b.addEventListener("click", function () { setUI(b.getAttribute("data-ui-btn")); }); });
+
+  /* ---------- plan tabs ---------- */
+  var tabs = document.querySelectorAll("[data-plan]");
+  Array.prototype.forEach.call(tabs, function (t) {
+    t.addEventListener("click", function () {
+      Array.prototype.forEach.call(tabs, function (x) { x.setAttribute("aria-selected", x === t ? "true" : "false"); });
+      each("[data-panel]", function (p) { p.hidden = p.dataset.panel !== t.dataset.plan; });
+    });
+  });
+
+  /* ---------- checklist ---------- */
+  var boxes = document.querySelectorAll(".check input");
+  var saved = {};
+  try { saved = JSON.parse(store.get("aegis-guide-check") || "{}") || {}; } catch (e) { saved = {}; }
+  function prog() {
+    var done = 0;
+    Array.prototype.forEach.call(boxes, function (b) { if (b.checked) done++; });
+    document.getElementById("prog-txt").textContent = done + " / " + boxes.length;
+    document.getElementById("prog-bar").style.width = (done / boxes.length * 100) + "%";
+  }
+  Array.prototype.forEach.call(boxes, function (b) {
+    b.checked = !!saved[b.dataset.k];
+    b.addEventListener("change", function () { saved[b.dataset.k] = b.checked; store.set("aegis-guide-check", JSON.stringify(saved)); prog(); });
+  });
+  document.getElementById("reset-check").addEventListener("click", function () {
+    saved = {}; store.set("aegis-guide-check", "{}");
+    Array.prototype.forEach.call(boxes, function (b) { b.checked = false; });
+    prog();
+  });
+  prog();
+
+  /* ---------- copy pitch ---------- */
+  copyBtn.addEventListener("click", function () {
+    var block = document.querySelector('#pitch-cue .say[data-l="' + UI + '"]');
+    var txt = Array.prototype.map.call(block.querySelectorAll("p"), function (p) { return p.textContent; }).join("\n\n");
+    var label = copyBtn.textContent;
+    function ok() { copyBtn.textContent = T("تم النسخ", "Copied"); setTimeout(function () { copyBtn.textContent = label; }, 1800); }
+    function fallback() {
+      var r = document.createRange(); r.selectNodeContents(block);
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      copyBtn.textContent = T("النص محدد، انسخوه يدويًا", "Text selected; copy it manually");
+    }
+    try { navigator.clipboard.writeText(txt).then(ok, fallback); } catch (e) { fallback(); }
+  });
+
+  /* ---------- scroll spy ---------- */
+  var rail = document.getElementById("rail");
+  var links = rail.querySelectorAll("a");
+  var map = {};
+  Array.prototype.forEach.call(links, function (a) { map[a.getAttribute("href").slice(1)] = a; });
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting && map[en.target.id]) {
+          Array.prototype.forEach.call(links, function (a) { a.classList.remove("on"); });
+          var a = map[en.target.id];
+          a.classList.add("on");
+          if (rail.scrollWidth > rail.clientWidth) {
+            var ar = a.getBoundingClientRect(), rr = rail.getBoundingClientRect();
+            rail.scrollLeft += (ar.left + ar.width / 2) - (rr.left + rr.width / 2);
+          }
+        }
+      });
+    }, { rootMargin: "-40% 0px -55% 0px" });
+    Object.keys(map).forEach(function (id) { var s = document.getElementById(id); if (s) io.observe(s); });
+  }
+
+  setUI(store.get("aegis-guide-ui") || "ar");
+})();
+</script>

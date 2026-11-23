@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AEGIS | Live demo</title>
+  <meta name="theme-color" content="#050914">
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="icon" href="/static/brand/aegis-shield-128.png" type="image/png">
+</head>
+<body class="app">
+  <aside class="side" id="side">
+    <a class="brand" href="/" data-i18n-attr="title:app.back">
+      <img src="/static/brand/aegis-shield-128.png" alt="" width="30" height="36">
+      <div><strong>AEGIS <span class="brand-ar" lang="ar">درع</span></strong><span data-i18n="brand.tag">Your AI. Your Data. Your Control.</span></div>
+    </a>
+    <nav id="nav" aria-label="Demo views">
+      <button data-view="overview" class="active" data-i18n="app.v.overview">Overview</button>
+      <button data-view="inspect" data-i18n="app.v.inspect">Inspect a request</button>
+      <button data-view="demo" data-i18n="app.v.demo">Demo scenarios</button>
+      <button data-view="exposure" data-i18n="app.v.exposure">Exposure budget</button>
+      <button data-view="simulate" data-i18n="app.v.simulate">Policy simulator</button>
+      <button data-view="policies" data-i18n="app.v.policies">Policies &amp; purposes</button>
+      <button data-view="audit" data-i18n="app.v.audit">Audit log</button>
+      <button data-view="evaluation" data-i18n="app.v.evaluation">Evaluation</button>
+    </nav>
+    <div class="side-foot">
+      <div class="badge local" id="proc-badge" data-i18n="app.proc">Processing: local</div>
+      <div class="muted small" id="llm-status" data-i18n="app.model.check">Model: checking…</div>
+      <div class="muted small" id="ver"></div>
+    </div>
+  </aside>
+
+  <div class="app-col">
+    <header class="topbar">
+      <button type="button" class="side-toggle" id="side-toggle" aria-controls="side" aria-expanded="false"><i></i><i></i><i></i><span class="sr" data-i18n="nav.menu">Menu</span></button>
+      <a class="back" href="/"><svg class="ico flip-rtl" viewBox="0 0 20 20" aria-hidden="true"><path d="M16 10H5m4-4-4 4 4 4"/></svg><span data-i18n="app.back">Back to product site</span></a>
+      <span class="topbar-title"><span class="live-dot"></span><span data-i18n="app.title">Live demo</span></span>
+      <button type="button" class="lang-btn" data-lang-switch>العربية</button>
+    </header>
+
+  <main>
+    <!-- OVERVIEW -->
+    <section id="view-overview" class="view active">
+      <header class="page-head">
+        <h1 data-i18n="app.ov.h">Security overview</h1>
+        <p class="muted"><span data-i18n="app.ov.p">Live figures from this machine's audit log (metadata only, no prompt text is stored).</span> <span id="demo-note"></span></p>
+      </header>
+      <div class="kpis" id="kpis"></div>
+      <div class="grid2">
+        <div class="card"><h3 data-i18n="app.ov.decisions">Decisions</h3><div id="action-bars"></div></div>
+        <div class="card"><h3 data-i18n="app.ov.types">Most frequent data types</h3><div id="type-bars"></div></div>
+        <div class="card"><h3 data-i18n="app.ov.rules">Most triggered rules</h3><div id="rule-bars"></div></div>
+        <div class="card"><h3 data-i18n="app.ov.how">How Aegis decides</h3>
+          <ol class="flow">
+            <li><b data-i18n="app.ov.f1">Injection screen</b><span data-i18n="app.ov.f1d">: instructions hidden in prompts or attached content</span></li>
+            <li><b data-i18n="app.ov.f2">Detection</b><span data-i18n="app.ov.f2d">: validators, bilingual lexicons and context (EN/AR)</span></li>
+            <li><b data-i18n="app.ov.f3">Purpose</b><span data-i18n="app.ov.f3d">: which disclosure contract applies to this task</span></li>
+            <li><b data-i18n="app.ov.f4">Policy</b><span data-i18n="app.ov.f4d">: deterministic YAML rules: ALLOW · WARN · GENERALIZE · BLOCK</span></li>
+            <li><b data-i18n="app.ov.f5">Identifiability budget</b><span data-i18n="app.ov.f5d">: how many people still match, across prompts</span></li>
+            <li><b data-i18n="app.ov.f6">Generalization</b><span data-i18n="app.ov.f6d">: least revealing form the task still needs</span></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- INSPECT -->
+    <section id="view-inspect" class="view">
+      <header class="page-head"><h1 data-i18n="app.in.h">Inspect a request</h1><p class="muted" data-i18n="app.in.p">Paste what an employee or agent wants to send to an AI model.</p></header>
+      <div class="card form">
+        <label><span data-i18n="app.in.prompt">Prompt</span><textarea id="in-prompt" rows="4" maxlength="20000" dir="auto" data-i18n-attr="placeholder:app.in.ph" placeholder="e.g. Summarize the leave request of Noura Alotaibi, 29, HR engineer in Riyadh…"></textarea></label>
+        <label><span><span data-i18n="app.in.content">Attached content</span> <span class="muted" data-i18n="app.in.content.n">(optional: document, email, CSV, tool output; treated as untrusted)</span></span><textarea id="in-content" rows="3" maxlength="100000" dir="auto"></textarea></label>
+        <div class="row">
+          <label><span data-i18n="app.in.purpose">Purpose</span><select id="in-purpose"><option value="" data-i18n="app.in.auto">Auto-detect</option></select></label>
+          <div class="btns">
+            <button class="primary" id="btn-eval" data-i18n="app.in.analyze">Analyze</button>
+            <button id="btn-send" data-i18n="app.in.send" data-i18n-attr="title:app.in.send.t" title="Analyze, then send ONLY the safe text to the connected model (clicking counts as confirming warnings)">Analyze &amp; send to model</button>
+          </div>
+        </div>
+        <details class="advanced">
+          <summary data-i18n="app.in.adv">Advanced</summary>
+          <div class="row">
+            <label><span data-i18n="app.in.policy">Policy</span><select id="in-policy"></select></label>
+            <label><span><span data-i18n="app.in.session">Session</span> <span class="muted" data-i18n="app.in.session.n">(same name = same conversation)</span></span><input id="in-session" value="my-session" maxlength="128"></label>
+            <div class="btns"><button id="btn-dry" data-i18n="app.in.dry" data-i18n-attr="title:app.in.dry.t" title="Analyze without saving to the audit log or the conversation memory">Preview only (not saved)</button></div>
+          </div>
+        </details>
+      </div>
+      <div id="inspect-out"></div>
+    </section>
+
+    <!-- DEMO -->
+    <section id="view-demo" class="view">
+      <header class="page-head"><h1 data-i18n="app.de.h">Demo scenarios</h1><p class="muted"><span class="badge demo" data-i18n="app.de.badge">DEMO DATA</span> <span data-i18n="app.de.p">All people, IDs and keys are synthetic. Each step calls the real API.</span></p></header>
+      <div id="scenarios"></div>
+    </section>
+
+    <!-- EXPOSURE -->
+    <section id="view-exposure" class="view">
+      <header class="page-head"><h1 data-i18n="app.ex.h">Identifiability budget</h1>
+        <p class="muted"><span data-i18n="app.ex.p">For each person a session talks about: how many employees in the reference population would still match what has left. Population:</span> <span id="pop-name"></span>.</p></header>
+      <div class="card form row">
+        <label><span data-i18n="app.ex.session">Session</span><input id="ex-session" value="demo-cumulative" maxlength="128"></label>
+        <div class="btns"><button class="primary" id="btn-ex" data-i18n="app.ex.load">Load</button><button id="btn-ex-reset" data-i18n="app.ex.reset">Reset session</button></div>
+      </div>
+      <div id="exposure-out"></div>
+    </section>
+
+    <!-- SIMULATE -->
+    <section id="view-simulate" class="view">
+      <header class="page-head"><h1 data-i18n="app.si.h">Policy simulator</h1><p class="muted" data-i18n="app.si.p">Same request, every policy, side by side (dry run). Shows how organizational policy, not the tool, decides.</p></header>
+      <div class="card form">
+        <label><span data-i18n="app.in.prompt">Prompt</span><textarea id="sim-prompt" rows="3" maxlength="20000" dir="auto">Draft a reply to Mr. Fahad Alotaibi (ID 1123456780) about his salary of SAR 31,000 being paid late. This is confidential.</textarea></label>
+        <label><span><span data-i18n="app.si.content">Attached content</span> <span class="muted" data-i18n="app.si.opt">(optional)</span></span><textarea id="sim-content" rows="2" maxlength="100000" dir="auto"></textarea></label>
+        <div class="row"><label><span data-i18n="app.in.purpose">Purpose</span><select id="sim-purpose"><option value="" data-i18n="app.in.auto">Auto-detect</option></select></label>
+          <div class="btns"><button class="primary" id="btn-sim" data-i18n="app.si.run">Simulate</button></div></div>
+      </div>
+      <div id="sim-out" class="sim-grid"></div>
+    </section>
+
+    <!-- POLICIES -->
+    <section id="view-policies" class="view">
+      <header class="page-head"><h1 data-i18n="app.po.h">Policies &amp; purpose contracts</h1><p class="muted" data-i18n="app.po.p">Configuration lives in YAML files under config/, owned by the data-protection officer: not in the UI or the code.</p></header>
+      <div class="card"><h3 data-i18n="app.po.contracts">Purpose contracts: the most revealing level each task may see</h3><div id="contracts"></div></div>
+      <div class="card"><h3 data-i18n="app.po.policies">Policies</h3><div class="row"><select id="pol-pick"></select></div><pre id="pol-src" class="code" dir="ltr"></pre></div>
+    </section>
+
+    <!-- AUDIT -->
+    <section id="view-audit" class="view">
+      <header class="page-head"><h1 data-i18n="app.au.h">Audit log</h1><p class="muted" data-i18n="app.au.p">What is stored: decision, rules, data types, keyed hashes, exposure numbers, latency. Never prompt text or detected values.</p></header>
+      <div class="card"><div class="row"><button id="btn-audit" data-i18n="app.au.refresh">Refresh</button></div><div id="audit-out" class="table-wrap"></div></div>
+    </section>
+
+    <!-- EVALUATION -->
+    <section id="view-evaluation" class="view">
+      <header class="page-head"><h1 data-i18n="app.ev.h">Evaluation</h1><p class="muted" data-i18n="app.ev.p">Generated by python -m eval.run. Every figure shows its sample size and a 95% confidence interval.</p></header>
+      <div id="eval-out"></div>
+    </section>
+  </main>
+  </div>
+  <script src="/static/i18n.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>

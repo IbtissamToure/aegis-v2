@@ -1,133 +1,428 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Aegis | Your AI. Your Data. Your Control.</title>
-  <link rel="stylesheet" href="/static/styles.css">
-  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <title>AEGIS | درع: Your AI. Your Data. Your Control.</title>
+  <meta name="description" content="AEGIS is a local-first AI governance and data-protection gateway: purpose-bound data minimization, an identifiability budget across prompts, prompt-injection screening and a content-free audit trail.">
+  <meta name="theme-color" content="#050914">
+  <link rel="icon" href="/static/brand/aegis-shield-128.png" type="image/png">
+  <link rel="stylesheet" href="/static/site.css">
 </head>
-<body>
-  <aside class="side">
-    <div class="brand">
-      <img src="/static/favicon.svg" alt="" width="34" height="34">
-      <div><strong>AEGIS</strong><span>Your AI. Your Data. Your Control.</span></div>
-    </div>
-    <nav id="nav">
-      <button data-view="overview" class="active">Overview</button>
-      <button data-view="inspect">Inspect a request</button>
-      <button data-view="demo">Demo scenarios</button>
-      <button data-view="exposure">Exposure budget</button>
-      <button data-view="simulate">Policy simulator</button>
-      <button data-view="policies">Policies &amp; purposes</button>
-      <button data-view="audit">Audit log</button>
-      <button data-view="evaluation">Evaluation</button>
-    </nav>
-    <div class="side-foot">
-      <div class="badge local" id="proc-badge">Processing: local</div>
-      <div class="muted small" id="llm-status">Model: checking…</div>
-      <div class="muted small" id="ver"></div>
-    </div>
-  </aside>
+<body class="site">
+  <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+  <canvas id="bg-net" aria-hidden="true"></canvas>
 
-  <main>
-    <!-- OVERVIEW -->
-    <section id="view-overview" class="view active">
-      <header class="page-head">
-        <h1>Security overview</h1>
-        <p class="muted">Live figures from this machine's audit log (metadata only, no prompt text is stored). <span id="demo-note"></span></p>
-      </header>
-      <div class="kpis" id="kpis"></div>
-      <div class="grid2">
-        <div class="card"><h3>Decisions</h3><div id="action-bars"></div></div>
-        <div class="card"><h3>Most frequent data types</h3><div id="type-bars"></div></div>
-        <div class="card"><h3>Most triggered rules</h3><div id="rule-bars"></div></div>
-        <div class="card"><h3>How Aegis decides</h3>
-          <ol class="flow">
-            <li><b>Injection screen</b>: instructions hidden in prompts or attached content</li>
-            <li><b>Detection</b>: validators, bilingual lexicons and context (EN/AR)</li>
-            <li><b>Purpose</b>: which disclosure contract applies to this task</li>
-            <li><b>Policy</b>: deterministic YAML rules: ALLOW · WARN · GENERALIZE · BLOCK</li>
-            <li><b>Identifiability budget</b>: how many people still match, across prompts</li>
-            <li><b>Generalization</b>: least revealing form the task still needs</li>
+  <!-- ============================ NAV -->
+  <header class="nav" id="top">
+    <div class="nav-in">
+      <a class="nav-brand" href="#top" aria-label="AEGIS">
+        <img src="/static/brand/aegis-shield-128.png" alt="" width="30" height="36">
+        <span class="wm">AEGIS</span><span class="wm-sep" aria-hidden="true"></span><span class="wm-ar" lang="ar">درع</span>
+      </a>
+      <nav class="nav-links" id="nav-links" aria-label="Sections">
+        <a href="#problem" data-i18n="nav.problem">Problem</a>
+        <a href="#how" data-i18n="nav.how">How it works</a>
+        <a href="#capabilities" data-i18n="nav.capabilities">Capabilities</a>
+        <a href="#results" data-i18n="nav.results">Results</a>
+        <a href="#architecture" data-i18n="nav.architecture">Architecture</a>
+      </nav>
+      <div class="nav-actions">
+        <span class="status-pill" id="status-pill" role="status"><i></i><span data-i18n="status.checking">Checking engine…</span></span>
+        <button type="button" class="lang-btn" data-lang-switch>العربية</button>
+        <a class="btn btn-primary btn-sm" href="/app" data-i18n="nav.demo">Live demo</a>
+        <button type="button" class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="nav-links"><span class="sr" data-i18n="nav.menu">Menu</span><i></i><i></i><i></i></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============================ A · HERO -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow reveal"><span class="dot"></span><span data-i18n="hero.eyebrow">AI governance and data-protection gateway</span></p>
+          <h1 id="hero-title" class="hero-title reveal">
+            <span data-i18n="hero.title1">Your AI.</span>
+            <span data-i18n="hero.title2">Your Data.</span>
+            <span class="grad" data-i18n="hero.title3">Your Control.</span>
+          </h1>
+          <p class="hero-sub reveal" data-i18n="hero.sub">Secure the way your organization uses AI. Gain visibility, prevent data exposure, and govern generative AI interactions, all through one intelligent security layer.</p>
+          <p class="hero-sub2 reveal" data-i18n="hero.sub.ar">ذكاء اصطناعي أكثر أمانًا. بيانات تحت سيطرتك. وحوكمة بلا تعقيد.</p>
+          <div class="hero-ctas reveal">
+            <a class="btn btn-primary" href="#how"><span data-i18n="hero.cta1">Explore the platform</span><svg class="ico flip-rtl" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4"/></svg></a>
+            <a class="btn btn-ghost" href="/app#inspect"><span data-i18n="hero.cta2">Try live demo</span></a>
+          </div>
+          <ul class="trust reveal">
+            <li data-i18n="hero.trust1">Runs locally</li>
+            <li data-i18n="hero.trust2">Deterministic, auditable decisions</li>
+            <li data-i18n="hero.trust3">English and Arabic</li>
+          </ul>
+        </div>
+
+        <div class="hero-visual reveal" aria-label="Live example of a prompt being minimized">
+          <div class="core">
+            <div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div>
+            <div class="core-glow"></div>
+            <img class="core-shield" src="/static/brand/aegis-shield.png" alt="AEGIS shield" width="260" height="313">
+          </div>
+          <div class="beam beam-in" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="beam beam-out" aria-hidden="true"><i></i><i></i><i></i></div>
+          <figure class="pcard pcard-in glass">
+            <figcaption><span class="pc-dot red"></span><span data-i18n="hero.in">Prompt as written</span></figcaption>
+            <p class="pc-text" id="hero-in" dir="auto"></p>
+          </figure>
+          <figure class="pcard pcard-out glass">
+            <figcaption><span class="pc-dot green"></span><span data-i18n="hero.out">What leaves the organization</span><span class="pc-action" id="hero-action"></span></figcaption>
+            <p class="pc-text" id="hero-out" dir="auto"></p>
+            <p class="pc-src" id="hero-src"></p>
+          </figure>
+        </div>
+      </div>
+      <a class="scroll-cue" href="#problem"><span data-i18n="hero.scroll">Scroll to explore</span><i></i></a>
+    </section>
+
+    <!-- ============================ B · PROBLEM -->
+    <section class="sec" id="problem" aria-labelledby="pb-title">
+      <div class="wrap">
+        <header class="sec-head reveal">
+          <p class="eyebrow"><span class="dot"></span><span data-i18n="pb.eyebrow">The problem</span></p>
+          <h2 id="pb-title" data-i18n="pb.title">Generative AI arrived faster than governance did.</h2>
+          <p class="lead" data-i18n="pb.lead"></p>
+        </header>
+
+        <div class="story">
+          <ol class="story-steps" id="story-steps">
+            <li class="story-step active" data-step="1"><button type="button"><span class="num">01</span><span><b data-i18n="pb.s1.t"></b><span data-i18n="pb.s1.d"></span></span></button></li>
+            <li class="story-step" data-step="2"><button type="button"><span class="num">02</span><span><b data-i18n="pb.s2.t"></b><span data-i18n="pb.s2.d"></span></span></button></li>
+            <li class="story-step" data-step="3"><button type="button"><span class="num">03</span><span><b data-i18n="pb.s3.t"></b><span data-i18n="pb.s3.d"></span></span></button></li>
+            <li class="story-step" data-step="4"><button type="button"><span class="num">04</span><span><b data-i18n="pb.s4.t"></b><span data-i18n="pb.s4.d"></span></span></button></li>
           </ol>
+
+          <div class="scene glass" id="scene" data-step="1" aria-hidden="true">
+            <div class="zone zone-org">
+              <span class="zone-label" data-i18n="pb.org">Organization</span>
+              <div class="actor">
+                <svg viewBox="0 0 64 64" class="actor-ico"><circle cx="32" cy="20" r="11"/><path d="M10 58c2-13 11-20 22-20s20 7 22 20"/></svg>
+                <span data-i18n="pb.employee">Employee</span>
+              </div>
+              <div class="bubble">
+                <span class="bubble-label" data-i18n="pb.prompt">Prompt</span>
+                <p>Summarize the leave case of <mark class="tk">Noura Alotaibi</mark>, <mark class="tk">ID 1034567899</mark>, salary <mark class="tk">SAR 31,000</mark>. Key: <mark class="tk">sk-proj-Q7f9…</mark></p>
+              </div>
+            </div>
+            <div class="boundary"><span></span></div>
+            <div class="zone zone-ext">
+              <div class="packets"><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="ai-node">
+                <svg viewBox="0 0 64 64" class="ai-ico"><path d="M20 46h26a12 12 0 0 0 1-24 16 16 0 0 0-30 4 10 10 0 0 0 3 20z"/></svg>
+                <span data-i18n="pb.ext">External AI service</span>
+              </div>
+              <ul class="risks">
+                <li data-i18n="pb.r1"></li><li data-i18n="pb.r2"></li><li data-i18n="pb.r3"></li><li data-i18n="pb.r4"></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="gaps">
+          <article class="gap reveal"><span class="gap-n">1</span><h3 data-i18n="pb.gap1.t"></h3><p data-i18n="pb.gap1.d"></p></article>
+          <article class="gap reveal"><span class="gap-n">2</span><h3 data-i18n="pb.gap2.t"></h3><p data-i18n="pb.gap2.d"></p></article>
         </div>
       </div>
     </section>
 
-    <!-- INSPECT -->
-    <section id="view-inspect" class="view">
-      <header class="page-head"><h1>Inspect a request</h1><p class="muted">Paste what an employee or agent wants to send to an AI model.</p></header>
-      <div class="card form">
-        <label>Prompt<textarea id="in-prompt" rows="4" maxlength="20000" placeholder="e.g. Summarize the leave request of Noura Alotaibi, 29, HR engineer in Riyadh…"></textarea></label>
-        <label>Attached content <span class="muted">(optional: document, email, CSV, tool output; treated as untrusted)</span><textarea id="in-content" rows="3" maxlength="100000"></textarea></label>
-        <div class="row">
-          <label>Purpose<select id="in-purpose"><option value="">Auto-detect</option></select></label>
-          <div class="btns">
-            <button class="primary" id="btn-eval">Analyze</button>
-            <button id="btn-send" title="Analyze, then send ONLY the safe text to the connected model (clicking counts as confirming warnings)">Analyze &amp; send to model</button>
-          </div>
+    <!-- ============================ C · HOW IT WORKS -->
+    <section class="sec sec-alt" id="how" aria-labelledby="how-title">
+      <div class="wrap">
+        <header class="sec-head reveal">
+          <p class="eyebrow"><span class="dot"></span><span data-i18n="how.eyebrow">How Aegis works</span></p>
+          <h2 id="how-title" data-i18n="how.title"></h2>
+          <p class="lead" data-i18n="how.lead"></p>
+        </header>
+
+        <div class="pipe reveal" role="tablist" aria-label="Pipeline stages" id="pipe">
+          <div class="pipe-track" aria-hidden="true"><i class="pipe-packet"></i></div>
+          <button type="button" role="tab" class="stage active" data-stage="1" aria-selected="true" aria-controls="stage-panel">
+            <span class="st-ico"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4z"/></svg></span><span class="st-n">01</span><span class="st-t" data-i18n="how.s1.t"></span></button>
+          <button type="button" role="tab" class="stage" data-stage="2" aria-selected="false" aria-controls="stage-panel">
+            <span class="st-ico"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/></svg></span><span class="st-n">02</span><span class="st-t" data-i18n="how.s2.t"></span></button>
+          <button type="button" role="tab" class="stage" data-stage="3" aria-selected="false" aria-controls="stage-panel">
+            <span class="st-ico"><svg viewBox="0 0 24 24"><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span class="st-n">03</span><span class="st-t" data-i18n="how.s3.t"></span></button>
+          <button type="button" role="tab" class="stage" data-stage="4" aria-selected="false" aria-controls="stage-panel">
+            <span class="st-ico"><svg viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.5 3 8 7 9 4-1 7-4.5 7-9V6z"/><path d="m9 12 2 2 4-4"/></svg></span><span class="st-n">04</span><span class="st-t" data-i18n="how.s4.t"></span></button>
+          <button type="button" role="tab" class="stage" data-stage="5" aria-selected="false" aria-controls="stage-panel">
+            <span class="st-ico"><svg viewBox="0 0 24 24"><path d="M4 20V10m6 10V4m6 16v-7m4 7H2"/></svg></span><span class="st-n">05</span><span class="st-t" data-i18n="how.s5.t"></span></button>
         </div>
-        <details class="advanced">
-          <summary>Advanced</summary>
-          <div class="row">
-            <label>Policy<select id="in-policy"></select></label>
-            <label>Session <span class="muted">(same name = same conversation)</span><input id="in-session" value="my-session" maxlength="128"></label>
-            <div class="btns"><button id="btn-dry" title="Analyze without saving to the audit log or the conversation memory">Preview only (not saved)</button></div>
+
+        <div class="stage-panel glass" id="stage-panel" role="tabpanel" aria-live="polite">
+          <div>
+            <h3 id="sp-title"></h3>
+            <p id="sp-desc"></p>
+            <p class="mono-line"><code id="sp-mod"></code></p>
           </div>
-        </details>
+          <span class="badge b-impl" data-i18n="badge.impl">Implemented</span>
+        </div>
+        <p class="det-note reveal"><svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2 3 5v5c0 4 3 7 7 8 4-1 7-4 7-8V5z"/></svg><span data-i18n="how.det"></span></p>
+
+        <aside class="scope reveal">
+          <h3 data-i18n="how.scope.t"></h3>
+          <p data-i18n="how.scope.d"></p>
+          <div class="scope-badges">
+            <span class="badge b-impl">REST API</span><span class="badge b-impl">MCP</span><span class="badge b-impl">Dashboard</span>
+            <span class="badge b-planned"><span data-i18n="badge.planned">Planned</span>: proxy</span>
+          </div>
+        </aside>
       </div>
-      <div id="inspect-out"></div>
     </section>
 
-    <!-- DEMO -->
-    <section id="view-demo" class="view">
-      <header class="page-head"><h1>Demo scenarios</h1><p class="muted"><span class="badge demo">DEMO DATA</span> All people, IDs and keys are synthetic. Each step calls the real API.</p></header>
-      <div id="scenarios"></div>
-    </section>
+    <!-- ============================ D · CAPABILITIES -->
+    <section class="sec" id="capabilities" aria-labelledby="cap-title">
+      <div class="wrap">
+        <header class="sec-head reveal">
+          <p class="eyebrow"><span class="dot"></span><span data-i18n="cap.eyebrow">Core capabilities</span></p>
+          <h2 id="cap-title" data-i18n="cap.title"></h2>
+        </header>
 
-    <!-- EXPOSURE -->
-    <section id="view-exposure" class="view">
-      <header class="page-head"><h1>Identifiability budget</h1>
-        <p class="muted">For each person a session talks about: how many employees in the reference population would still match what has left. Population: <span id="pop-name"></span>.</p></header>
-      <div class="card form row">
-        <label>Session<input id="ex-session" value="demo-cumulative" maxlength="128"></label>
-        <div class="btns"><button class="primary" id="btn-ex">Load</button><button id="btn-ex-reset">Reset session</button></div>
+        <div class="caps reveal">
+          <div class="cap-tabs" role="tablist" aria-label="Capabilities">
+            <button type="button" role="tab" class="cap-tab active" data-cap="gov" aria-selected="true" aria-controls="cap-gov" id="tab-gov">
+              <span class="cap-glyph g-gov" aria-hidden="true"></span><span><b data-i18n="cap.gov.t"></b><small data-i18n="cap.gov.s"></small></span></button>
+            <button type="button" role="tab" class="cap-tab" data-cap="min" aria-selected="false" aria-controls="cap-min" id="tab-min">
+              <span class="cap-glyph g-min" aria-hidden="true"></span><span><b data-i18n="cap.min.t"></b><small data-i18n="cap.min.s"></small></span></button>
+            <button type="button" role="tab" class="cap-tab" data-cap="inj" aria-selected="false" aria-controls="cap-inj" id="tab-inj">
+              <span class="cap-glyph g-inj" aria-hidden="true"></span><span><b data-i18n="cap.inj.t"></b><small data-i18n="cap.inj.s"></small></span></button>
+            <button type="button" role="tab" class="cap-tab" data-cap="dash" aria-selected="false" aria-controls="cap-dash" id="tab-dash">
+              <span class="cap-glyph g-dash" aria-hidden="true"></span><span><b data-i18n="cap.dash.t"></b><small data-i18n="cap.dash.s"></small></span></button>
+          </div>
+
+          <!-- Governance -->
+          <article class="cap-panel glass active" id="cap-gov" role="tabpanel" aria-labelledby="tab-gov">
+            <div class="cap-head"><h3 data-i18n="cap.gov.t"></h3><span class="badge b-partial" data-i18n="badge.partial"></span></div>
+            <div class="cap-cols">
+              <dl class="cap-facts">
+                <dt data-i18n="cap.what"></dt><dd data-i18n="cap.gov.what"></dd>
+                <dt data-i18n="cap.why"></dt><dd data-i18n="cap.gov.why"></dd>
+                <dt data-i18n="cap.flow"></dt><dd><span class="flow-chip" data-i18n="cap.gov.flow"></span></dd>
+                <dd class="note-planned" data-i18n="cap.gov.note"></dd>
+              </dl>
+              <div class="try">
+                <p class="try-h"><span class="badge b-live" data-i18n="badge.live"></span><span data-i18n="cap.gov.ex"></span></p>
+                <p class="sample" id="gov-sample" dir="auto"></p>
+                <button type="button" class="btn btn-primary btn-sm" id="gov-run" data-i18n="cap.gov.run">Compare policies</button>
+                <div class="pol-grid" id="gov-out" aria-live="polite"></div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Minimization -->
+          <article class="cap-panel glass" id="cap-min" role="tabpanel" aria-labelledby="tab-min" hidden>
+            <div class="cap-head"><h3 data-i18n="cap.min.t"></h3><span class="badge b-impl" data-i18n="badge.impl"></span></div>
+            <div class="cap-cols">
+              <dl class="cap-facts">
+                <dt data-i18n="cap.what"></dt><dd data-i18n="cap.min.what"></dd>
+                <dt data-i18n="cap.why"></dt><dd data-i18n="cap.min.why"></dd>
+                <dt data-i18n="cap.flow"></dt><dd><span class="flow-chip" data-i18n="cap.min.flow"></span></dd>
+              </dl>
+              <div class="try">
+                <p class="try-h"><span class="badge b-live" data-i18n="badge.live"></span><span data-i18n="cap.min.ex"></span></p>
+                <p class="sample" id="min-sample" dir="auto"></p>
+                <div class="seg" role="radiogroup" id="min-purposes"></div>
+                <div class="min-out" id="min-out" aria-live="polite"></div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Injection -->
+          <article class="cap-panel glass" id="cap-inj" role="tabpanel" aria-labelledby="tab-inj" hidden>
+            <div class="cap-head"><h3 data-i18n="cap.inj.t"></h3><span class="badge b-impl" data-i18n="badge.impl"></span></div>
+            <div class="cap-cols">
+              <dl class="cap-facts">
+                <dt data-i18n="cap.what"></dt><dd data-i18n="cap.inj.what"></dd>
+                <dt data-i18n="cap.why"></dt><dd data-i18n="cap.inj.why"></dd>
+                <dt data-i18n="cap.flow"></dt><dd><span class="flow-chip" data-i18n="cap.inj.flow"></span></dd>
+                <dd class="note-planned" data-i18n="cap.inj.note"></dd>
+              </dl>
+              <div class="try">
+                <p class="try-h"><span class="badge b-live" data-i18n="badge.live"></span><span data-i18n="cap.inj.ex"></span></p>
+                <div class="seg" id="inj-examples">
+                  <button type="button" class="active" data-ex="1" data-i18n="cap.inj.e1"></button>
+                  <button type="button" data-ex="2" data-i18n="cap.inj.e2"></button>
+                  <button type="button" data-ex="3" data-i18n="cap.inj.e3"></button>
+                  <button type="button" data-ex="4" data-i18n="cap.inj.e4"></button>
+                </div>
+                <p class="sample mono-s" id="inj-sample" dir="auto"></p>
+                <div class="inj-out" id="inj-out" aria-live="polite">
+                  <div class="meter"><i id="inj-fill"></i><b class="meter-th"></b></div>
+                  <div class="inj-row"><span data-i18n="cap.inj.score"></span><b id="inj-score">-</b><span class="tagx" id="inj-verdict"></span></div>
+                  <ul class="inj-signals" id="inj-signals"></ul>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Dashboard -->
+          <article class="cap-panel glass" id="cap-dash" role="tabpanel" aria-labelledby="tab-dash" hidden>
+            <div class="cap-head"><h3 data-i18n="cap.dash.t"></h3><span class="badge b-impl" data-i18n="badge.impl"></span></div>
+            <div class="cap-cols">
+              <dl class="cap-facts">
+                <dt data-i18n="cap.what"></dt><dd data-i18n="cap.dash.what"></dd>
+                <dt data-i18n="cap.why"></dt><dd data-i18n="cap.dash.why"></dd>
+                <dt data-i18n="cap.flow"></dt><dd><span class="flow-chip" data-i18n="cap.dash.flow"></span></dd>
+              </dl>
+              <div class="try">
+                <p class="try-h"><span class="badge b-live" data-i18n="badge.live"></span><span data-i18n="cap.dash.ex"></span></p>
+                <div class="mini-kpis" id="dash-kpis"></div>
+                <div class="mini-bars" id="dash-bars"></div>
+                <p class="small muted" id="dash-note"></p>
+                <a class="btn btn-ghost btn-sm" href="/app#overview" data-i18n="cap.dash.open">Open the dashboard</a>
+              </div>
+            </div>
+          </article>
+        </div>
       </div>
-      <div id="exposure-out"></div>
     </section>
 
-    <!-- SIMULATE -->
-    <section id="view-simulate" class="view">
-      <header class="page-head"><h1>Policy simulator</h1><p class="muted">Same request, every policy, side by side (dry run). Shows how organizational policy: not the tool: decides.</p></header>
-      <div class="card form">
-        <label>Prompt<textarea id="sim-prompt" rows="3" maxlength="20000">Draft a reply to Mr. Fahad Alotaibi (ID 1123456780) about his salary of SAR 31,000 being paid late. This is confidential.</textarea></label>
-        <label>Attached content <span class="muted">(optional)</span><textarea id="sim-content" rows="2" maxlength="100000"></textarea></label>
-        <div class="row"><label>Purpose<select id="sim-purpose"><option value="">Auto-detect</option></select></label>
-          <div class="btns"><button class="primary" id="btn-sim">Simulate</button></div></div>
+    <!-- ============================ E · RESULTS -->
+    <section class="sec sec-alt" id="results" aria-labelledby="res-title">
+      <div class="wrap">
+        <header class="sec-head reveal">
+          <p class="eyebrow"><span class="dot"></span><span data-i18n="res.eyebrow">Results</span></p>
+          <h2 id="res-title" data-i18n="res.title"></h2>
+          <p class="lead" data-i18n="res.lead"></p>
+          <p class="small muted" id="res-gen"></p>
+        </header>
+        <div id="res-body">
+          <div class="stats" id="res-stats"></div>
+          <div class="charts">
+            <figure class="chart glass reveal" id="ch-budget"></figure>
+            <figure class="chart glass reveal" id="ch-utility"></figure>
+            <figure class="chart glass reveal" id="ch-lang"></figure>
+            <figure class="chart glass reveal" id="ch-inj"></figure>
+            <figure class="chart glass reveal chart-wide" id="ch-lat"></figure>
+          </div>
+          <p class="caveat reveal"><span class="badge b-synth" data-i18n="badge.synthetic"></span><span data-i18n="res.caveat"></span></p>
+        </div>
       </div>
-      <div id="sim-out" class="sim-grid"></div>
     </section>
 
-    <!-- POLICIES -->
-    <section id="view-policies" class="view">
-      <header class="page-head"><h1>Policies &amp; purpose contracts</h1><p class="muted">Configuration lives in YAML files under <code>config/</code>, owned by the data-protection officer: not in the UI or the code.</p></header>
-      <div class="card"><h3>Purpose contracts: the most revealing level each task may see</h3><div id="contracts"></div></div>
-      <div class="card"><h3>Policies</h3><div class="row"><select id="pol-pick"></select></div><pre id="pol-src" class="code"></pre></div>
+    <!-- ============================ F · EXPERIENCE -->
+    <section class="sec xp" id="experience" aria-labelledby="xp-title">
+      <div class="wrap">
+        <div class="xp-box glass reveal">
+          <div class="xp-copy">
+            <p class="eyebrow"><span class="dot"></span><span data-i18n="xp.eyebrow">Experience Aegis</span></p>
+            <h2 id="xp-title" data-i18n="xp.title"></h2>
+            <p class="lead" data-i18n="xp.lead"></p>
+            <a class="btn btn-primary btn-lg" href="/app"><span data-i18n="xp.cta">Launch the live demo</span><svg class="ico flip-rtl" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4"/></svg></a>
+          </div>
+          <ul class="xp-views" id="xp-views"></ul>
+        </div>
+      </div>
     </section>
 
-    <!-- AUDIT -->
-    <section id="view-audit" class="view">
-      <header class="page-head"><h1>Audit log</h1><p class="muted">What is stored: decision, rules, data types, keyed hashes, exposure numbers, latency. Never prompt text or detected values.</p></header>
-      <div class="card"><div class="row"><button id="btn-audit">Refresh</button></div><div id="audit-out" class="table-wrap"></div></div>
+    <!-- ============================ G · ARCHITECTURE -->
+    <section class="sec sec-alt" id="architecture" aria-labelledby="ar-title">
+      <div class="wrap">
+        <header class="sec-head reveal">
+          <p class="eyebrow"><span class="dot"></span><span data-i18n="ar.eyebrow">Architecture</span></p>
+          <h2 id="ar-title" data-i18n="ar.title"></h2>
+          <p class="lead" data-i18n="ar.lead"></p>
+        </header>
+
+        <div class="arch reveal">
+          <div class="arch-diagram" id="arch">
+            <div class="arch-row">
+              <p class="arch-label" data-i18n="ar.entry"></p>
+              <div class="arch-nodes n3">
+                <button type="button" class="an" data-node="dash"><span data-i18n="ar.n.dash.t"></span><code>web/</code></button>
+                <button type="button" class="an" data-node="mcp"><span data-i18n="ar.n.mcp.t"></span><code>mcp_server/</code></button>
+                <button type="button" class="an" data-node="rest"><span data-i18n="ar.n.rest.t"></span><code>api/server.py</code></button>
+              </div>
+            </div>
+            <div class="arch-flow" aria-hidden="true"><i></i></div>
+            <div class="arch-gw">
+              <p class="arch-label" data-i18n="ar.gateway"></p>
+              <div class="arch-nodes n3 gw">
+                <button type="button" class="an st" data-node="s1"><span data-i18n="ar.n.s1.t"></span><code>injection/</code></button>
+                <button type="button" class="an st" data-node="s2"><span data-i18n="ar.n.s2.t"></span><code>detection/</code></button>
+                <button type="button" class="an st" data-node="s3"><span data-i18n="ar.n.s3.t"></span><code>purpose.py</code></button>
+                <button type="button" class="an st" data-node="s4"><span data-i18n="ar.n.s4.t"></span><code>exposure/</code></button>
+                <button type="button" class="an st" data-node="s5"><span data-i18n="ar.n.s5.t"></span><code>policy/</code></button>
+                <button type="button" class="an st" data-node="s6"><span data-i18n="ar.n.s6.t"></span><code>generalization/</code></button>
+              </div>
+              <p class="arch-core"><code>aegis/gateway.py</code></p>
+            </div>
+            <div class="arch-flow" aria-hidden="true"><i></i></div>
+            <div class="arch-row">
+              <p class="arch-label" data-i18n="ar.out"></p>
+              <div class="arch-nodes n3">
+                <button type="button" class="an opt" data-node="llm"><span data-i18n="ar.n.llm.t"></span><code>llm/providers.py</code></button>
+                <button type="button" class="an" data-node="audit"><span data-i18n="ar.n.audit.t"></span><code>audit/store.py</code></button>
+                <button type="button" class="an" data-node="cfg"><span data-i18n="ar.n.cfg.t"></span><code>config/*.yaml</code></button>
+              </div>
+            </div>
+          </div>
+          <aside class="arch-detail glass" id="arch-detail" aria-live="polite">
+            <p class="muted" data-i18n="ar.hint">Select a component</p>
+          </aside>
+        </div>
+
+        <div class="stack reveal">
+          <h3 data-i18n="ar.stack"></h3>
+          <ul class="chips">
+            <li>Python 3.11</li><li>FastAPI</li><li>Pydantic</li><li>Uvicorn</li><li>PyYAML</li><li>SQLite</li>
+            <li>MCP SDK</li><li>Ollama · qwen3:1.7b <em class="opt-t">optional</em></li><li>Vanilla JS</li><li>Strict CSP</li><li>pytest</li><li>matplotlib <em class="opt-t">eval</em></li>
+          </ul>
+        </div>
+      </div>
     </section>
 
-    <!-- EVALUATION -->
-    <section id="view-evaluation" class="view">
-      <header class="page-head"><h1>Evaluation</h1><p class="muted">Generated by <code>python -m eval.run</code>. Every figure shows its sample size and a 95% confidence interval.</p></header>
-      <div id="eval-out"></div>
+    <!-- ============================ H · FINAL CTA -->
+    <section class="final" aria-labelledby="fin-title">
+      <div class="wrap final-in reveal">
+        <img src="/static/brand/aegis-shield.png" alt="" width="96" height="116" class="final-shield">
+        <h2 id="fin-title" data-i18n="fin.title"></h2>
+        <p class="lead" data-i18n="fin.sub"></p>
+        <div class="hero-ctas center">
+          <a class="btn btn-primary btn-lg" href="/app" data-i18n="fin.cta1">Try the live demo</a>
+          <a class="btn btn-ghost btn-lg" href="/api/docs" data-i18n="fin.cta2">Read the API docs</a>
+        </div>
+      </div>
     </section>
   </main>
-  <script src="/static/app.js"></script>
+
+  <footer class="foot">
+    <div class="wrap foot-in">
+      <div class="foot-brand">
+        <div class="logo-plate"><img src="/static/brand/aegis-logo-original.jpg" alt="AEGIS logo" width="200" height="140"></div>
+        <p class="foot-tag"><span data-i18n="brand.tag"></span><br><span lang="ar" dir="rtl">درع</span></p>
+      </div>
+      <nav class="foot-col" aria-label="Product">
+        <h4 data-i18n="ft.product"></h4>
+        <a href="#problem" data-i18n="nav.problem"></a><a href="#how" data-i18n="nav.how"></a>
+        <a href="#capabilities" data-i18n="nav.capabilities"></a><a href="#results" data-i18n="nav.results"></a>
+        <a href="#architecture" data-i18n="nav.architecture"></a>
+      </nav>
+      <nav class="foot-col" aria-label="Project">
+        <h4 data-i18n="ft.project"></h4>
+        <a href="/app" data-i18n="nav.demo"></a>
+        <a href="/app#demo" data-i18n="xp.v.demo"></a>
+        <a href="/app#evaluation" data-i18n="xp.v.evaluation"></a>
+        <a href="/api/docs" data-i18n="ft.api"></a>
+      </nav>
+      <div class="foot-col">
+        <h4 data-i18n="ft.lang"></h4>
+        <button type="button" class="lang-btn" data-lang-switch>العربية</button>
+      </div>
+    </div>
+    <div class="wrap foot-bottom">
+      <p class="small muted" data-i18n="ft.note"></p>
+      <p class="small muted" id="ft-ver"></p>
+    </div>
+  </footer>
+
+  <script src="/static/i18n.js"></script>
+  <script src="/static/site.js"></script>
 </body>
 </html>
